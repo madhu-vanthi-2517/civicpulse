@@ -1,11 +1,27 @@
-import AdminDashboard from './pages/authority/AdminDashboard'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import AdminDashboard from './pages/authority/AdminDashboard';
+import ComplaintForm from './pages/citizen/ComplaintForm';
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <AdminDashboard />
-    </div>
-  )
-}
+    <Router>
+      <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
+        
+        {/* Temporary Sandbox Navigation Header (Optional - Can be removed later) */}
+       
 
-export default App
+        {/* Central Component Routing Matrix */}
+        <main>
+          <Routes>
+            {/* Base Route: Loads the Citizen Login / Registration Workspace */}
+            <Route path="/" element={<ComplaintForm />} />
+
+            {/* Admin Route: Loads the Secure Authority Overview Grid */}
+            <Route path="/admin" element={<AdminDashboard />} />
+          </Routes>
+        </main>
+        
+      </div>
+    </Router>
+  );
+}
