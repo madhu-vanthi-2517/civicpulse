@@ -7,7 +7,7 @@ export default function AdminDashboard() {
   ]);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 text-left">
+    <div className="w-full min-h-screen bg-gray-50 p-6 text-slate-900 !text-left">
       <header className="mb-8 border-b border-gray-200 pb-4">
         <h1 className="text-3xl font-bold text-gray-900">CivicPulse · Authority Panel</h1>
         <p className="text-sm text-gray-500 mt-1">Puducherry Region Prototype Dashboard</p>

@@ -1,26 +1,30 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import AdminDashboard from './pages/authority/AdminDashboard';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ComplaintForm from './pages/citizen/ComplaintForm';
+
+// Self-contained placeholder so the compiler never breaks on this branch
+function AdminPlaceholder() {
+  return (
+    <div className="p-8 bg-gray-50 min-h-screen text-left font-sans">
+      <h1 className="text-2xl font-bold text-slate-950 mb-2">Authority Panel</h1>
+      <p className="text-gray-500 text-sm">
+        Secured administrative environment module active. (Files residing on authority branch).
+      </p>
+    </div>
+  );
+}
 
 export default function App() {
   return (
     <Router>
       <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
-        
-        {/* Temporary Sandbox Navigation Header (Optional - Can be removed later) */}
-       
-
-        {/* Central Component Routing Matrix */}
         <main>
           <Routes>
-            {/* Base Route: Loads the Citizen Login / Registration Workspace */}
+            {/* Base Home Route: Mathi's Citizen Portal Card Layout */}
             <Route path="/" element={<ComplaintForm />} />
 
-            {/* Admin Route: Loads the Secure Authority Overview Grid */}
-            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin" element={<AdminPlaceholder />} />
           </Routes>
         </main>
-        
       </div>
     </Router>
   );
