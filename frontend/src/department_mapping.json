@@ -1,0 +1,10 @@
+{
+  "categories": {
+    "pothole": "Public Works Department",
+    "water_leakage": "Water Supply & Sewerage Board",
+    "streetlight_broken": "Electricity & Street Lighting",
+    "garbage_dumping": "Sanitation & Waste Management",
+    "stray_animals": "Animal Welfare & Control",
+    "traffic_signal_fault": "Traffic Management Authority"
+  }
+}
