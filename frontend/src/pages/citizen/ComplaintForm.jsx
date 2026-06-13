@@ -25,10 +25,10 @@ export default function ComplaintForm() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 text-left">
       <div className="sm:mx-auto w-full max-w-md px-4">
-        <h2 className="text-center text-3xl font-extrabold !text-slate-900 tracking-tight">
+        <h2 className="text-3xl font-black text-slate-900 tracking-tight">
           CivicPulse
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-500">
+        <p className="mt-1 text-sm text-gray-500 font-medium">
           {isLogin ? "Access your citizen feedback timeline" : "Create a verified resident account"}
         </p>
       </div>
