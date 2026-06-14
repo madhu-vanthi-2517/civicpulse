@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+.env
+venv/
+env/
+
+# ML models
+ml/models/*.pkl
+
+# Node / React
+node_modules/
+dist/
+.DS_Store
+*.local
+
+# IDE
+.vscode/
+.idea/
