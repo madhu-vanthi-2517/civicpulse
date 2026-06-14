@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ComplaintForm from './pages/citizen/ComplaintForm';
-
+import Login from './pages/citizen/Login';
+import Register from './pages/citizen/Register';
 // Self-contained placeholder so the compiler never breaks on this branch
 function AdminPlaceholder() {
   return (
@@ -23,6 +24,8 @@ export default function App() {
             <Route path="/" element={<ComplaintForm />} />
 
             <Route path="/admin" element={<AdminPlaceholder />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
           </Routes>
         </main>
       </div>
