@@ -2,8 +2,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ComplaintForm from './pages/citizen/ComplaintForm';
 import Login from './pages/citizen/Login';
 import Register from './pages/citizen/Register';
-
-
+import ComplaintTracker from './pages/citizen/ComplaintTracker';
+import PublicTracker from './pages/citizen/PublicTracker';
 import AdminDashboard from './pages/authority/AdminDashboard'; 
 
 export default function App() {
@@ -17,6 +17,8 @@ export default function App() {
             
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/my-complaints" element={<ComplaintTracker />} />
+            <Route path="/track" element={<PublicTracker />} />
            
             <Route path="/admin" element={<AdminDashboard />} />
           </Routes>
