@@ -59,7 +59,7 @@ CivicPulse is an open-source, AI-powered grievance platform that:
 
 ## Project Structure
 
-|| Folder | Purpose |
+|Folder | Purpose |
 |--------|---------|
 | `backend/app/ai/` | Classifier, urgency scoring, department routing |
 | `backend/app/routers/` | API endpoints — auth, complaints, analytics |
