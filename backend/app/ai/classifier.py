@@ -1,98 +1,41 @@
-import os
 import joblib
+import os
 
-# Locate model file
-
-BASE_DIR = os.path.dirname(
-    os.path.dirname(
-        os.path.dirname(
-            os.path.dirname(__file__)
-        )
-    )
+model_path = os.path.join(
+    os.path.dirname(__file__),
+    "../../../ml/models/complaint_classifier.pkl"
 )
+model = joblib.load(model_path)
 
-MODEL_PATH = os.path.join(
-    BASE_DIR,
-    "ml",
-    "models",
-    "complaint_classifier.pkl"
-)
+DEPARTMENT_MAP = {
+    "Sanitation": "Municipal Corporation",
+    "Roads": "Road Department",
+    "Water": "Water Board",
+    "Electrical": "Electricity Board",
+    "Other": "General Department"
+}
 
-model = joblib.load(MODEL_PATH)
+HIGH_KEYWORDS = [
+    "overflow", "flood", "school", "hospital",
+    "fire", "collapse", "sewage", "accident"
+]
+MEDIUM_KEYWORDS = [
+    "broken", "leaking", "damaged",
+    "blocked", "not working"
+]
 
-
-def predict_category(text):
+def predict_category(text: str) -> str:
     return model.predict([text])[0]
 
-
-def predict_urgency(text):
-
-    text = text.lower()
-
-    high_keywords = [
-        "school",
-        "hospital",
-        "overflow",
-        "accident",
-        "danger",
-        "fire",
-        "emergency",
-        "sewage",
-        "leakage"
-    ]
-
-    medium_keywords = [
-        "pothole",
-        "streetlight",
-        "garbage",
-        "water supply",
-        "drainage"
-    ]
-
-    for keyword in high_keywords:
-        if keyword in text:
-            return "High"
-
-    for keyword in medium_keywords:
-        if keyword in text:
-            return "Medium"
-
+def predict_urgency(text: str) -> str:
+    text_lower = text.lower()
+    if any(w in text_lower for w in HIGH_KEYWORDS):
+        return "High"
+    elif any(w in text_lower for w in MEDIUM_KEYWORDS):
+        return "Medium"
     return "Low"
 
-
-def predict_department(category):
-
-    mapping = {
-        "Sanitation": "Municipality Department",
-        "Roads": "Public Works Department",
-        "Water": "Public Works Department",
-        "Electrical": "Electricity Department",
-        "Other": "General Administration"
-    }
-
-    return mapping.get(
-        category,
-        "General Administration"
-    )
-
-
-def classify_complaint(text):
-
-    category = predict_category(text)
-    urgency = predict_urgency(text)
-    department = predict_department(category)
-
-    return {
-        "category": category,
-        "urgency": urgency,
-        "department": department
-    }
-
-
-if __name__ == "__main__":
-
-    sample = "Water leakage near school"
-
-    print(
-        classify_complaint(sample)
+def predict_department(category: str) -> str:
+    return DEPARTMENT_MAP.get(
+        category, "General Department"
     )
