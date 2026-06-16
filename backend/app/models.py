@@ -11,6 +11,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), nullable=False)
     email = Column(String(100), unique=True, nullable=False)
+    password = Column(String(255), nullable=False)
     phone = Column(String(20))
     role = Column(String(20), default="citizen")
 
@@ -35,7 +36,7 @@ class Complaint(Base):
     id = Column(Integer, primary_key=True, index=True)
 
     user_id = Column(Integer, ForeignKey("users.id"))
-    department_id = Column(Integer, ForeignKey("departments.id"))
+    department_id = Column(Integer, ForeignKey("departments.id"), nullable=True)
 
     title = Column(String(255), nullable=False)
     description = Column(Text, nullable=False)
@@ -45,7 +46,9 @@ class Complaint(Base):
     area = Column(String(100))
 
     category = Column(String(100))
-    priority = Column(String(20))
+    urgency = Column(String(20))
+    department_name = Column(String(100))
+
     status = Column(String(20), default="Pending")
 
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -69,4 +72,7 @@ class StatusLog(Base):
 
     changed_at = Column(DateTime, default=datetime.utcnow)
 
-    complaint = relationship("Complaint", back_populates="status_logs")
+    complaint = relationship(
+        "Complaint",
+        back_populates="status_logs"
+    )

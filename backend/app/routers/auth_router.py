@@ -1,4 +1,4 @@
-import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException
 from app.schemas import UserRegister, UserLogin
 from app.database import SessionLocal
 from app.models import User

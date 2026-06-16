@@ -1,4 +1,4 @@
-import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException
 from app.database import SessionLocal
 from app.models import Complaint, StatusLog
 from app.schemas import ComplaintCreate, StatusUpdate

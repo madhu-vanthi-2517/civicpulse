@@ -1,10 +1,8 @@
-import joblib
+def predict_category(text):
+    return "Road"
 
-model = joblib.load(
-    "ml/models/complaint_classifier.pkl"
-)
+def predict_urgency(text):
+    return "Medium"
 
-
-def classify_complaint(text):
-    prediction = model.predict([text])[0]
-    return prediction
+def predict_department(category):
+    return "Public Works Department"
