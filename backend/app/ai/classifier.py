@@ -1,41 +1,74 @@
 import joblib
-import os
+from pathlib import Path
 
-model_path = os.path.join(
-    os.path.dirname(__file__),
-    "../../../ml/models/complaint_classifier.pkl"
-)
-model = joblib.load(model_path)
 
-DEPARTMENT_MAP = {
-    "Sanitation": "Municipal Corporation",
-    "Roads": "Road Department",
-    "Water": "Water Board",
-    "Electrical": "Electricity Board",
-    "Other": "General Department"
-}
+MODEL_PATH = Path(__file__).resolve().parents[3] / "ml" / "models" / "complaint_classifier.pkl"
 
-HIGH_KEYWORDS = [
-    "overflow", "flood", "school", "hospital",
-    "fire", "collapse", "sewage", "accident"
-]
-MEDIUM_KEYWORDS = [
-    "broken", "leaking", "damaged",
-    "blocked", "not working"
-]
+model = joblib.load(MODEL_PATH)
 
-def predict_category(text: str) -> str:
+
+def predict_category(text):
     return model.predict([text])[0]
 
-def predict_urgency(text: str) -> str:
-    text_lower = text.lower()
-    if any(w in text_lower for w in HIGH_KEYWORDS):
+
+def predict_urgency(text):
+
+    text = text.lower()
+
+    high_keywords = [
+        "hospital",
+        "school",
+        "fire",
+        "overflow",
+        "accident",
+        "danger",
+        "electrical",
+        "transformer",
+        "leakage"
+    ]
+
+    medium_keywords = [
+        "road",
+        "garbage",
+        "streetlight",
+        "water"
+    ]
+
+    if any(word in text for word in high_keywords):
         return "High"
-    elif any(w in text_lower for w in MEDIUM_KEYWORDS):
+
+    if any(word in text for word in medium_keywords):
         return "Medium"
+
     return "Low"
 
-def predict_department(category: str) -> str:
-    return DEPARTMENT_MAP.get(
-        category, "General Department"
+
+def predict_department(category):
+
+    mapping = {
+        "Water": "Public Works Department",
+        "Roads": "Public Works Department",
+        "Sanitation": "Municipality Sanitation Department",
+        "Electrical": "Electricity Department",
+        "Other": "Municipal Administration"
+    }
+
+    return mapping.get(
+        category,
+        "Municipal Administration"
     )
+
+
+def classify_complaint(text):
+
+    category = predict_category(text)
+
+    urgency = predict_urgency(text)
+
+    department = predict_department(category)
+
+    return {
+        "category": category,
+        "urgency": urgency,
+        "department": department
+    }
