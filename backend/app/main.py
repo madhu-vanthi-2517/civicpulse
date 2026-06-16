@@ -19,7 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ADD THESE
+
 app.include_router(
     auth_router,
     prefix="/auth",
@@ -32,6 +32,9 @@ app.include_router(
     tags=["Complaints"]
 )
 
+
 @app.get("/")
 def home():
-    return {"message": "CivicPulse API is running"}
+    return {
+        "message": "CivicPulse API is running"
+    }
