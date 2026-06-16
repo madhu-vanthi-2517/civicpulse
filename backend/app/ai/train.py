@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import joblib
 
@@ -8,41 +9,58 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 
 
-# Load Dataset
-df = pd.read_csv("ml/data/complaints_dataset.csv")
+DATASET_PATH = "ml/data/complaints_dataset.csv"
+MODEL_PATH = "ml/models/complaint_classifier.pkl"
+
+
+df = pd.read_csv(DATASET_PATH)
+
+df = df.dropna(subset=["complaint_text", "category"])
+df["complaint_text"] = df["complaint_text"].astype(str).str.lower().str.strip()
+df["category"] = df["category"].astype(str).str.strip()
 
 print("Dataset Loaded Successfully")
 print(df.head())
 
 
-# Features and Labels
 X = df["complaint_text"]
 y = df["category"]
 
 
-# Split Data
 X_train, X_test, y_train, y_test = train_test_split(
     X,
     y,
-    test_size=0.2,
-    random_state=42
+    test_size=0.35,
+    random_state=42,
+    stratify=y
 )
 
 
-# Create Pipeline
 model = Pipeline([
-    ("tfidf", TfidfVectorizer()),
-    ("classifier", LogisticRegression(max_iter=1000))
+    (
+        "tfidf",
+        TfidfVectorizer(
+            stop_words="english",
+            ngram_range=(1, 2),
+            min_df=3,
+            max_df=0.80
+        )
+    ),
+    (
+        "classifier",
+        LogisticRegression(
+            max_iter=1000,
+            C=0.3
+        )
+    )
 ])
 
 
-# Train Model
 model.fit(X_train, y_train)
 
 print("Model Training Complete")
 
 
-# Test Accuracy
 predictions = model.predict(X_test)
 
 accuracy = accuracy_score(y_test, predictions)
@@ -50,10 +68,11 @@ accuracy = accuracy_score(y_test, predictions)
 print(f"Accuracy: {accuracy:.2f}")
 
 
-# Save Model
+os.makedirs("ml/models", exist_ok=True)
+
 joblib.dump(
     model,
-    "ml/models/complaint_classifier.pkl"
+    MODEL_PATH
 )
 
 print("Model Saved Successfully")

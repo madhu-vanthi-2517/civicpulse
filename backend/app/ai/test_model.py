@@ -1,7 +1,5 @@
-from classifier import (
-    predict_category,
-    predict_urgency
-)
+from classifier import classify_complaint
+
 
 samples = [
     "Garbage has not been collected for a week",
@@ -9,16 +7,23 @@ samples = [
     "Water leakage near school",
     "Streetlight not working in my area",
     "Stray dogs creating nuisance",
-    "Transformer caught fire near hospital"
+    "Transformer caught fire near hospital",
+    "Overflowing drainage near Muthialpet",
+    "Broken road near Villianur bus stand",
+    "No water supply in Lawspet",
+    "Streetlights not functioning near Beach Road"
 ]
+
 
 for complaint in samples:
 
-    category = predict_category(complaint)
+    result = classify_complaint(complaint)
 
-    urgency = predict_urgency(complaint)
+    print("\n====================================")
+    print("Complaint:")
+    print(complaint)
 
-    print("\n--------------------------------")
-    print("Complaint:", complaint)
-    print("Category :", category)
-    print("Urgency  :", urgency)
+    print("\nPrediction:")
+    print("Category  :", result["category"])
+    print("Urgency   :", result["urgency"])
+    print("Department:", result["department"])

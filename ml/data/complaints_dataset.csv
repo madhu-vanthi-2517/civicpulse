@@ -1,1 +1,501 @@
-complaint_text,categoryGarbage pile near market,SanitationGarbage not collected for three days,SanitationOverflowing dustbin near school,SanitationSewage overflow near bus stand,SanitationBlocked drainage causing foul smell,SanitationWaste dumped beside residential area,SanitationDrainage water stagnating on street,SanitationPublic toilet not cleaned,SanitationGarbage accumulation near hospital,SanitationOpen drain causing hygiene issues,SanitationWaste collection vehicle skipped area,SanitationUnclean roadside garbage heap,SanitationDrain clogged after rainfall,SanitationOverflowing community dustbin,SanitationMosquito breeding due to stagnant sewage,SanitationGarbage scattered by stray animals,SanitationDirty public restroom,SanitationImproper waste disposal near lake,SanitationSewage water entering homes,SanitationAccumulated trash near playground,SanitationDrainage blockage near temple,SanitationOverflowing garbage bin in park,SanitationFoul smell from open drainage,SanitationWaste burning causing pollution,SanitationUnsanitary conditions near market,SanitationGarbage collection delayed,SanitationDrain cover missing with sewage exposure,SanitationWaste dumped near school gate,SanitationDirty drainage channel,SanitationTrash pile attracting pests,SanitationLarge pothole near bus stop,RoadsRoad damaged after heavy rain,RoadsCracked road surface near market,RoadsBroken speed breaker on main road,RoadsRoadside pavement damaged,RoadsUneven road causing accidents,RoadsPotholes near school entrance,RoadsRoad construction left unfinished,RoadsDamaged bridge approach road,RoadsRoad blocked by debris,RoadsBroken divider on highway,RoadsRoad shoulder erosion reported,RoadsDangerous pothole at junction,RoadsDamaged pedestrian crossing,RoadsCollapsed roadside pavement,RoadsRoad markings faded completely,RoadsBroken median barrier,RoadsDeep pothole near hospital,RoadsRoad flooded due to poor drainage,RoadsDamaged service road,RoadsLoose gravel causing skidding,RoadsRoad crack expanding rapidly,RoadsIncomplete road repair work,RoadsSunken road section near market,RoadsDamaged culvert affecting road,RoadsRoad obstruction due to construction,RoadsBroken footpath tiles,RoadsPoorly maintained village road,RoadsRoad surface peeling off,RoadsPothole causing traffic congestion,RoadsWater leakage from pipeline,WaterNo water supply in residential area,WaterBurst water pipe near junction,WaterLow water pressure in locality,WaterDrinking water contamination reported,WaterWater tank overflow in street,WaterLeakage from underground water line,WaterIrregular water supply in ward,WaterBroken public water tap,WaterWater wastage due to damaged valve,WaterPipeline leakage near school,WaterNo drinking water in community hall,WaterWater supply interrupted frequently,WaterContaminated water with bad smell,WaterWater meter leakage issue,WaterBroken overhead tank outlet,WaterWater overflowing from storage tank,WaterInsufficient water supply in area,WaterDamaged water connection pipe,WaterLeakage near water treatment line,WaterRusty water from household tap,WaterWaterlogging due to pipeline break,WaterPublic tap not functioning,WaterWater pressure too low at peak hours,WaterLeaking valve causing water loss,WaterBurst main water line,WaterWater supply delayed for several days,WaterContaminated borewell water,WaterBroken water distribution pipe,WaterOverflow from municipal water tank,WaterStreetlight not working,ElectricalPower outage in neighborhood,ElectricalTransformer damaged after rain,ElectricalElectric pole leaning dangerously,ElectricalStreetlights flickering continuously,ElectricalLoose electric wire hanging,ElectricalFrequent voltage fluctuations,ElectricalElectricity failure near market,ElectricalFaulty streetlight near park,ElectricalPower supply interruption in area,ElectricalBroken electric pole support,ElectricalTransformer emitting sparks,ElectricalStreetlight damaged by storm,ElectricalPower outage affecting hospital area,ElectricalExposed electrical wiring on road,ElectricalElectric cable hanging low,ElectricalRepeated tripping of power line,ElectricalStreetlight remains on during daytime,ElectricalVoltage too low in locality,ElectricalElectric junction box damaged,ElectricalPower transformer making noise,ElectricalBroken streetlight near bus stop,ElectricalElectrical pole damaged in accident,ElectricalShort circuit reported in street,ElectricalPower failure during night,ElectricalDangerous exposed cable,ElectricalStreetlight not functioning in park,ElectricalTransformer oil leakage,ElectricalFrequent electricity cuts,ElectricalElectric pole light not working,ElectricalStray dogs causing disturbance,OtherIllegal parking blocking road,OtherNoise pollution from construction,OtherAbandoned vehicle on street,OtherPublic park maintenance required,OtherUnauthorized street vending issue,OtherBroken public bench in park,OtherTraffic signal malfunction,OtherEncroachment on public pathway,OtherStreet name board damaged,OtherPlayground equipment damaged,OtherIllegal dumping of construction materials,OtherPublic fountain not working,OtherOvergrown vegetation in park,OtherDamaged bus shelter roof,OtherUnauthorized banner installation,OtherNoise from late night events,OtherBroken park lighting fixture,OtherTraffic sign missing at junction,OtherAbandoned cart on roadside,OtherStray cattle blocking traffic,OtherDamaged community center gate,OtherPublic clock tower not functioning,OtherIllegal occupation of footpath,OtherMissing road direction board,OtherDamaged seating area in public park,OtherCrowding due to street vendors,OtherPublic announcement system not working,OtherBroken fencing around playground,OtherImproper maintenance of community hall,Other
+complaint_text,category
+Garbage not collected in Bahour,Sanitation
+Stray dogs gathering near garbage dump in Villianur,Other
+Road surface near Ariyankuppam is damaged and causing traffic issues.,Roads
+Road damaged in Mudaliarpet,Roads
+Power outage in Muthialpet,Electrical
+Streetlights near Bahour remain off during night hours.,Electrical
+Garbage accumulation near White Town is creating hygiene problems.,Sanitation
+Streetlight not working in Beach Road,Electrical
+Pothole near Villianur,Roads
+Public property near Lawspet requires maintenance attention.,Other
+Road surface near Villianur is damaged and causing traffic issues.,Roads
+Water stagnation due to blocked drainage near Muthialpet,Sanitation
+Pipeline burst at Reddiarpalayam,Water
+Pipeline burst at Ariyankuppam,Water
+Streetlights near Mudaliarpet remain off during night hours.,Electrical
+Residents report low water pressure in Mudaliarpet for the last two days.,Water
+Residents report low water pressure in Muthialpet for the last two days.,Water
+Garbage accumulation near White Town is creating hygiene problems.,Sanitation
+Pothole near Lawspet,Roads
+Residents report low water pressure in Beach Road for the last two days.,Water
+Garbage accumulation near Muthialpet is creating hygiene problems.,Sanitation
+Streetlights near Beach Road remain off during night hours.,Electrical
+Electric pole damaged during road work near Beach Road,Electrical
+Electric pole damaged during road work near White Town,Electrical
+Garbage accumulation near Muthialpet is creating hygiene problems.,Sanitation
+Streetlights near Villianur remain off during night hours.,Electrical
+Road surface near Villianur is damaged and causing traffic issues.,Roads
+Stray dogs in Villianur,Other
+Streetlights near White Town remain off during night hours.,Electrical
+Water leakage near Oulgaret,Water
+Water stagnation due to blocked drainage near Muthialpet,Sanitation
+Road surface near Ariyankuppam is damaged and causing traffic issues.,Roads
+Road damaged in Beach Road,Roads
+Road damaged after water pipeline repair near Mudaliarpet,Roads
+Road surface near Bahour is damaged and causing traffic issues.,Roads
+"The road stretch near Muthialpet has developed multiple potholes after rainfall, making travel unsafe for commuters.",Roads
+Public property near Villianur requires maintenance attention.,Other
+Stray dogs gathering near garbage dump in Bahour,Other
+"Drainage water and waste have accumulated near Lawspet, causing foul smell and mosquito breeding.",Sanitation
+"The road stretch near Beach Road has developed multiple potholes after rainfall, making travel unsafe for commuters.",Roads
+Residents of White Town have been facing irregular drinking water supply after recent pipeline work and the issue remains unresolved.,Water
+Stray dogs gathering near garbage dump in Beach Road,Other
+Road surface near White Town is damaged and causing traffic issues.,Roads
+Public property near Villianur requires maintenance attention.,Other
+Residents report low water pressure in Reddiarpalayam for the last two days.,Water
+Streetlights near Villianur remain off during night hours.,Electrical
+Public property near Mudaliarpet requires maintenance attention.,Other
+Water stagnation due to blocked drainage near Reddiarpalayam,Sanitation
+Road surface near Reddiarpalayam is damaged and causing traffic issues.,Roads
+Public property near Lawspet requires maintenance attention.,Other
+Road damaged after water pipeline repair near Villianur,Roads
+Public property near Lawspet requires maintenance attention.,Other
+Public property near Muthialpet requires maintenance attention.,Other
+Water leakage near Muthialpet,Water
+Streetlights near Bahour remain off during night hours.,Electrical
+Streetlights near Reddiarpalayam remain off during night hours.,Electrical
+Frequent power fluctuations near White Town are affecting households and local businesses throughout the area.,Electrical
+Citizens have raised concerns about public infrastructure maintenance near White Town and are requesting immediate action.,Other
+Citizens have raised concerns about public infrastructure maintenance near Muthialpet and are requesting immediate action.,Other
+Residents report low water pressure in Oulgaret for the last two days.,Water
+Water stagnation due to blocked drainage near Beach Road,Sanitation
+Frequent power fluctuations near Bahour are affecting households and local businesses throughout the area.,Electrical
+Streetlights near Mudaliarpet remain off during night hours.,Electrical
+Pothole near Reddiarpalayam,Roads
+Streetlights near Oulgaret remain off during night hours.,Electrical
+Water leakage near Reddiarpalayam,Water
+Streetlights near Muthialpet remain off during night hours.,Electrical
+Park maintenance needed in Bahour,Other
+Road surface near Muthialpet is damaged and causing traffic issues.,Roads
+Road damaged in Villianur,Roads
+Residents report low water pressure in Oulgaret for the last two days.,Water
+"The road stretch near Ariyankuppam has developed multiple potholes after rainfall, making travel unsafe for commuters.",Roads
+Garbage accumulation near Ariyankuppam is creating hygiene problems.,Sanitation
+Pothole near Reddiarpalayam,Roads
+Water leakage near White Town,Water
+Stray dogs in Muthialpet,Other
+Garbage accumulation near Ariyankuppam is creating hygiene problems.,Sanitation
+Garbage accumulation near Muthialpet is creating hygiene problems.,Sanitation
+Garbage not collected in Muthialpet,Sanitation
+Residents report low water pressure in Beach Road for the last two days.,Water
+Residents report low water pressure in Lawspet for the last two days.,Water
+Public property near Beach Road requires maintenance attention.,Other
+Garbage not collected in Beach Road,Sanitation
+Road surface near Oulgaret is damaged and causing traffic issues.,Roads
+Water stagnation due to blocked drainage near Reddiarpalayam,Sanitation
+Garbage accumulation near Reddiarpalayam is creating hygiene problems.,Sanitation
+Garbage accumulation near White Town is creating hygiene problems.,Sanitation
+Road surface near Oulgaret is damaged and causing traffic issues.,Roads
+Garbage accumulation near Muthialpet is creating hygiene problems.,Sanitation
+Electric pole damaged during road work near Mudaliarpet,Electrical
+Park maintenance needed in Muthialpet,Other
+Blocked sewage near Mudaliarpet,Sanitation
+Road surface near Bahour is damaged and causing traffic issues.,Roads
+Drainage overflow in Muthialpet,Sanitation
+Road surface near Muthialpet is damaged and causing traffic issues.,Roads
+Residents report low water pressure in Bahour for the last two days.,Water
+Streetlight not working in Bahour,Electrical
+Blocked sewage near Lawspet,Sanitation
+Road surface near Bahour is damaged and causing traffic issues.,Roads
+Road surface near Lawspet is damaged and causing traffic issues.,Roads
+Public property near Muthialpet requires maintenance attention.,Other
+Residents report low water pressure in Reddiarpalayam for the last two days.,Water
+Road surface near Oulgaret is damaged and causing traffic issues.,Roads
+Road surface near Beach Road is damaged and causing traffic issues.,Roads
+Garbage accumulation near Reddiarpalayam is creating hygiene problems.,Sanitation
+Electric pole damaged during road work near Muthialpet,Electrical
+Water leakage near Oulgaret,Water
+Frequent power fluctuations near Reddiarpalayam are affecting households and local businesses throughout the area.,Electrical
+Residents of Muthialpet have been facing irregular drinking water supply after recent pipeline work and the issue remains unresolved.,Water
+Citizens have raised concerns about public infrastructure maintenance near Beach Road and are requesting immediate action.,Other
+Streetlights near Reddiarpalayam remain off during night hours.,Electrical
+No water supply in Beach Road,Water
+Stray dogs in Lawspet,Other
+Residents report low water pressure in Oulgaret for the last two days.,Water
+Streetlights near Reddiarpalayam remain off during night hours.,Electrical
+Stray dogs in White Town,Other
+Residents report low water pressure in Ariyankuppam for the last two days.,Water
+Garbage not collected in Beach Road,Sanitation
+Road surface near Ariyankuppam is damaged and causing traffic issues.,Roads
+Frequent power fluctuations near White Town are affecting households and local businesses throughout the area.,Electrical
+Streetlights near Bahour remain off during night hours.,Electrical
+Citizens have raised concerns about public infrastructure maintenance near Muthialpet and are requesting immediate action.,Other
+Road surface near Lawspet is damaged and causing traffic issues.,Roads
+"Drainage water and waste have accumulated near Mudaliarpet, causing foul smell and mosquito breeding.",Sanitation
+Public property near White Town requires maintenance attention.,Other
+"The road stretch near White Town has developed multiple potholes after rainfall, making travel unsafe for commuters.",Roads
+Streetlights near Ariyankuppam remain off during night hours.,Electrical
+"Drainage water and waste have accumulated near Oulgaret, causing foul smell and mosquito breeding.",Sanitation
+Garbage accumulation near White Town is creating hygiene problems.,Sanitation
+Public property near White Town requires maintenance attention.,Other
+Public property near Oulgaret requires maintenance attention.,Other
+Road surface near Oulgaret is damaged and causing traffic issues.,Roads
+Stray dogs in Oulgaret,Other
+Public property near Lawspet requires maintenance attention.,Other
+Public property near Oulgaret requires maintenance attention.,Other
+Water leakage near Bahour,Water
+Water pipe leaking onto road near Villianur,Water
+Public property near Oulgaret requires maintenance attention.,Other
+Frequent power fluctuations near White Town are affecting households and local businesses throughout the area.,Electrical
+Garbage accumulation near Ariyankuppam is creating hygiene problems.,Sanitation
+Pipeline burst at Beach Road,Water
+Water leakage near Oulgaret,Water
+Frequent power fluctuations near White Town are affecting households and local businesses throughout the area.,Electrical
+Citizens have raised concerns about public infrastructure maintenance near Oulgaret and are requesting immediate action.,Other
+Road surface near Lawspet is damaged and causing traffic issues.,Roads
+Road damaged in Oulgaret,Roads
+Water pipe leaking onto road near Beach Road,Water
+Transformer issue near Ariyankuppam,Electrical
+Electric pole damaged during road work near White Town,Electrical
+Drainage overflow in Mudaliarpet,Sanitation
+Public property near Beach Road requires maintenance attention.,Other
+Garbage accumulation near Bahour is creating hygiene problems.,Sanitation
+Public property near Villianur requires maintenance attention.,Other
+Broken speed breaker at Mudaliarpet,Roads
+Streetlights near Reddiarpalayam remain off during night hours.,Electrical
+Streetlights near Ariyankuppam remain off during night hours.,Electrical
+Public property near White Town requires maintenance attention.,Other
+"Drainage water and waste have accumulated near Mudaliarpet, causing foul smell and mosquito breeding.",Sanitation
+Noise complaint in Oulgaret,Other
+Park maintenance needed in Bahour,Other
+Garbage accumulation near Lawspet is creating hygiene problems.,Sanitation
+Road damaged after water pipeline repair near Oulgaret,Roads
+Water pipe leaking onto road near Mudaliarpet,Water
+Drainage overflow in Oulgaret,Sanitation
+Transformer issue near Villianur,Electrical
+Garbage accumulation near Bahour is creating hygiene problems.,Sanitation
+"Drainage water and waste have accumulated near Bahour, causing foul smell and mosquito breeding.",Sanitation
+Public property near Muthialpet requires maintenance attention.,Other
+Frequent power fluctuations near Ariyankuppam are affecting households and local businesses throughout the area.,Electrical
+Streetlights near Mudaliarpet remain off during night hours.,Electrical
+Water stagnation due to blocked drainage near Ariyankuppam,Sanitation
+Road damaged in Mudaliarpet,Roads
+Water pipe leaking onto road near Mudaliarpet,Water
+Residents of Bahour have been facing irregular drinking water supply after recent pipeline work and the issue remains unresolved.,Water
+Road surface near Bahour is damaged and causing traffic issues.,Roads
+Electric pole damaged during road work near Bahour,Electrical
+Drainage overflow in White Town,Sanitation
+Road surface near Mudaliarpet is damaged and causing traffic issues.,Roads
+Public property near Beach Road requires maintenance attention.,Other
+Public property near Bahour requires maintenance attention.,Other
+Public property near Beach Road requires maintenance attention.,Other
+Road surface near Oulgaret is damaged and causing traffic issues.,Roads
+Public property near Villianur requires maintenance attention.,Other
+Road surface near Villianur is damaged and causing traffic issues.,Roads
+Road surface near Muthialpet is damaged and causing traffic issues.,Roads
+Stray dogs gathering near garbage dump in Muthialpet,Other
+Pipeline burst at Reddiarpalayam,Water
+Public property near Beach Road requires maintenance attention.,Other
+Road damaged in Mudaliarpet,Roads
+Residents report low water pressure in Lawspet for the last two days.,Water
+Garbage accumulation near Oulgaret is creating hygiene problems.,Sanitation
+Water pipe leaking onto road near Villianur,Water
+Road damaged after water pipeline repair near Beach Road,Roads
+Road surface near Mudaliarpet is damaged and causing traffic issues.,Roads
+Public property near Bahour requires maintenance attention.,Other
+Water stagnation due to blocked drainage near Lawspet,Sanitation
+Park maintenance needed in Beach Road,Other
+Electric pole damaged during road work near Mudaliarpet,Electrical
+Garbage accumulation near Reddiarpalayam is creating hygiene problems.,Sanitation
+Pothole near Mudaliarpet,Roads
+Streetlight not working in Muthialpet,Electrical
+Park maintenance needed in Mudaliarpet,Other
+Water leakage near Villianur,Water
+Road damaged after water pipeline repair near Bahour,Roads
+Garbage accumulation near Villianur is creating hygiene problems.,Sanitation
+Power outage in Villianur,Electrical
+Public property near Muthialpet requires maintenance attention.,Other
+Public property near Muthialpet requires maintenance attention.,Other
+Streetlight not working in Lawspet,Electrical
+Frequent power fluctuations near White Town are affecting households and local businesses throughout the area.,Electrical
+Road surface near Oulgaret is damaged and causing traffic issues.,Roads
+Electric pole damaged during road work near Ariyankuppam,Electrical
+Drainage overflow in White Town,Sanitation
+Residents report low water pressure in Lawspet for the last two days.,Water
+"Drainage water and waste have accumulated near Muthialpet, causing foul smell and mosquito breeding.",Sanitation
+Garbage accumulation near White Town is creating hygiene problems.,Sanitation
+Streetlights near Muthialpet remain off during night hours.,Electrical
+"The road stretch near Beach Road has developed multiple potholes after rainfall, making travel unsafe for commuters.",Roads
+Citizens have raised concerns about public infrastructure maintenance near Mudaliarpet and are requesting immediate action.,Other
+Streetlight not working in Beach Road,Electrical
+"The road stretch near Villianur has developed multiple potholes after rainfall, making travel unsafe for commuters.",Roads
+Electric pole damaged during road work near Oulgaret,Electrical
+Transformer issue near Mudaliarpet,Electrical
+Frequent power fluctuations near Muthialpet are affecting households and local businesses throughout the area.,Electrical
+Residents report low water pressure in Bahour for the last two days.,Water
+Road damaged after water pipeline repair near Mudaliarpet,Roads
+Garbage accumulation near Villianur is creating hygiene problems.,Sanitation
+Road surface near Reddiarpalayam is damaged and causing traffic issues.,Roads
+Water pipe leaking onto road near Lawspet,Water
+Road damaged in Bahour,Roads
+Garbage not collected in Beach Road,Sanitation
+Streetlights near Lawspet remain off during night hours.,Electrical
+Pothole near Villianur,Roads
+Garbage accumulation near Muthialpet is creating hygiene problems.,Sanitation
+Noise complaint in Villianur,Other
+Road surface near Beach Road is damaged and causing traffic issues.,Roads
+Frequent power fluctuations near Beach Road are affecting households and local businesses throughout the area.,Electrical
+Transformer issue near Muthialpet,Electrical
+Road damaged in White Town,Roads
+Public property near Muthialpet requires maintenance attention.,Other
+"Drainage water and waste have accumulated near Mudaliarpet, causing foul smell and mosquito breeding.",Sanitation
+Residents report low water pressure in Mudaliarpet for the last two days.,Water
+Stray dogs gathering near garbage dump in Oulgaret,Other
+Residents of Muthialpet have been facing irregular drinking water supply after recent pipeline work and the issue remains unresolved.,Water
+Garbage accumulation near Muthialpet is creating hygiene problems.,Sanitation
+Road surface near Villianur is damaged and causing traffic issues.,Roads
+Pipeline burst at Muthialpet,Water
+Public property near Lawspet requires maintenance attention.,Other
+Water leakage near Ariyankuppam,Water
+Public property near Oulgaret requires maintenance attention.,Other
+Road damaged after water pipeline repair near Ariyankuppam,Roads
+Road surface near White Town is damaged and causing traffic issues.,Roads
+Residents of Bahour have been facing irregular drinking water supply after recent pipeline work and the issue remains unresolved.,Water
+Stray dogs gathering near garbage dump in Muthialpet,Other
+Public property near Ariyankuppam requires maintenance attention.,Other
+"Drainage water and waste have accumulated near Ariyankuppam, causing foul smell and mosquito breeding.",Sanitation
+Water leakage near Muthialpet,Water
+Residents report low water pressure in Ariyankuppam for the last two days.,Water
+Garbage accumulation near Ariyankuppam is creating hygiene problems.,Sanitation
+Water pipe leaking onto road near Bahour,Water
+"The road stretch near Villianur has developed multiple potholes after rainfall, making travel unsafe for commuters.",Roads
+Garbage accumulation near White Town is creating hygiene problems.,Sanitation
+Water stagnation due to blocked drainage near White Town,Sanitation
+"Drainage water and waste have accumulated near Villianur, causing foul smell and mosquito breeding.",Sanitation
+No water supply in Muthialpet,Water
+Garbage accumulation near White Town is creating hygiene problems.,Sanitation
+Broken speed breaker at Muthialpet,Roads
+Residents report low water pressure in Lawspet for the last two days.,Water
+Road damaged in White Town,Roads
+Streetlights near Mudaliarpet remain off during night hours.,Electrical
+Residents report low water pressure in Villianur for the last two days.,Water
+Streetlights near Mudaliarpet remain off during night hours.,Electrical
+Streetlights near White Town remain off during night hours.,Electrical
+Residents report low water pressure in Beach Road for the last two days.,Water
+Garbage not collected in Mudaliarpet,Sanitation
+Citizens have raised concerns about public infrastructure maintenance near Oulgaret and are requesting immediate action.,Other
+Citizens have raised concerns about public infrastructure maintenance near Ariyankuppam and are requesting immediate action.,Other
+Water leakage near Lawspet,Water
+Pipeline burst at Beach Road,Water
+Road surface near White Town is damaged and causing traffic issues.,Roads
+Stray dogs in Oulgaret,Other
+Road surface near White Town is damaged and causing traffic issues.,Roads
+Pipeline burst at Bahour,Water
+Citizens have raised concerns about public infrastructure maintenance near Ariyankuppam and are requesting immediate action.,Other
+Public property near Reddiarpalayam requires maintenance attention.,Other
+Streetlights near Beach Road remain off during night hours.,Electrical
+Water pipe leaking onto road near Oulgaret,Water
+Broken speed breaker at Muthialpet,Roads
+Road damaged in Lawspet,Roads
+Water pipe leaking onto road near Bahour,Water
+Pipeline burst at White Town,Water
+Residents report low water pressure in Muthialpet for the last two days.,Water
+Public property near Bahour requires maintenance attention.,Other
+Public property near Muthialpet requires maintenance attention.,Other
+Residents report low water pressure in Mudaliarpet for the last two days.,Water
+Blocked sewage near White Town,Sanitation
+Road surface near Oulgaret is damaged and causing traffic issues.,Roads
+Public property near Bahour requires maintenance attention.,Other
+Water stagnation due to blocked drainage near Villianur,Sanitation
+Residents of Muthialpet have been facing irregular drinking water supply after recent pipeline work and the issue remains unresolved.,Water
+Water pipe leaking onto road near Oulgaret,Water
+Residents report low water pressure in Villianur for the last two days.,Water
+Road surface near Beach Road is damaged and causing traffic issues.,Roads
+Residents of Oulgaret have been facing irregular drinking water supply after recent pipeline work and the issue remains unresolved.,Water
+"The road stretch near Lawspet has developed multiple potholes after rainfall, making travel unsafe for commuters.",Roads
+Transformer issue near Mudaliarpet,Electrical
+Electric pole damaged during road work near Beach Road,Electrical
+Electric pole damaged during road work near White Town,Electrical
+Road surface near Bahour is damaged and causing traffic issues.,Roads
+"Drainage water and waste have accumulated near Reddiarpalayam, causing foul smell and mosquito breeding.",Sanitation
+Citizens have raised concerns about public infrastructure maintenance near Muthialpet and are requesting immediate action.,Other
+"Drainage water and waste have accumulated near Oulgaret, causing foul smell and mosquito breeding.",Sanitation
+Residents report low water pressure in Reddiarpalayam for the last two days.,Water
+"Drainage water and waste have accumulated near Mudaliarpet, causing foul smell and mosquito breeding.",Sanitation
+No water supply in Ariyankuppam,Water
+Drainage overflow in White Town,Sanitation
+Power outage in Villianur,Electrical
+Road damaged in Villianur,Roads
+Residents of Muthialpet have been facing irregular drinking water supply after recent pipeline work and the issue remains unresolved.,Water
+Garbage accumulation near Reddiarpalayam is creating hygiene problems.,Sanitation
+Residents report low water pressure in Villianur for the last two days.,Water
+Transformer issue near White Town,Electrical
+Road damaged after water pipeline repair near Muthialpet,Roads
+Road surface near Mudaliarpet is damaged and causing traffic issues.,Roads
+Park maintenance needed in Lawspet,Other
+Residents of Beach Road have been facing irregular drinking water supply after recent pipeline work and the issue remains unresolved.,Water
+Citizens have raised concerns about public infrastructure maintenance near Mudaliarpet and are requesting immediate action.,Other
+Residents report low water pressure in Oulgaret for the last two days.,Water
+Streetlights near Beach Road remain off during night hours.,Electrical
+Road damaged after water pipeline repair near Bahour,Roads
+Stray dogs gathering near garbage dump in Lawspet,Other
+Electric pole damaged during road work near Beach Road,Electrical
+Garbage accumulation near Beach Road is creating hygiene problems.,Sanitation
+Streetlight not working in White Town,Electrical
+Stray dogs gathering near garbage dump in Lawspet,Other
+Road surface near Beach Road is damaged and causing traffic issues.,Roads
+Public property near Ariyankuppam requires maintenance attention.,Other
+Road damaged after water pipeline repair near Muthialpet,Roads
+Road damaged in Beach Road,Roads
+Pipeline burst at Bahour,Water
+Drainage overflow in Bahour,Sanitation
+Streetlights near White Town remain off during night hours.,Electrical
+Streetlights near Oulgaret remain off during night hours.,Electrical
+Garbage accumulation near Villianur is creating hygiene problems.,Sanitation
+Road damaged after water pipeline repair near Villianur,Roads
+Water stagnation due to blocked drainage near Mudaliarpet,Sanitation
+"Drainage water and waste have accumulated near Ariyankuppam, causing foul smell and mosquito breeding.",Sanitation
+Water stagnation due to blocked drainage near Villianur,Sanitation
+Stray dogs gathering near garbage dump in White Town,Other
+Garbage accumulation near Lawspet is creating hygiene problems.,Sanitation
+Broken speed breaker at Beach Road,Roads
+"Drainage water and waste have accumulated near Muthialpet, causing foul smell and mosquito breeding.",Sanitation
+Public property near Ariyankuppam requires maintenance attention.,Other
+Road surface near Muthialpet is damaged and causing traffic issues.,Roads
+Streetlights near Muthialpet remain off during night hours.,Electrical
+Broken speed breaker at Ariyankuppam,Roads
+Drainage overflow in Reddiarpalayam,Sanitation
+Water pipe leaking onto road near White Town,Water
+Water stagnation due to blocked drainage near Ariyankuppam,Sanitation
+Garbage not collected in Mudaliarpet,Sanitation
+Broken speed breaker at Reddiarpalayam,Roads
+Stray dogs in Ariyankuppam,Other
+Road damaged after water pipeline repair near Beach Road,Roads
+Garbage accumulation near White Town is creating hygiene problems.,Sanitation
+Residents report low water pressure in Villianur for the last two days.,Water
+Water stagnation due to blocked drainage near Ariyankuppam,Sanitation
+Residents of Lawspet have been facing irregular drinking water supply after recent pipeline work and the issue remains unresolved.,Water
+Power outage in White Town,Electrical
+Public property near Muthialpet requires maintenance attention.,Other
+Citizens have raised concerns about public infrastructure maintenance near Lawspet and are requesting immediate action.,Other
+Residents report low water pressure in White Town for the last two days.,Water
+Residents of Mudaliarpet have been facing irregular drinking water supply after recent pipeline work and the issue remains unresolved.,Water
+Citizens have raised concerns about public infrastructure maintenance near Lawspet and are requesting immediate action.,Other
+Frequent power fluctuations near Ariyankuppam are affecting households and local businesses throughout the area.,Electrical
+Pipeline burst at Muthialpet,Water
+Streetlights near Reddiarpalayam remain off during night hours.,Electrical
+Drainage overflow in Ariyankuppam,Sanitation
+Frequent power fluctuations near Lawspet are affecting households and local businesses throughout the area.,Electrical
+No water supply in Bahour,Water
+Public property near Ariyankuppam requires maintenance attention.,Other
+Public property near Villianur requires maintenance attention.,Other
+Streetlights near Mudaliarpet remain off during night hours.,Electrical
+Water stagnation due to blocked drainage near Lawspet,Sanitation
+Residents report low water pressure in Mudaliarpet for the last two days.,Water
+Pothole near Mudaliarpet,Roads
+Water leakage near Muthialpet,Water
+Residents report low water pressure in Mudaliarpet for the last two days.,Water
+Water leakage near White Town,Water
+Road surface near Reddiarpalayam is damaged and causing traffic issues.,Roads
+"The road stretch near Oulgaret has developed multiple potholes after rainfall, making travel unsafe for commuters.",Roads
+Garbage accumulation near Mudaliarpet is creating hygiene problems.,Sanitation
+Garbage accumulation near Oulgaret is creating hygiene problems.,Sanitation
+Road surface near Beach Road is damaged and causing traffic issues.,Roads
+Road surface near White Town is damaged and causing traffic issues.,Roads
+Electric pole damaged during road work near White Town,Electrical
+Park maintenance needed in Villianur,Other
+No water supply in Mudaliarpet,Water
+Garbage accumulation near Bahour is creating hygiene problems.,Sanitation
+Power outage in Muthialpet,Electrical
+Garbage accumulation near Mudaliarpet is creating hygiene problems.,Sanitation
+Citizens have raised concerns about public infrastructure maintenance near Bahour and are requesting immediate action.,Other
+Road damaged after water pipeline repair near Oulgaret,Roads
+Pipeline burst at Reddiarpalayam,Water
+Streetlights near Mudaliarpet remain off during night hours.,Electrical
+Public property near Mudaliarpet requires maintenance attention.,Other
+Electric pole damaged during road work near Muthialpet,Electrical
+Public property near Lawspet requires maintenance attention.,Other
+Public property near Mudaliarpet requires maintenance attention.,Other
+Residents report low water pressure in Ariyankuppam for the last two days.,Water
+Water stagnation due to blocked drainage near Bahour,Sanitation
+Electric pole damaged during road work near White Town,Electrical
+Frequent power fluctuations near White Town are affecting households and local businesses throughout the area.,Electrical
+Blocked sewage near Reddiarpalayam,Sanitation
+Streetlights near Oulgaret remain off during night hours.,Electrical
+Public property near Oulgaret requires maintenance attention.,Other
+Water stagnation due to blocked drainage near Ariyankuppam,Sanitation
+Stray dogs gathering near garbage dump in Ariyankuppam,Other
+Water pipe leaking onto road near Mudaliarpet,Water
+Residents of White Town have been facing irregular drinking water supply after recent pipeline work and the issue remains unresolved.,Water
+Garbage accumulation near Muthialpet is creating hygiene problems.,Sanitation
+Road damaged after water pipeline repair near Ariyankuppam,Roads
+Public property near Oulgaret requires maintenance attention.,Other
+Streetlights near Bahour remain off during night hours.,Electrical
+"The road stretch near Villianur has developed multiple potholes after rainfall, making travel unsafe for commuters.",Roads
+Garbage accumulation near Ariyankuppam is creating hygiene problems.,Sanitation
+Residents of White Town have been facing irregular drinking water supply after recent pipeline work and the issue remains unresolved.,Water
+Streetlights near Mudaliarpet remain off during night hours.,Electrical
+Streetlights near Oulgaret remain off during night hours.,Electrical
+Residents of Mudaliarpet have been facing irregular drinking water supply after recent pipeline work and the issue remains unresolved.,Water
+Garbage accumulation near Villianur is creating hygiene problems.,Sanitation
+Residents of Reddiarpalayam have been facing irregular drinking water supply after recent pipeline work and the issue remains unresolved.,Water
+Frequent power fluctuations near Muthialpet are affecting households and local businesses throughout the area.,Electrical
+Frequent power fluctuations near Lawspet are affecting households and local businesses throughout the area.,Electrical
+Public property near White Town requires maintenance attention.,Other
+"The road stretch near Muthialpet has developed multiple potholes after rainfall, making travel unsafe for commuters.",Roads
+Broken speed breaker at Mudaliarpet,Roads
+Drainage overflow in Oulgaret,Sanitation
+Water pipe leaking onto road near Reddiarpalayam,Water
+Transformer issue near Muthialpet,Electrical
+No water supply in Muthialpet,Water
+"The road stretch near Bahour has developed multiple potholes after rainfall, making travel unsafe for commuters.",Roads
+Water leakage near Muthialpet,Water
+Garbage accumulation near Ariyankuppam is creating hygiene problems.,Sanitation
+Power outage in Oulgaret,Electrical
+Streetlights near Oulgaret remain off during night hours.,Electrical
+Public property near Ariyankuppam requires maintenance attention.,Other
+Residents of Reddiarpalayam have been facing irregular drinking water supply after recent pipeline work and the issue remains unresolved.,Water
+Frequent power fluctuations near White Town are affecting households and local businesses throughout the area.,Electrical
+Citizens have raised concerns about public infrastructure maintenance near Beach Road and are requesting immediate action.,Other
+"Drainage water and waste have accumulated near Ariyankuppam, causing foul smell and mosquito breeding.",Sanitation
+Public property near Bahour requires maintenance attention.,Other
+"Drainage water and waste have accumulated near Oulgaret, causing foul smell and mosquito breeding.",Sanitation
+Garbage accumulation near Oulgaret is creating hygiene problems.,Sanitation
+"The road stretch near Beach Road has developed multiple potholes after rainfall, making travel unsafe for commuters.",Roads
+Garbage accumulation near Lawspet is creating hygiene problems.,Sanitation
+Garbage accumulation near Mudaliarpet is creating hygiene problems.,Sanitation
+Residents report low water pressure in Lawspet for the last two days.,Water
+Streetlights near Bahour remain off during night hours.,Electrical
+Transformer issue near Muthialpet,Electrical
+Streetlights near Oulgaret remain off during night hours.,Electrical
+Stray dogs gathering near garbage dump in Ariyankuppam,Other
+Garbage accumulation near White Town is creating hygiene problems.,Sanitation
+Stray dogs in Ariyankuppam,Other
+Road surface near Ariyankuppam is damaged and causing traffic issues.,Roads
+Residents report low water pressure in Reddiarpalayam for the last two days.,Water
+Road surface near Ariyankuppam is damaged and causing traffic issues.,Roads
+Streetlights near Muthialpet remain off during night hours.,Electrical
+Streetlight not working in Ariyankuppam,Electrical
+Residents report low water pressure in Beach Road for the last two days.,Water
+Public property near Villianur requires maintenance attention.,Other
+Drainage overflow in Bahour,Sanitation
+Water pipe leaking onto road near Villianur,Water
+Water stagnation due to blocked drainage near Bahour,Sanitation
+Citizens have raised concerns about public infrastructure maintenance near Reddiarpalayam and are requesting immediate action.,Other
+Residents of Reddiarpalayam have been facing irregular drinking water supply after recent pipeline work and the issue remains unresolved.,Water
+Electric pole damaged during road work near Oulgaret,Electrical
+Water leakage near Bahour,Water
+Residents report low water pressure in Villianur for the last two days.,Water
+Streetlights near Muthialpet remain off during night hours.,Electrical
+Garbage not collected in Mudaliarpet,Sanitation
+Streetlights near Muthialpet remain off during night hours.,Electrical
+Road surface near White Town is damaged and causing traffic issues.,Roads
+Road surface near Reddiarpalayam is damaged and causing traffic issues.,Roads
+Frequent power fluctuations near Reddiarpalayam are affecting households and local businesses throughout the area.,Electrical
+Frequent power fluctuations near White Town are affecting households and local businesses throughout the area.,Electrical
+Noise complaint in Reddiarpalayam,Other
+Water stagnation due to blocked drainage near Bahour,Sanitation
+Garbage accumulation near Mudaliarpet is creating hygiene problems.,Sanitation
+Residents report low water pressure in Oulgaret for the last two days.,Water
+Water stagnation due to blocked drainage near Ariyankuppam,Sanitation
+Citizens have raised concerns about public infrastructure maintenance near Muthialpet and are requesting immediate action.,Other
+Public property near Ariyankuppam requires maintenance attention.,Other
+Stray dogs gathering near garbage dump in Bahour,Other
+Streetlights near Mudaliarpet remain off during night hours.,Electrical
+Power outage in Lawspet,Electrical
+Garbage not collected in White Town,Sanitation
+"Drainage water and waste have accumulated near Villianur, causing foul smell and mosquito breeding.",Sanitation
+Frequent power fluctuations near Villianur are affecting households and local businesses throughout the area.,Electrical
+Streetlights near White Town remain off during night hours.,Electrical
+Streetlights near Bahour remain off during night hours.,Electrical
