@@ -3,12 +3,13 @@ import ComplaintCard from "../../components/ComplaintCard";
 const mockComplaints = [
   {
     id: "CP001",
-    title: "Garbage Accumulation",
+    title: "Garbage not collected near market",
     category: "Sanitation",
     urgency: "High",
     status: "Pending",
     date: "2026-06-12",
-    location: "Tiruppur, Ward 4"
+    location: "Puducherry — Anna Nagar",
+    description: "Garbage has not been collected for 5 days."
   },
   {
     id: "CP002",
@@ -17,7 +18,18 @@ const mockComplaints = [
     urgency: "Medium",
     status: "In Progress",
     date: "2026-06-13",
-    location: "Coimbatore, RS Puram"
+    location: "Karaikal — Main Street",
+    description: "Large pothole causing risk to two-wheelers."
+  },
+  {
+    id: "CP003",
+    title: "Streetlight not working",
+    category: "Electrical",
+    urgency: "Low",
+    status: "Resolved",
+    date: "2026-06-11",
+    location: "Mahe — Bus Stand Road",
+    description: "Streetlight non-functional for a week."
   }
 ];
 
@@ -26,15 +38,20 @@ export default function ComplaintTracker() {
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-3xl mx-auto">
 
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">
-          My Complaints
-        </h2>
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-gray-800">
+            My Complaints
+          </h2>
+          <p className="text-sm text-gray-500 mt-1">
+            Track all your submitted complaints
+          </p>
+        </div>
 
         <div className="flex flex-col gap-4">
           {mockComplaints.map((complaint) => (
             <ComplaintCard
               key={complaint.id}
-              {...complaint}
+              complaint={complaint}
             />
           ))}
         </div>
