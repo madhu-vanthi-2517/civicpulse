@@ -1,61 +1,80 @@
+import { useState, useEffect } from "react";
+import { useAuth } from "../../context/AuthContext";
+import { api } from "../../api";
 import ComplaintCard from "../../components/ComplaintCard";
 
-const mockComplaints = [
-  {
-    id: "CP001",
-    title: "Garbage not collected near market",
-    category: "Sanitation",
-    urgency: "High",
-    status: "Pending",
-    date: "2026-06-12",
-    location: "Puducherry — Anna Nagar",
-    description: "Garbage has not been collected for 5 days."
-  },
-  {
-    id: "CP002",
-    title: "Pothole on MG Road",
-    category: "Roads",
-    urgency: "Medium",
-    status: "In Progress",
-    date: "2026-06-13",
-    location: "Karaikal — Main Street",
-    description: "Large pothole causing risk to two-wheelers."
-  },
-  {
-    id: "CP003",
-    title: "Streetlight not working",
-    category: "Electrical",
-    urgency: "Low",
-    status: "Resolved",
-    date: "2026-06-11",
-    location: "Mahe — Bus Stand Road",
-    description: "Streetlight non-functional for a week."
-  }
-];
-
 export default function ComplaintTracker() {
+  const [complaints, setComplaints] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const { token } = useAuth();
+
+  useEffect(() => {
+    const fetchComplaints = async () => {
+      try {
+        const data = await api.getComplaints(token);
+        if (Array.isArray(data)) {
+          setComplaints(data);
+        } else {
+          setError("Failed to load complaints");
+        }
+      } catch (err) {
+        setError("Cannot connect to server.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchComplaints();
+  }, [token]);
+
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-3xl mx-auto">
-
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-gray-800">
             My Complaints
           </h2>
           <p className="text-sm text-gray-500 mt-1">
-            Track all your submitted complaints
+            All complaints submitted by you
           </p>
         </div>
 
+        {loading && (
+          <p className="text-center text-gray-400 py-8">
+            Loading complaints...
+          </p>
+        )}
+
+        {error && (
+          <p className="text-center text-red-500 py-8">
+            {error}
+          </p>
+        )}
+
+        {!loading && !error && complaints.length === 0 && (
+          <div className="text-center py-16 text-gray-400">
+            <p className="text-lg">
+              No complaints submitted yet.
+            </p>
+            <a href="/submit"
+               className="text-blue-600 text-sm mt-2
+                          hover:underline block">
+              Submit your first complaint →
+            </a>
+          </div>
+        )}
+
         <div className="flex flex-col gap-4">
-          {mockComplaints.map((complaint) => (
+          {complaints.map((complaint) => (
             <ComplaintCard
               key={complaint.id}
-              complaint={complaint}
+              complaint={{
+                ...complaint,
+                location: `${complaint.district} — ${complaint.area}`
+              }}
             />
           ))}
         </div>
-
       </div>
     </div>
   );
