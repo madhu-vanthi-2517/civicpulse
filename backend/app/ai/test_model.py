@@ -6,12 +6,24 @@ samples = [
     "Road full of potholes near bus stand",
     "Water leakage near school",
     "Streetlight not working in my area",
-    "Stray dogs creating nuisance"
+    "Stray dogs creating nuisance",
+    "Transformer caught fire near hospital",
+    "Overflowing drainage near Muthialpet",
+    "Broken road near Villianur bus stand",
+    "No water supply in Lawspet",
+    "Streetlights not functioning near Beach Road"
 ]
 
 
 for complaint in samples:
-    category = classify_complaint(complaint)
 
-    print(f"\nComplaint: {complaint}")
-    print(f"Predicted Category: {category}")
+    result = classify_complaint(complaint)
+
+    print("\n====================================")
+    print("Complaint:")
+    print(complaint)
+
+    print("\nPrediction:")
+    print("Category  :", result["category"])
+    print("Urgency   :", result["urgency"])
+    print("Department:", result["department"])

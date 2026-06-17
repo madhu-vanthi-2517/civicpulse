@@ -1,0 +1,9 @@
+{
+  "categories": {
+    "pothole": "Road Department",
+    "streetlight_broken": "Electricity Board",
+    "water_leakage": "Water Board",
+    "sanitation": "Municipal Corporation",
+    "other": "General Department"
+  }
+}

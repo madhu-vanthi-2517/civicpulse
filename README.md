@@ -20,31 +20,70 @@ CivicPulse is an open-source, AI-powered grievance platform that:
 - Routes complaints to the proper municipal  department
 - Offers real-time public status visibility
 - Provides authorities with an analytics dashboard to identify problem areas
+
+ ## Architecture
+![CivicPulse system architecture](./docs/architecture.png)
+
+
+## How a complaint flows through the system
+
+1. Citizen submits complaint text via React form
+2. FastAPI receives it and calls the AI pipeline
+3. Scikit-Learn classifies → returns Category, Urgency, Department
+4. All fields saved to PostgreSQL database
+5. Authority sees complaint on dashboard
+6. Authority updates status → Pending to Resolved
+7. Citizen tracks status on Public Tracker
+
+   
+## Citizen journey
+![Citizen and Authority User Flow](./docs/user_flow.png)
     
 ## Tech Stack
 
-| Component       | Tool                        |
-|-----------------|-----------------------------|
-| Frontend        | React + Tailwind CSS        |
-| Backend         | FastAPI                     |
-| Database        | PostgreSQL                  |
-| AI / ML         | Scikit-Learn                |
-| Maps            | OpenStreetMap (Leaflet.js)  |
-| Version Control | GitHub                      |
-| License         | MIT                         |
+| Component | Tool | Purpose |
+|-----------|------|---------|
+| Frontend framework | React 18 + Vite | Citizen and authority UI |
+| Styling | Tailwind CSS | Responsive design |
+| Routing | React Router v6 | Page navigation |
+| Charts | Recharts | Analytics dashboard |
+| Backend | FastAPI (Python) | REST API layer |
+| Database | PostgreSQL 15 | Data storage |
+| ORM | SQLAlchemy | DB models and queries |
+| Auth | JWT (python-jose) | Citizen and authority login |
+| AI / ML | Scikit-Learn | Complaint classification |
+| Vectorizer | TF-IDF | Text feature extraction |
+| Maps | OpenStreetMap + Leaflet.js | Location picker and heatmap |
+| Version control | GitHub | Collaboration |
+| License | MIT | FOSS compliance |
 
 ## Project Structure
 
-| Folder | Purpose |
+|Folder | Purpose |
 |--------|---------|
-| `backend/app/ai/` | Classifier, duplicate detection, routing |
-| `backend/app/routers/` | API endpoints |
+| `backend/app/ai/` | Classifier, urgency scoring, department routing |
+| `backend/app/routers/` | API endpoints — auth, complaints, analytics |
 | `backend/tests/` | Unit tests |
-| `frontend/src/components/` | Shared components |
-| `frontend/src/pages/citizen/` | Citizen-facing pages |
-| `frontend/src/pages/authority/` | Admin dashboard |
-| `ml/` | Training data, saved models, notebooks |
-| `docs/` | Architecture, API reference, attributions |
+| `frontend/src/components/` | Shared UI components |
+| `frontend/src/pages/citizen/` | Login, Register, Submit, Tracker, Public Tracker |
+| `frontend/src/pages/authority/` | Admin Dashboard, Analytics, Complaint Detail |
+| `ml/data/` | Training dataset (CSV) |
+| `ml/models/` | Saved trained model (.pkl) |
+| `ml/notebooks/` | Model development notebook |
+| `docs/` | Architecture, API reference, AI attributions |
+
+## Pages
+
+| Route | Page | Access |
+|-------|------|--------|
+| `/login` | Login | Public |
+| `/register` | Register | Public |
+| `/track` | Public Complaint Tracker | Public |
+| `/submit` | Submit Complaint | Citizen |
+| `/my-complaints` | My Complaints | Citizen |
+| `/admin` | Authority Dashboard | Authority |
+| `/analytics` | Analytics | Authority |
+| `/complaint/:id` | Complaint Detail | Authority |
 
 ## Team
 
@@ -63,7 +102,6 @@ CivicPulse is an open-source, AI-powered grievance platform that:
  5. Analytics page shows live data updates.
    
 ## Setup
-- Full setup instructions will be added as development progresses.
 
 ### Prerequisites
 - Python 3.10+
@@ -75,6 +113,25 @@ CivicPulse is an open-source, AI-powered grievance platform that:
 git clone https://github.com/madhu-vanthi-2517/civicpulse.git
 cd civicpulse
 ```
+## Backend
+```bash
+cd backend
+pip install -r requirements.txt
+cp .env.example .env
+# Edit .env with your PostgreSQL credentials
+uvicorn main:app --reload
+```
+### Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+### Test accounts
+_Will be added before final submission._
+
+## Demo Video
+_Will be added before final submission._
 
 ## License
 This project is licensed under the MIT License.
