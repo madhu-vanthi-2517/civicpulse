@@ -1,6 +1,9 @@
-import APIRouter, HTTPException
-from app.database import SessionLocal
-from app.models import Complaint, StatusLog
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.orm import Session
+from sqlalchemy.exc import SQLAlchemyError
+
+from app.database import get_db
+from app.models import Complaint, StatusLog, User
 from app.schemas import ComplaintCreate, StatusUpdate
 from app.ai.classifier import (
     predict_category,
@@ -10,11 +13,26 @@ from app.ai.classifier import (
 
 router = APIRouter()
 
+
 @router.post("/complaint")
-def submit_complaint(complaint: ComplaintCreate):
-    db = SessionLocal()
+def submit_complaint(
+    complaint: ComplaintCreate,
+    db: Session = Depends(get_db)
+):
     try:
+        if complaint.user_id is not None:
+            user = db.query(User).filter(
+                User.id == complaint.user_id
+            ).first()
+
+            if not user:
+                raise HTTPException(
+                    status_code=404,
+                    detail="User not found. Register user first or remove user_id."
+                )
+
         text = f"{complaint.title} {complaint.description}"
+
         category = predict_category(text)
         urgency = predict_urgency(text)
         department_name = predict_department(category)
@@ -30,105 +48,123 @@ def submit_complaint(complaint: ComplaintCreate):
             status="Pending",
             user_id=complaint.user_id
         )
+
         db.add(new_complaint)
         db.commit()
         db.refresh(new_complaint)
+
         return {
             "message": "Complaint submitted successfully",
             "id": new_complaint.id,
             "category": category,
             "urgency": urgency,
             "department": department_name,
-            "status": "Pending"
+            "status": new_complaint.status
         }
-    finally:
-        db.close()
+
+    except HTTPException:
+        raise
+
+    except SQLAlchemyError as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Database error: {str(e)}"
+        )
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Server error: {str(e)}"
+        )
+
 
 @router.get("/complaints")
 def get_complaints(
     status: str = None,
     district: str = None,
-    department: str = None
+    department: str = None,
+    db: Session = Depends(get_db)
 ):
-    db = SessionLocal()
-    try:
-        query = db.query(Complaint)
-        if status:
-            query = query.filter(
-                Complaint.status == status
-            )
-        if district:
-            query = query.filter(
-                Complaint.district == district
-            )
-        if department:
-            query = query.filter(
-                Complaint.department_name == department
-            )
-        return query.all()
-    finally:
-        db.close()
+    query = db.query(Complaint)
+
+    if status:
+        query = query.filter(Complaint.status == status)
+
+    if district:
+        query = query.filter(Complaint.district == district)
+
+    if department:
+        query = query.filter(Complaint.department_name == department)
+
+    return query.all()
+
 
 @router.get("/complaints/public")
-def get_public_complaints(district: str = None):
-    db = SessionLocal()
-    try:
-        query = db.query(Complaint)
-        if district:
-            query = query.filter(
-                Complaint.district == district
-            )
-        return query.all()
-    finally:
-        db.close()
+def get_public_complaints(
+    district: str = None,
+    db: Session = Depends(get_db)
+):
+    query = db.query(Complaint)
+
+    if district:
+        query = query.filter(Complaint.district == district)
+
+    return query.all()
+
 
 @router.get("/complaint/{complaint_id}")
-def get_complaint(complaint_id: int):
-    db = SessionLocal()
-    try:
-        complaint = db.query(Complaint).filter(
-            Complaint.id == complaint_id
-        ).first()
-        if not complaint:
-            raise HTTPException(
-                status_code=404,
-                detail="Complaint not found"
-            )
-        return complaint
-    finally:
-        db.close()
+def get_complaint(
+    complaint_id: int,
+    db: Session = Depends(get_db)
+):
+    complaint = db.query(Complaint).filter(
+        Complaint.id == complaint_id
+    ).first()
+
+    if not complaint:
+        raise HTTPException(
+            status_code=404,
+            detail="Complaint not found"
+        )
+
+    return complaint
+
 
 @router.put("/complaint/{complaint_id}/status")
 def update_status(
     complaint_id: int,
-    body: StatusUpdate
+    body: StatusUpdate,
+    db: Session = Depends(get_db)
 ):
-    db = SessionLocal()
-    try:
-        complaint = db.query(Complaint).filter(
-            Complaint.id == complaint_id
-        ).first()
-        if not complaint:
-            raise HTTPException(
-                status_code=404,
-                detail="Complaint not found"
-            )
-        old_status = complaint.status
-        complaint.status = body.status
+    complaint = db.query(Complaint).filter(
+        Complaint.id == complaint_id
+    ).first()
 
-        log = StatusLog(
-            complaint_id=complaint_id,
-            old_status=old_status,
-            new_status=body.status,
-            remarks=body.remarks
+    if not complaint:
+        raise HTTPException(
+            status_code=404,
+            detail="Complaint not found"
         )
-        db.add(log)
-        db.commit()
-        return {
-            "message": "Status updated successfully",
-            "id": complaint_id,
-            "old_status": old_status,
-            "new_status": body.status
-        }
-    finally:
-        db.close()
+
+    old_status = complaint.status
+    complaint.status = body.status
+
+    log = StatusLog(
+        complaint_id=complaint_id,
+        old_status=old_status,
+        new_status=body.status,
+        remarks=body.remarks
+    )
+
+    db.add(log)
+    db.commit()
+    db.refresh(complaint)
+
+    return {
+        "message": "Status updated successfully",
+        "id": complaint_id,
+        "old_status": old_status,
+        "new_status": body.status
+    }

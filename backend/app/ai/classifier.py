@@ -1,3 +1,6 @@
+def predict_category(text: str):
+    return "Road"
+
 import joblib
 from pathlib import Path
 
@@ -58,7 +61,12 @@ def predict_department(category):
         "Municipal Administration"
     )
 
+def predict_urgency(text: str):
+    return "Medium"
 
+
+def predict_department(category: str):
+    return "Public Works Department"
 def classify_complaint(text):
 
     category = predict_category(text)
