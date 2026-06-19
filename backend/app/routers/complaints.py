@@ -168,3 +168,45 @@ def update_status(
         "old_status": old_status,
         "new_status": body.status
     }
+
+
+@router.get("/analytics")
+def get_analytics(db: Session = Depends(get_db)):
+    complaints = db.query(Complaint).all()
+
+    category_counts = {}
+    district_counts = {}
+    status_counts = {
+        "Pending": 0,
+        "In Progress": 0,
+        "Resolved": 0
+    }
+
+    for complaint in complaints:
+        category = complaint.category or "General"
+        district = complaint.district or "Unknown"
+        status = complaint.status or "Pending"
+
+        category_counts[category] = category_counts.get(category, 0) + 1
+        district_counts[district] = district_counts.get(district, 0) + 1
+
+        if status in status_counts:
+            status_counts[status] += 1
+        else:
+            status_counts[status] = 1
+
+    return {
+        "total": len(complaints),
+        "by_category": [
+            {"category": category, "count": count}
+            for category, count in category_counts.items()
+        ],
+        "by_district": [
+            {"district": district, "count": count}
+            for district, count in district_counts.items()
+        ],
+        "by_status": [
+            {"name": status, "value": count}
+            for status, count in status_counts.items()
+        ]
+    }
