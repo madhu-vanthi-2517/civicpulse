@@ -6,6 +6,7 @@ from app.models import Base
 
 from app.routers.auth_router import router as auth_router
 from app.routers.complaints import router as complaints_router
+from app.routers.classify import router as classify_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -19,7 +20,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 app.include_router(
     auth_router,
     prefix="/auth",
@@ -32,6 +32,10 @@ app.include_router(
     tags=["Complaints"]
 )
 
+app.include_router(
+    classify_router,
+    tags=["ML Classifier"]
+)
 
 @app.get("/")
 def home():
