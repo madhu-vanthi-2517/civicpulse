@@ -61,5 +61,11 @@ export const api = {
       }
     );
     return res.json();
+  },
+  getAnalytics: async (token) => {
+    const res = await fetch(`${BASE_URL}/api/analytics`, {
+      headers: { "Authorization": `Bearer ${token}` }
+    });
+    return res.json();
   }
 };

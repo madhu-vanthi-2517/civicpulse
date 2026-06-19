@@ -91,9 +91,9 @@ export default function App() {
             <Route path="/submit" element={<ProtectedRoute><ComplaintForm /></ProtectedRoute>} />
             <Route path="/my-complaints" element={<ProtectedRoute><ComplaintTracker /></ProtectedRoute>} />
             <Route path="/track" element={<PublicTracker />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/complaint/:id" element={<ComplaintDetail />} />
+            <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+            <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
+            <Route path="/complaint/:id" element={<ProtectedRoute><ComplaintDetail /></ProtectedRoute>} />
           </Routes>
         </main>
       </div>
