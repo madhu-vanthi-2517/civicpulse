@@ -88,12 +88,12 @@ export default function App() {
             <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/submit" element={<ProtectedRoute><ComplaintForm /></ProtectedRoute>} />
-            <Route path="/my-complaints" element={<ProtectedRoute><ComplaintTracker /></ProtectedRoute>} />
+            <Route path="/submit" element={<ProtectedRoute requiredRole="citizen"><ComplaintForm /></ProtectedRoute>} />
+            <Route path="/my-complaints" element={<ProtectedRoute requiredRole="citizen"><ComplaintTracker /></ProtectedRoute>} />
             <Route path="/track" element={<PublicTracker />} />
-            <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-            <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
-            <Route path="/complaint/:id" element={<ProtectedRoute><ComplaintDetail /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute requiredRole="authority"><AdminDashboard /></ProtectedRoute>} />
+            <Route path="/analytics" element={<ProtectedRoute requiredRole="authority"><Analytics /></ProtectedRoute>} />
+            <Route path="/complaint/:id" element={<ProtectedRoute requiredRole="authority"><ComplaintDetail /></ProtectedRoute>} />
           </Routes>
         </main>
       </div>
