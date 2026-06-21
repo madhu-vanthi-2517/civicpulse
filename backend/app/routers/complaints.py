@@ -1,11 +1,7 @@
-from fastapi import APIRouter, HTTPException, Depends
-from sqlalchemy.orm import Session
-from sqlalchemy.exc import SQLAlchemyError
-
-from app.database import get_db
-from app.models import Complaint, StatusLog, User
+from fastapi import APIRouter, HTTPException
+from app.database import SessionLocal
+from app.models import Complaint, StatusLog, ComplaintReporter
 from app.schemas import ComplaintCreate, StatusUpdate
-
 from app.ai.classifier import (
     predict_category,
     predict_urgency,
@@ -16,277 +12,242 @@ from app.ai.classifier import (
 router = APIRouter()
 
 VALID_DISTRICTS = ["Puducherry", "Karaikal", "Mahe", "Yanam"]
-VALID_STATUSES = ["Pending", "In Progress", "Resolved"]
-
 
 @router.post("/complaint")
-def submit_complaint(
-    complaint: ComplaintCreate,
-    db: Session = Depends(get_db)
-):
+def submit_complaint(complaint: ComplaintCreate):
+    if complaint.district not in VALID_DISTRICTS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"District must be one of {VALID_DISTRICTS}"
+        )
+
+    db = SessionLocal()
     try:
-        # Basic validation
-        if not complaint.title or not complaint.title.strip():
-            raise HTTPException(
-                status_code=400,
-                detail="Complaint title is required"
-            )
-
-        if not complaint.description or not complaint.description.strip():
-            raise HTTPException(
-                status_code=400,
-                detail="Complaint description is required"
-            )
-
-        if not complaint.district or complaint.district not in VALID_DISTRICTS:
-            raise HTTPException(
-                status_code=400,
-                detail=f"District must be one of {VALID_DISTRICTS}"
-            )
-
-        # User validation
-        if complaint.user_id is not None:
-            user = db.query(User).filter(
-                User.id == complaint.user_id
-            ).first()
-
-            if not user:
-                raise HTTPException(
-                    status_code=404,
-                    detail="User not found. Register user first or remove user_id."
-                )
-
         text = f"{complaint.title} {complaint.description}"
 
-        # Check duplicate only within same district and unresolved complaints
-        existing_complaints = db.query(Complaint).filter(
+        existing = db.query(Complaint).filter(
             Complaint.district == complaint.district,
             Complaint.status != "Resolved"
         ).all()
 
-        duplicate = check_duplicate(
-            text,
-            existing_complaints
-        )
+        existing_list = [
+            {"id": c.id, "description": f"{c.title} {c.description}"}
+            for c in existing
+        ]
 
+        duplicate = check_duplicate(text, existing_list)
+
+        # ---- DUPLICATE FOUND: merge instead of creating new row ----
+        if duplicate:
+            original = db.query(Complaint).filter(
+                Complaint.id == duplicate["id"]
+            ).first()
+
+            original.report_count += 1
+
+            reporter_entry = ComplaintReporter(
+                complaint_id=original.id,
+                user_id=complaint.user_id
+            )
+            db.add(reporter_entry)
+            db.commit()
+            db.refresh(original)
+
+            return {
+                "message": "Similar complaint already exists. "
+                            "Your report has been linked to it.",
+                "id": original.id,
+                "category": original.category,
+                "urgency": original.urgency,
+                "department": original.department_name,
+                "status": original.status,
+                "duplicate_warning": True,
+                "similar_to_id": original.id,
+                "report_count": original.report_count
+            }
+
+        # ---- NO DUPLICATE: create new complaint normally ----
         category = predict_category(text)
         urgency = predict_urgency(text)
         department_name = predict_department(category)
 
         new_complaint = Complaint(
-            title=complaint.title.strip(),
-            description=complaint.description.strip(),
+            title=complaint.title,
+            description=complaint.description,
             district=complaint.district,
             area=complaint.area,
             category=category,
             urgency=urgency,
             department_name=department_name,
             status="Pending",
+            report_count=1,
             user_id=complaint.user_id
         )
-
         db.add(new_complaint)
         db.commit()
         db.refresh(new_complaint)
 
-        response = {
+        # Track the original submitter too
+        reporter_entry = ComplaintReporter(
+            complaint_id=new_complaint.id,
+            user_id=complaint.user_id
+        )
+        db.add(reporter_entry)
+        db.commit()
+
+        return {
             "message": "Complaint submitted successfully",
             "id": new_complaint.id,
-            "title": new_complaint.title,
-            "description": new_complaint.description,
-            "district": new_complaint.district,
-            "area": new_complaint.area,
             "category": category,
             "urgency": urgency,
             "department": department_name,
-            "status": new_complaint.status,
+            "status": "Pending",
             "duplicate_warning": False,
-            "similar_to_id": None
+            "report_count": 1
         }
-
-        if duplicate:
-            response["duplicate_warning"] = True
-            response["similar_to_id"] = duplicate.id
-
-        return response
-
-    except HTTPException:
-        raise
-
-    except SQLAlchemyError as e:
-        db.rollback()
-        raise HTTPException(
-            status_code=500,
-            detail=f"Database error: {str(e)}"
-        )
-
-    except Exception as e:
-        db.rollback()
-        raise HTTPException(
-            status_code=500,
-            detail=f"Server error: {str(e)}"
-        )
+    finally:
+        db.close()
 
 
 @router.get("/complaints")
 def get_complaints(
     status: str = None,
     district: str = None,
-    department: str = None,
-    db: Session = Depends(get_db)
+    department: str = None
 ):
-    if status and status not in VALID_STATUSES:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Status must be one of {VALID_STATUSES}"
-        )
-
-    if district and district not in VALID_DISTRICTS:
-        raise HTTPException(
-            status_code=400,
-            detail=f"District must be one of {VALID_DISTRICTS}"
-        )
-
-    query = db.query(Complaint)
-
-    if status:
-        query = query.filter(Complaint.status == status)
-
-    if district:
-        query = query.filter(Complaint.district == district)
-
-    if department:
-        query = query.filter(Complaint.department_name == department)
-
-    return query.all()
+    db = SessionLocal()
+    try:
+        query = db.query(Complaint)
+        if status:
+            query = query.filter(Complaint.status == status)
+        if district:
+            query = query.filter(Complaint.district == district)
+        if department:
+            query = query.filter(
+                Complaint.department_name == department
+            )
+        return query.all()
+    finally:
+        db.close()
 
 
 @router.get("/complaints/public")
-def get_public_complaints(
-    district: str = None,
-    db: Session = Depends(get_db)
-):
-    if district and district not in VALID_DISTRICTS:
-        raise HTTPException(
-            status_code=400,
-            detail=f"District must be one of {VALID_DISTRICTS}"
-        )
+def get_public_complaints(district: str = None):
+    db = SessionLocal()
+    try:
+        query = db.query(Complaint)
+        if district:
+            query = query.filter(Complaint.district == district)
+        return query.all()
+    finally:
+        db.close()
 
-    query = db.query(Complaint)
 
-    if district:
-        query = query.filter(Complaint.district == district)
+# ---- NEW: citizen's own complaints, including merged ones ----
+@router.get("/complaints/mine")
+def get_my_complaints(user_id: int):
+    db = SessionLocal()
+    try:
+        reported_ids = db.query(
+            ComplaintReporter.complaint_id
+        ).filter(
+            ComplaintReporter.user_id == user_id
+        ).all()
+        ids = [r[0] for r in reported_ids]
 
-    return query.all()
+        complaints = db.query(Complaint).filter(
+            Complaint.id.in_(ids)
+        ).all()
+        return complaints
+    finally:
+        db.close()
 
 
 @router.get("/complaint/{complaint_id}")
-def get_complaint(
-    complaint_id: int,
-    db: Session = Depends(get_db)
-):
-    if complaint_id <= 0:
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid complaint ID"
-        )
-
-    complaint = db.query(Complaint).filter(
-        Complaint.id == complaint_id
-    ).first()
-
-    if not complaint:
-        raise HTTPException(
-            status_code=404,
-            detail="Complaint not found"
-        )
-
-    return complaint
+def get_complaint(complaint_id: int):
+    db = SessionLocal()
+    try:
+        if complaint_id <= 0:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid complaint ID"
+            )
+        complaint = db.query(Complaint).filter(
+            Complaint.id == complaint_id
+        ).first()
+        if not complaint:
+            raise HTTPException(
+                status_code=404,
+                detail="Complaint not found"
+            )
+        return complaint
+    finally:
+        db.close()
 
 
 @router.put("/complaint/{complaint_id}/status")
-def update_status(
-    complaint_id: int,
-    body: StatusUpdate,
-    db: Session = Depends(get_db)
-):
-    if complaint_id <= 0:
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid complaint ID"
+def update_status(complaint_id: int, body: StatusUpdate):
+    db = SessionLocal()
+    try:
+        complaint = db.query(Complaint).filter(
+            Complaint.id == complaint_id
+        ).first()
+        if not complaint:
+            raise HTTPException(
+                status_code=404,
+                detail="Complaint not found"
+            )
+        old_status = complaint.status
+        complaint.status = body.status
+
+        log = StatusLog(
+            complaint_id=complaint_id,
+            old_status=old_status,
+            new_status=body.status,
+            remarks=body.remarks
         )
-
-    if body.status not in VALID_STATUSES:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Status must be one of {VALID_STATUSES}"
-        )
-
-    complaint = db.query(Complaint).filter(
-        Complaint.id == complaint_id
-    ).first()
-
-    if not complaint:
-        raise HTTPException(
-            status_code=404,
-            detail="Complaint not found"
-        )
-
-    old_status = complaint.status
-    complaint.status = body.status
-
-    log = StatusLog(
-        complaint_id=complaint_id,
-        old_status=old_status,
-        new_status=body.status,
-        remarks=body.remarks
-    )
-
-    db.add(log)
-    db.commit()
-    db.refresh(complaint)
-
-    return {
-        "message": "Status updated successfully",
-        "id": complaint_id,
-        "old_status": old_status,
-        "new_status": body.status
-    }
+        db.add(log)
+        db.commit()
+        return {
+            "message": "Status updated successfully",
+            "id": complaint_id,
+            "old_status": old_status,
+            "new_status": body.status
+        }
+    finally:
+        db.close()
 
 
 @router.get("/analytics")
-def get_analytics(db: Session = Depends(get_db)):
-    complaints = db.query(Complaint).all()
+def get_analytics():
+    db = SessionLocal()
+    try:
+        complaints = db.query(Complaint).all()
 
-    category_counts = {}
-    district_counts = {}
-    status_counts = {
-        "Pending": 0,
-        "In Progress": 0,
-        "Resolved": 0
-    }
+        category_counts = {}
+        district_counts = {}
+        status_counts = {"Pending": 0, "In Progress": 0, "Resolved": 0}
 
-    for complaint in complaints:
-        category = complaint.category or "General"
-        district = complaint.district or "Unknown"
-        status = complaint.status or "Pending"
+        for c in complaints:
+            category_counts[c.category] = category_counts.get(c.category, 0) + 1
+            district_counts[c.district] = district_counts.get(c.district, 0) + 1
+            if c.status in status_counts:
+                status_counts[c.status] += 1
 
-        category_counts[category] = category_counts.get(category, 0) + 1
-        district_counts[district] = district_counts.get(district, 0) + 1
-        status_counts[status] = status_counts.get(status, 0) + 1
-
-    return {
-        "total": len(complaints),
-        "by_category": [
-            {"category": category, "count": count}
-            for category, count in category_counts.items()
-        ],
-        "by_district": [
-            {"district": district, "count": count}
-            for district, count in district_counts.items()
-        ],
-        "by_status": [
-            {"name": status, "value": count}
-            for status, count in status_counts.items()
-        ]
-    }
+        return {
+            "total": len(complaints),
+            "by_category": [
+                {"category": k, "count": v}
+                for k, v in category_counts.items()
+            ],
+            "by_district": [
+                {"district": k, "count": v}
+                for k, v in district_counts.items()
+            ],
+            "by_status": [
+                {"name": k, "value": v}
+                for k, v in status_counts.items()
+            ]
+        }
+    finally:
+        db.close()
