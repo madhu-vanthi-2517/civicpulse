@@ -1,11 +1,16 @@
-def predict_category(text: str):
-    return "Road"
-
 import joblib
 from pathlib import Path
 
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
-MODEL_PATH = Path(__file__).resolve().parents[3] / "ml" / "models" / "complaint_classifier.pkl"
+
+MODEL_PATH = (
+    Path(__file__).resolve().parents[3]
+    / "ml"
+    / "models"
+    / "complaint_classifier.pkl"
+)
 
 model = joblib.load(MODEL_PATH)
 
@@ -15,7 +20,6 @@ def predict_category(text):
 
 
 def predict_urgency(text):
-
     text = text.lower()
 
     high_keywords = [
@@ -27,14 +31,18 @@ def predict_urgency(text):
         "danger",
         "electrical",
         "transformer",
-        "leakage"
+        "leakage",
+        "emergency",
+        "sewage"
     ]
 
     medium_keywords = [
         "road",
         "garbage",
         "streetlight",
-        "water"
+        "water",
+        "pothole",
+        "drainage"
     ]
 
     if any(word in text for word in high_keywords):
@@ -47,7 +55,6 @@ def predict_urgency(text):
 
 
 def predict_department(category):
-
     mapping = {
         "Water": "Public Works Department",
         "Roads": "Public Works Department",
@@ -56,23 +63,44 @@ def predict_department(category):
         "Other": "Municipal Administration"
     }
 
-    return mapping.get(
-        category,
-        "Municipal Administration"
+    return mapping.get(category, "Municipal Administration")
+
+
+def check_duplicate(new_text, existing_complaints, threshold=0.75):
+    if not existing_complaints:
+        return None
+
+    texts = [
+        f"{complaint.title} {complaint.description}"
+        for complaint in existing_complaints
+    ]
+
+    texts.append(new_text)
+
+    vectorizer = TfidfVectorizer(
+        lowercase=True,
+        ngram_range=(1, 2)
     )
 
-def predict_urgency(text: str):
-    return "Medium"
+    vectors = vectorizer.fit_transform(texts)
+
+    similarities = cosine_similarity(
+        vectors[-1],
+        vectors[:-1]
+    )[0]
+
+    max_score = similarities.max()
+
+    if max_score >= threshold:
+        best_match_index = similarities.argmax()
+        return existing_complaints[best_match_index]
+
+    return None
 
 
-def predict_department(category: str):
-    return "Public Works Department"
 def classify_complaint(text):
-
     category = predict_category(text)
-
     urgency = predict_urgency(text)
-
     department = predict_department(category)
 
     return {
