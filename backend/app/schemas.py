@@ -27,12 +27,15 @@ class ComplaintResponse(BaseModel):
     title: str
     description: str
     district: str
-    area: Optional[str]
-    category: Optional[str]
-    urgency: Optional[str]
-    department_name: Optional[str]
+    area: Optional[str] = None
+    category: Optional[str] = None
+    urgency: Optional[str] = None
+    department_name: Optional[str] = None
     status: str
-    created_at: datetime
+    created_at: Optional[datetime] = None
+
+    duplicate_warning: bool = False
+    similar_to_id: Optional[int] = None
 
     class Config:
         from_attributes = True

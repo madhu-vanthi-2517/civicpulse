@@ -15,6 +15,9 @@ from app.ai.classifier import (
 
 router = APIRouter()
 
+VALID_DISTRICTS = ["Puducherry", "Karaikal", "Mahe", "Yanam"]
+VALID_STATUSES = ["Pending", "In Progress", "Resolved"]
+
 
 @router.post("/complaint")
 def submit_complaint(
@@ -22,6 +25,26 @@ def submit_complaint(
     db: Session = Depends(get_db)
 ):
     try:
+        # Basic validation
+        if not complaint.title or not complaint.title.strip():
+            raise HTTPException(
+                status_code=400,
+                detail="Complaint title is required"
+            )
+
+        if not complaint.description or not complaint.description.strip():
+            raise HTTPException(
+                status_code=400,
+                detail="Complaint description is required"
+            )
+
+        if not complaint.district or complaint.district not in VALID_DISTRICTS:
+            raise HTTPException(
+                status_code=400,
+                detail=f"District must be one of {VALID_DISTRICTS}"
+            )
+
+        # User validation
         if complaint.user_id is not None:
             user = db.query(User).filter(
                 User.id == complaint.user_id
@@ -35,6 +58,7 @@ def submit_complaint(
 
         text = f"{complaint.title} {complaint.description}"
 
+        # Check duplicate only within same district and unresolved complaints
         existing_complaints = db.query(Complaint).filter(
             Complaint.district == complaint.district,
             Complaint.status != "Resolved"
@@ -50,8 +74,8 @@ def submit_complaint(
         department_name = predict_department(category)
 
         new_complaint = Complaint(
-            title=complaint.title,
-            description=complaint.description,
+            title=complaint.title.strip(),
+            description=complaint.description.strip(),
             district=complaint.district,
             area=complaint.area,
             category=category,
@@ -68,12 +92,17 @@ def submit_complaint(
         response = {
             "message": "Complaint submitted successfully",
             "id": new_complaint.id,
+            "title": new_complaint.title,
+            "description": new_complaint.description,
+            "district": new_complaint.district,
+            "area": new_complaint.area,
             "category": category,
             "urgency": urgency,
             "department": department_name,
             "status": new_complaint.status,
-            "duplicate_warning": False
-        } 
+            "duplicate_warning": False,
+            "similar_to_id": None
+        }
 
         if duplicate:
             response["duplicate_warning"] = True
@@ -106,6 +135,18 @@ def get_complaints(
     department: str = None,
     db: Session = Depends(get_db)
 ):
+    if status and status not in VALID_STATUSES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Status must be one of {VALID_STATUSES}"
+        )
+
+    if district and district not in VALID_DISTRICTS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"District must be one of {VALID_DISTRICTS}"
+        )
+
     query = db.query(Complaint)
 
     if status:
@@ -125,6 +166,12 @@ def get_public_complaints(
     district: str = None,
     db: Session = Depends(get_db)
 ):
+    if district and district not in VALID_DISTRICTS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"District must be one of {VALID_DISTRICTS}"
+        )
+
     query = db.query(Complaint)
 
     if district:
@@ -138,6 +185,12 @@ def get_complaint(
     complaint_id: int,
     db: Session = Depends(get_db)
 ):
+    if complaint_id <= 0:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid complaint ID"
+        )
+
     complaint = db.query(Complaint).filter(
         Complaint.id == complaint_id
     ).first()
@@ -157,6 +210,18 @@ def update_status(
     body: StatusUpdate,
     db: Session = Depends(get_db)
 ):
+    if complaint_id <= 0:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid complaint ID"
+        )
+
+    if body.status not in VALID_STATUSES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Status must be one of {VALID_STATUSES}"
+        )
+
     complaint = db.query(Complaint).filter(
         Complaint.id == complaint_id
     ).first()
