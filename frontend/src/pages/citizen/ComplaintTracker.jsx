@@ -7,12 +7,12 @@ export default function ComplaintTracker() {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { token } = useAuth();
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
-        const data = await api.getComplaints(token);
+        const data = await api.getMyComplaints(user?.id);
         if (Array.isArray(data)) {
           setComplaints(data);
         } else {
@@ -24,8 +24,8 @@ export default function ComplaintTracker() {
         setLoading(false);
       }
     };
-    fetchComplaints();
-  }, [token]);
+    if (user?.id) fetchComplaints();
+  }, [user]);
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -35,11 +35,11 @@ export default function ComplaintTracker() {
             My Complaints
           </h2>
           <p className="text-sm text-gray-500 mt-1">
-            All complaints submitted by you
+            All complaints you've reported, including
+            ones merged with similar reports
           </p>
         </div>
 
-        {/* Loading skeleton — NEW for Day 7 */}
         {loading && (
           <div className="flex flex-col gap-4">
             {[1, 2, 3].map((i) => (
@@ -75,13 +75,20 @@ export default function ComplaintTracker() {
         {!loading && !error && complaints.length > 0 && (
           <div className="flex flex-col gap-4">
             {complaints.map((complaint) => (
-              <ComplaintCard
-                key={complaint.id}
-                complaint={{
-                  ...complaint,
-                  location: `${complaint.district} — ${complaint.area}`
-                }}
-              />
+              <div key={complaint.id}>
+                <ComplaintCard
+                  complaint={{
+                    ...complaint,
+                    location: `${complaint.district} — ${complaint.area}`
+                  }}
+                />
+                {complaint.report_count > 1 && (
+                  <p className="text-xs text-gray-400 mt-1 ml-1">
+                    This issue has been reported by{" "}
+                    {complaint.report_count} citizens
+                  </p>
+                )}
+              </div>
             ))}
           </div>
         )}

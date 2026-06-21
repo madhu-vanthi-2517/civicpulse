@@ -40,6 +40,15 @@ export const api = {
     return res.json();
   },
 
+  // NEW — fetches only the logged-in citizen's complaints,
+  // including ones merged into someone else's original
+  getMyComplaints: async (userId) => {
+    const res = await fetch(
+      `${BASE_URL}/api/complaints/mine?user_id=${userId}`
+    );
+    return res.json();
+  },
+
   getPublicComplaints: async (district = "") => {
     const url = district
       ? `${BASE_URL}/api/complaints/public?district=${district}`
