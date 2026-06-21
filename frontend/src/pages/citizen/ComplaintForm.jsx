@@ -191,6 +191,20 @@ export default function ComplaintForm() {
               </p>
             </div>
           )}
+
+          {/* Duplicate warning — NEW for Day 7 */}
+          {result?.duplicate_warning && (
+            <div className="mt-2 p-4 bg-amber-50 border
+                            border-amber-200 rounded-lg">
+              <p className="text-sm font-semibold text-amber-700">
+                ⚠ This looks similar to complaint #{result.similar_to_id}
+              </p>
+              <p className="text-xs text-amber-600 mt-1">
+                It may already be reported. Your complaint was
+                still submitted and will be reviewed.
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
