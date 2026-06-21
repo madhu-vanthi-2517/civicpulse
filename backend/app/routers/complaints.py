@@ -5,10 +5,12 @@ from sqlalchemy.exc import SQLAlchemyError
 from app.database import get_db
 from app.models import Complaint, StatusLog, User
 from app.schemas import ComplaintCreate, StatusUpdate
+
 from app.ai.classifier import (
     predict_category,
     predict_urgency,
-    predict_department
+    predict_department,
+    check_duplicate
 )
 
 router = APIRouter()
@@ -33,6 +35,16 @@ def submit_complaint(
 
         text = f"{complaint.title} {complaint.description}"
 
+        existing_complaints = db.query(Complaint).filter(
+            Complaint.district == complaint.district,
+            Complaint.status != "Resolved"
+        ).all()
+
+        duplicate = check_duplicate(
+            text,
+            existing_complaints
+        )
+
         category = predict_category(text)
         urgency = predict_urgency(text)
         department_name = predict_department(category)
@@ -53,14 +65,21 @@ def submit_complaint(
         db.commit()
         db.refresh(new_complaint)
 
-        return {
+        response = {
             "message": "Complaint submitted successfully",
             "id": new_complaint.id,
             "category": category,
             "urgency": urgency,
             "department": department_name,
-            "status": new_complaint.status
-        }
+            "status": new_complaint.status,
+            "duplicate_warning": False
+        } 
+
+        if duplicate:
+            response["duplicate_warning"] = True
+            response["similar_to_id"] = duplicate.id
+
+        return response
 
     except HTTPException:
         raise
@@ -189,11 +208,7 @@ def get_analytics(db: Session = Depends(get_db)):
 
         category_counts[category] = category_counts.get(category, 0) + 1
         district_counts[district] = district_counts.get(district, 0) + 1
-
-        if status in status_counts:
-            status_counts[status] += 1
-        else:
-            status_counts[status] = 1
+        status_counts[status] = status_counts.get(status, 0) + 1
 
     return {
         "total": len(complaints),
