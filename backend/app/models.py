@@ -28,33 +28,44 @@ class Department(Base):
 
     complaints = relationship("Complaint", back_populates="department")
 
-
 class Complaint(Base):
     __tablename__ = "complaints"
-
     id = Column(Integer, primary_key=True, index=True)
-
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
-    department_id = Column(Integer, ForeignKey("departments.id"), nullable=True)
-
+    user_id = Column(Integer, ForeignKey("users.id"))
+    department_id = Column(
+        Integer, ForeignKey("departments.id"), nullable=True
+    )
     title = Column(String(255), nullable=False)
     description = Column(Text, nullable=False)
-
-    state = Column(String(100), nullable=True)
-    district = Column(String(100), nullable=False)
-    area = Column(String(100), nullable=True)
-
-    category = Column(String(100), nullable=True)
-    urgency = Column(String(20), nullable=True)
-    department_name = Column(String(100), nullable=True)
-
+    district = Column(String(100))
+    area = Column(String(100))
+    category = Column(String(100))
+    urgency = Column(String(20))
+    department_name = Column(String(100))
     status = Column(String(20), default="Pending")
+    report_count = Column(Integer, default=1)   # NEW
     created_at = Column(DateTime, default=datetime.utcnow)
-
     user = relationship("User", back_populates="complaints")
-    department = relationship("Department", back_populates="complaints")
-    status_logs = relationship("StatusLog", back_populates="complaint")
+    department = relationship(
+        "Department", back_populates="complaints"
+    )
+    status_logs = relationship(
+        "StatusLog", back_populates="complaint"
+    )
+    reporters = relationship(
+        "ComplaintReporter", back_populates="complaint"
+    )
 
+
+class ComplaintReporter(Base):
+    __tablename__ = "complaint_reporters"
+    id = Column(Integer, primary_key=True, index=True)
+    complaint_id = Column(Integer, ForeignKey("complaints.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
+    reported_at = Column(DateTime, default=datetime.utcnow)
+    complaint = relationship(
+        "Complaint", back_populates="reporters"
+    )
 
 class StatusLog(Base):
     __tablename__ = "status_logs"
