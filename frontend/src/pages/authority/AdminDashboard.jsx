@@ -9,6 +9,7 @@ export default function AdminDashboard() {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [sortByReports, setSortByReports] = useState(false);
   const { token } = useAuth();
   const navigate = useNavigate();
 
@@ -29,6 +30,10 @@ export default function AdminDashboard() {
   const pendingCount = complaints.filter(
     c => c.status === "Pending"
   ).length;
+
+  const displayedComplaints = sortByReports
+    ? [...complaints].sort((a, b) => b.report_count - a.report_count)
+    : complaints;
 
   return (
     <div className="flex h-screen w-screen overflow-hidden
@@ -135,6 +140,14 @@ export default function AdminDashboard() {
           </div>
         </div>
 
+        {/* Sort control */}
+        <button
+          onClick={() => setSortByReports(!sortByReports)}
+          className="mb-4 text-sm text-indigo-600 hover:underline"
+        >
+          {sortByReports ? "✓ Sorted by most reported" : "Sort by most reported"}
+        </button>
+
         {/* Table */}
         {loading ? (
           <div className="flex flex-col gap-3">
@@ -167,7 +180,7 @@ export default function AdminDashboard() {
               </thead>
               <tbody className="bg-white divide-y
                                 divide-gray-200">
-                {complaints.map((item) => (
+                {displayedComplaints.map((item) => (
                   <tr key={item.id}
                       className="hover:bg-gray-50/50">
                     <td className="px-6 py-4 text-sm
