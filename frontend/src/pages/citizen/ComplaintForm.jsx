@@ -17,7 +17,7 @@ export default function ComplaintForm() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
-  const { token } = useAuth();
+  const { token, user } = useAuth();
 
   const handleSubmit = async () => {
     if (!title || !description || !district) {
@@ -29,7 +29,7 @@ export default function ComplaintForm() {
     setResult(null);
     try {
       const data = await api.submitComplaint(
-        { title, description, district, area },
+        { title, description, district, area, user_id: user?.id  },
         token
       );
       if (data.id) {
@@ -128,10 +128,15 @@ export default function ComplaintForm() {
             />
           </div>
 
-          {error && (
-            <p className="text-sm text-red-500">{error}</p>
-          )}
-
+         {error && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+            <p className="text-sm text-red-600">{error}</p>
+            <p className="text-xs text-red-400 mt-1">
+              Make sure the backend server is running, or try again
+              in a moment.
+            </p>
+          </div>
+        )}
           <button
             onClick={handleSubmit}
             disabled={loading}
@@ -188,6 +193,20 @@ export default function ComplaintForm() {
               </div>
               <p className="text-xs text-gray-400 mt-2">
                 Complaint ID: #{result.id}
+              </p>
+            </div>
+          )}
+
+          {/* Duplicate warning — NEW for Day 7 */}
+          {result?.duplicate_warning && (
+            <div className="mt-2 p-4 bg-amber-50 border
+                            border-amber-200 rounded-lg">
+              <p className="text-sm font-semibold text-amber-700">
+                ⚠ This looks similar to complaint #{result.similar_to_id}
+              </p>
+              <p className="text-xs text-amber-600 mt-1">
+                It may already be reported. Your complaint was
+                still submitted and will be reviewed.
               </p>
             </div>
           )}
