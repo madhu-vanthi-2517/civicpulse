@@ -48,15 +48,11 @@ Examples:
 
 ## Department Routing
 
-Water → Public Works Department
-
-Roads → Public Works Department
-
-Sanitation → Municipality Sanitation Department
-
-Electrical → Electricity Department
-
-Other → Municipal Administration
+- Water → Public Works Department 
+- Roads → Public Works Department 
+- Sanitation → Municipality Sanitation Department 
+- Electrical → Electricity Department 
+- Other → Municipal Administration
 
 ## Duplicate Detection
 
@@ -76,15 +72,20 @@ while still allowing complaint submission.
 Input:
 "Streetlight not working near bus stand"
 
-Output:
-Category: Electrical
-Urgency: Medium
-Department: Electricity Department
+Output:<br>
+Category: Electrical<br>
 
+Urgency: Medium<br>
+
+Department: Electricity Department
+<br>
 Input:
 "Water leakage near school"
 
-Output:
-Category: Water
-Urgency: High
+Output:<br>
+Category: Water<br>
+
+Urgency: High<br>
+
 Department: Public Works Department
+

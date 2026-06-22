@@ -36,7 +36,15 @@ export default function Analytics() {
     return (
       <div className="p-8 bg-gray-50 min-h-screen
                       flex items-center justify-center">
-        <p className="text-gray-400">Loading analytics...</p>
+        <div className="flex flex-col gap-4 w-full max-w-5xl">
+          <div className="grid grid-cols-4 gap-4">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="bg-white rounded-xl
+                                      shadow-sm p-6 animate-pulse
+                                      h-24" />
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
@@ -56,6 +64,9 @@ export default function Analytics() {
   const resolvedCount = data.by_status.find(
     s => s.name === "Resolved"
   )?.value || 0;
+  const resolutionRate = data.total > 0
+    ? Math.round((resolvedCount / data.total) * 100)
+    : 0;
 
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
@@ -70,8 +81,8 @@ export default function Analytics() {
           </p>
         </div>
 
-        {/* Summary Cards */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
+        {/* Summary Cards — now 4 cards instead of 3 */}
+        <div className="grid grid-cols-4 gap-4 mb-8">
           <div className="bg-white p-6 rounded-xl border
                           border-gray-100 shadow-xs">
             <h3 className="text-xs font-medium text-gray-500
@@ -100,6 +111,17 @@ export default function Analytics() {
             </h3>
             <p className="text-3xl font-bold text-emerald-600 mt-2">
               {resolvedCount}
+            </p>
+          </div>
+          {/* NEW card — Day 7 */}
+          <div className="bg-white p-6 rounded-xl border
+                          border-gray-100 shadow-xs">
+            <h3 className="text-xs font-medium text-blue-600
+                           uppercase tracking-wider">
+              Resolution Rate
+            </h3>
+            <p className="text-3xl font-bold text-blue-600 mt-2">
+              {resolutionRate}%
             </p>
           </div>
         </div>

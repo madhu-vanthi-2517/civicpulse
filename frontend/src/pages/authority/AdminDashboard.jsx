@@ -9,6 +9,7 @@ export default function AdminDashboard() {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [sortByReports, setSortByReports] = useState(false);
   const { token } = useAuth();
   const navigate = useNavigate();
 
@@ -29,6 +30,10 @@ export default function AdminDashboard() {
   const pendingCount = complaints.filter(
     c => c.status === "Pending"
   ).length;
+
+  const displayedComplaints = sortByReports
+    ? [...complaints].sort((a, b) => b.report_count - a.report_count)
+    : complaints;
 
   return (
     <div className="flex h-screen w-screen overflow-hidden
@@ -135,11 +140,23 @@ export default function AdminDashboard() {
           </div>
         </div>
 
+        {/* Sort control */}
+        <button
+          onClick={() => setSortByReports(!sortByReports)}
+          className="mb-4 text-sm text-indigo-600 hover:underline"
+        >
+          {sortByReports ? "✓ Sorted by most reported" : "Sort by most reported"}
+        </button>
+
         {/* Table */}
         {loading ? (
-          <p className="text-center text-gray-400 py-8">
-            Loading complaints...
-          </p>
+          <div className="flex flex-col gap-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white rounded-xl
+                                      shadow-xs p-4 animate-pulse
+                                      h-12" />
+            ))}
+          </div>
         ) : (
           <div className="w-full bg-white rounded-xl border
                           border-gray-200 overflow-x-auto
@@ -163,7 +180,7 @@ export default function AdminDashboard() {
               </thead>
               <tbody className="bg-white divide-y
                                 divide-gray-200">
-                {complaints.map((item) => (
+                {displayedComplaints.map((item) => (
                   <tr key={item.id}
                       className="hover:bg-gray-50/50">
                     <td className="px-6 py-4 text-sm
@@ -172,7 +189,18 @@ export default function AdminDashboard() {
                     </td>
                     <td className="px-6 py-4 text-sm
                                    font-medium text-gray-900">
-                      {item.title}
+                      <div className="flex items-center gap-2">
+                        <span>{item.title}</span>
+                        {item.report_count > 1 && (
+                          <span className="text-xs bg-red-100
+                                           text-red-700 px-2
+                                           py-0.5 rounded-full
+                                           font-semibold
+                                           whitespace-nowrap">
+                            Reported {item.report_count}×
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="px-6 py-4 text-xs
                                    font-mono text-gray-500">

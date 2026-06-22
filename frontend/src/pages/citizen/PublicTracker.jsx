@@ -16,6 +16,7 @@ export default function PublicTracker() {
 
   useEffect(() => {
     const fetchComplaints = async () => {
+      setLoading(true);
       try {
         const data = await api.getPublicComplaints(
           selectedDistrict
@@ -141,11 +142,18 @@ export default function PublicTracker() {
           </div>
         </div>
 
-        {/* Complaint List */}
+        {/* Complaint List with loading skeleton — NEW for Day 7 */}
         {loading ? (
-          <p className="text-center text-gray-400 py-8">
-            Loading complaints...
-          </p>
+          <div className="flex flex-col gap-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white rounded-xl
+                                      shadow-sm p-5 animate-pulse">
+                <div className="h-4 bg-gray-200 rounded
+                                w-1/3 mb-2" />
+                <div className="h-3 bg-gray-100 rounded w-2/3" />
+              </div>
+            ))}
+          </div>
         ) : (
           <div className="flex flex-col gap-4">
             {complaints.length === 0 ? (

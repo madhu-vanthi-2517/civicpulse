@@ -1,14 +1,11 @@
-const BASE_URL = "https://crouton-gab-amaze.ngrok-free.dev";
+const BASE_URL = "http://127.0.0.1:8000";
 
 export const api = {
   // Auth
   register: async (name, email, password) => {
     const res = await fetch(`${BASE_URL}/auth/register`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "ngrok-skip-browser-warning": "true"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password })
     });
     return res.json();
@@ -17,10 +14,7 @@ export const api = {
   login: async (email, password) => {
     const res = await fetch(`${BASE_URL}/auth/login`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "ngrok-skip-browser-warning": "true"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
     });
     return res.json();
@@ -32,8 +26,7 @@ export const api = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-        "ngrok-skip-browser-warning": "true"
+        "Authorization": `Bearer ${token}`
       },
       body: JSON.stringify(data)
     });
@@ -42,11 +35,17 @@ export const api = {
 
   getComplaints: async (token) => {
     const res = await fetch(`${BASE_URL}/api/complaints`, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "ngrok-skip-browser-warning": "true"
-      }
+      headers: { "Authorization": `Bearer ${token}` }
     });
+    return res.json();
+  },
+
+  // NEW — fetches only the logged-in citizen's complaints,
+  // including ones merged into someone else's original
+  getMyComplaints: async (userId) => {
+    const res = await fetch(
+      `${BASE_URL}/api/complaints/mine?user_id=${userId}`
+    );
     return res.json();
   },
 
@@ -54,9 +53,7 @@ export const api = {
     const url = district
       ? `${BASE_URL}/api/complaints/public?district=${district}`
       : `${BASE_URL}/api/complaints/public`;
-    const res = await fetch(url, {
-      headers: { "ngrok-skip-browser-warning": "true" }
-    });
+    const res = await fetch(url);
     return res.json();
   },
 
@@ -67,8 +64,7 @@ export const api = {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-          "ngrok-skip-browser-warning": "true"
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({ status, remarks: "" })
       }
@@ -79,10 +75,7 @@ export const api = {
   // Analytics
   getAnalytics: async (token) => {
     const res = await fetch(`${BASE_URL}/api/analytics`, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "ngrok-skip-browser-warning": "true"
-      }
+      headers: { "Authorization": `Bearer ${token}` }
     });
     return res.json();
   }

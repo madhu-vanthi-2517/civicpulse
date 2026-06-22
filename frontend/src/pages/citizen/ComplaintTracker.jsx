@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { api } from "../../api";
@@ -7,12 +8,12 @@ export default function ComplaintTracker() {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { token } = useAuth();
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
-        const data = await api.getComplaints(token);
+        const data = await api.getMyComplaints(user?.id);
         if (Array.isArray(data)) {
           setComplaints(data);
         } else {
@@ -24,8 +25,8 @@ export default function ComplaintTracker() {
         setLoading(false);
       }
     };
-    fetchComplaints();
-  }, [token]);
+    if (user?.id) fetchComplaints();
+  }, [user]);
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -35,14 +36,22 @@ export default function ComplaintTracker() {
             My Complaints
           </h2>
           <p className="text-sm text-gray-500 mt-1">
-            All complaints submitted by you
+            All complaints you've reported, including
+            ones merged with similar reports
           </p>
         </div>
 
         {loading && (
-          <p className="text-center text-gray-400 py-8">
-            Loading complaints...
-          </p>
+          <div className="flex flex-col gap-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white rounded-xl
+                                      shadow-sm p-5 animate-pulse">
+                <div className="h-4 bg-gray-200 rounded
+                                w-1/3 mb-2" />
+                <div className="h-3 bg-gray-100 rounded w-2/3" />
+              </div>
+            ))}
+          </div>
         )}
 
         {error && (
@@ -56,25 +65,34 @@ export default function ComplaintTracker() {
             <p className="text-lg">
               No complaints submitted yet.
             </p>
-            <a href="/submit"
-               className="text-blue-600 text-sm mt-2
-                          hover:underline block">
+            <Link to="/submit"
+              className="text-blue-600 text-sm mt-2
+                 hover:underline block">
               Submit your first complaint →
-            </a>
+            </Link>
           </div>
         )}
 
-        <div className="flex flex-col gap-4">
-          {complaints.map((complaint) => (
-            <ComplaintCard
-              key={complaint.id}
-              complaint={{
-                ...complaint,
-                location: `${complaint.district} — ${complaint.area}`
-              }}
-            />
-          ))}
-        </div>
+        {!loading && !error && complaints.length > 0 && (
+          <div className="flex flex-col gap-4">
+            {complaints.map((complaint) => (
+              <div key={complaint.id}>
+                <ComplaintCard
+                  complaint={{
+                    ...complaint,
+                    location: `${complaint.district} — ${complaint.area}`
+                  }}
+                />
+                {complaint.report_count > 1 && (
+                  <p className="text-xs text-gray-400 mt-1 ml-1">
+                    This issue has been reported by{" "}
+                    {complaint.report_count} citizens
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

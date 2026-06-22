@@ -22,7 +22,7 @@ export default function Login() {
       const data = await api.login(email, password);
       if (data.access_token) {
         login(
-          { email: data.email, role: data.role },
+          { email: data.email, role: data.role, id: data.id },
           data.access_token
         );
         if (data.role === "authority") {
