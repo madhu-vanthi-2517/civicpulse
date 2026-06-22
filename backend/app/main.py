@@ -12,9 +12,10 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="CivicPulse API")
 
+# CORS setup for local frontend + ngrok/public testing
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["*"],  # allow all origins for testing/demo
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -36,6 +37,7 @@ app.include_router(
     classify_router,
     tags=["ML Classifier"]
 )
+
 
 @app.get("/")
 def home():

@@ -25,22 +25,18 @@ def submit_complaint(complaint: ComplaintCreate):
     try:
         text = f"{complaint.title} {complaint.description}"
 
+        # Pass actual Complaint objects directly —
+        # check_duplicate reads .title and .description itself
         existing = db.query(Complaint).filter(
             Complaint.district == complaint.district,
             Complaint.status != "Resolved"
         ).all()
 
-        existing_list = [
-            {"id": c.id, "description": f"{c.title} {c.description}"}
-            for c in existing
-        ]
+        duplicate = check_duplicate(text, existing)
 
-        duplicate = check_duplicate(text, existing_list)
-
-        # ---- DUPLICATE FOUND: merge instead of creating new row ----
         if duplicate:
             original = db.query(Complaint).filter(
-                Complaint.id == duplicate["id"]
+                Complaint.id == duplicate.id
             ).first()
 
             original.report_count += 1
@@ -66,7 +62,6 @@ def submit_complaint(complaint: ComplaintCreate):
                 "report_count": original.report_count
             }
 
-        # ---- NO DUPLICATE: create new complaint normally ----
         category = predict_category(text)
         urgency = predict_urgency(text)
         department_name = predict_department(category)
@@ -87,7 +82,6 @@ def submit_complaint(complaint: ComplaintCreate):
         db.commit()
         db.refresh(new_complaint)
 
-        # Track the original submitter too
         reporter_entry = ComplaintReporter(
             complaint_id=new_complaint.id,
             user_id=complaint.user_id
@@ -143,7 +137,6 @@ def get_public_complaints(district: str = None):
         db.close()
 
 
-# ---- NEW: citizen's own complaints, including merged ones ----
 @router.get("/complaints/mine")
 def get_my_complaints(user_id: int):
     db = SessionLocal()
@@ -154,6 +147,9 @@ def get_my_complaints(user_id: int):
             ComplaintReporter.user_id == user_id
         ).all()
         ids = [r[0] for r in reported_ids]
+
+        if not ids:
+            return []
 
         complaints = db.query(Complaint).filter(
             Complaint.id.in_(ids)
