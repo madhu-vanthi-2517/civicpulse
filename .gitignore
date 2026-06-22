@@ -36,3 +36,7 @@ dist/
 # IDE
 .vscode/
 .idea/
+
+.env
+*.db
+
