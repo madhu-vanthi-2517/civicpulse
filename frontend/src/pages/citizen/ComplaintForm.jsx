@@ -128,10 +128,15 @@ export default function ComplaintForm() {
             />
           </div>
 
-          {error && (
-            <p className="text-sm text-red-500">{error}</p>
-          )}
-
+         {error && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+            <p className="text-sm text-red-600">{error}</p>
+            <p className="text-xs text-red-400 mt-1">
+              Make sure the backend server is running, or try again
+              in a moment.
+            </p>
+          </div>
+        )}
           <button
             onClick={handleSubmit}
             disabled={loading}
