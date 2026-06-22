@@ -49,19 +49,14 @@ Examples:
 ## Department Routing
 
 Water → Public Works Department
-
 Roads → Public Works Department
-
 Sanitation → Municipality Sanitation Department
-
 Electrical → Electricity Department
-
 Other → Municipal Administration
 
 ## Duplicate Detection
 
 TF-IDF + Cosine Similarity
-
 Threshold: 0.75
 
 Scope:
