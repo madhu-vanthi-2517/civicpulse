@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { api } from "../../api";
@@ -64,11 +65,11 @@ export default function ComplaintTracker() {
             <p className="text-lg">
               No complaints submitted yet.
             </p>
-            <a href="/submit"
-               className="text-blue-600 text-sm mt-2
-                          hover:underline block">
+            <Link to="/submit"
+              className="text-blue-600 text-sm mt-2
+                 hover:underline block">
               Submit your first complaint →
-            </a>
+            </Link>
           </div>
         )}
 

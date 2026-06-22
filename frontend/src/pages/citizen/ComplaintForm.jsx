@@ -17,7 +17,7 @@ export default function ComplaintForm() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
-  const { token } = useAuth();
+  const { token, user } = useAuth();
 
   const handleSubmit = async () => {
     if (!title || !description || !district) {
@@ -29,7 +29,7 @@ export default function ComplaintForm() {
     setResult(null);
     try {
       const data = await api.submitComplaint(
-        { title, description, district, area },
+        { title, description, district, area, user_id: user?.id  },
         token
       );
       if (data.id) {
