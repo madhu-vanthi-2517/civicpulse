@@ -27,13 +27,14 @@ CivicPulse is an open-source, AI-powered grievance platform that:
 
 ## How a complaint flows through the system
 
-1. Citizen submits complaint text via React form
+1. Citizen logs in and submits a complaint via the React form
 2. FastAPI receives it and calls the AI pipeline
 3. Scikit-Learn classifies → returns Category, Urgency, Department
 4. All fields saved to PostgreSQL database
 5. Authority sees complaint on dashboard
 6. Authority updates status → Pending to Resolved
 7. Citizen tracks status on Public Tracker
+8. Analytics page reflects the updated data
 
    
 ## Citizen journey
@@ -93,14 +94,7 @@ CivicPulse is an open-source, AI-powered grievance platform that:
 | Jeevadharshini | Backend | @jeevadharshini25 |
 | Mathivathana | Frontend — Citizen UI | @mathi-vathana-06 |
 | Madhuvanthi | Frontend — Authority UI + DevOps | @madhu-vanthi-2517 |
-
- ## Demo Flow
- 1. Citizen logs in and submits a complaint.
- 2. AI quickly tags it with category, urgency, and department.
- 3. Complaint shows up on the authority dashboard.
- 4. Authority updates the status from pending to resolved.
- 5. Analytics page shows live data updates.
-   
+ 
 ## Setup
 
 ### Prerequisites
