@@ -14,7 +14,7 @@ manually handled, often duplicated, and hard to prioritize on a large scale.
 
 ## Solution
 CivicPulse is an open-source, AI-powered grievance platform that: 
-- Allows citizens to submit complaints with location and photo evidence
+- Allows citizens to submit complaints with location
 - Automatically categorizes complaint types using NLP
 - Assigns urgency levels (Low, Medium, High)
 - Routes complaints to the proper municipal  department
