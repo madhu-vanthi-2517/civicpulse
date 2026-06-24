@@ -1,4 +1,4 @@
-const BASE_URL = "https://civicpulse-backend-dlyv.onrender.com ";
+const BASE_URL = "https://civicpulse-backend-dlyv.onrender.com";
 
 export const api = {
   // Auth
@@ -35,13 +35,14 @@ export const api = {
 
   getComplaints: async (token) => {
     const res = await fetch(`${BASE_URL}/api/complaints`, {
-      headers: { "Authorization": `Bearer ${token}` }
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
     });
     return res.json();
   },
 
-  // NEW — fetches only the logged-in citizen's complaints,
-  // including ones merged into someone else's original
+  // Fetch only logged-in citizen's complaints
   getMyComplaints: async (userId) => {
     const res = await fetch(
       `${BASE_URL}/api/complaints/mine?user_id=${userId}`
@@ -53,29 +54,29 @@ export const api = {
     const url = district
       ? `${BASE_URL}/api/complaints/public?district=${district}`
       : `${BASE_URL}/api/complaints/public`;
+
     const res = await fetch(url);
     return res.json();
   },
 
   updateStatus: async (id, status, token) => {
-    const res = await fetch(
-      `${BASE_URL}/api/complaint/${id}/status`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ status, remarks: "" })
-      }
-    );
+    const res = await fetch(`${BASE_URL}/api/complaint/${id}/status`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({ status, remarks: "" })
+    });
     return res.json();
   },
 
   // Analytics
   getAnalytics: async (token) => {
     const res = await fetch(`${BASE_URL}/api/analytics`, {
-      headers: { "Authorization": `Bearer ${token}` }
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
     });
     return res.json();
   }
