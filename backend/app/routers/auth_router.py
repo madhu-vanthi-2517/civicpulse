@@ -98,30 +98,3 @@ def login(request: LoginRequest):
 
     finally:
         db.close()
-
-
-@router.put("/make-admin/{email}")
-def make_admin(email: str, secret: str):
-    if secret != SECRET_KEY:
-        raise HTTPException(status_code=403, detail="Not allowed")
-
-    db = SessionLocal()
-
-    try:
-        user = db.query(User).filter(User.email == email).first()
-
-        if not user:
-            raise HTTPException(status_code=404, detail="User not found")
-
-        user.role = "admin"
-        db.commit()
-        db.refresh(user)
-
-        return {
-            "message": "User role updated to admin",
-            "email": user.email,
-            "role": user.role
-        }
-
-    finally:
-        db.close()
