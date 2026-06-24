@@ -59,13 +59,11 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
-        
-        {/* Unified Clean Branding Header */}
         <div className="flex flex-col items-center mb-6">
           <img 
             src="/logo_civicpulse.jpeg" 
             alt="CivicPulse Logo" 
-            className="w-20 h-20 object-contain" 
+            className="w-28 h-28 object-contain" 
           />
           <h2 className="text-2xl font-bold text-center text-gray-800 mt-2">
             CivicPulse Login
