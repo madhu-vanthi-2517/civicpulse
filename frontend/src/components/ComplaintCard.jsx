@@ -1,9 +1,28 @@
-import { Droplet, MapPin, Calendar } from 'lucide-react'; // 🌟 Added scannable layout icons
+import { Droplet, Zap, Volume2, Trash2, AlertCircle, MapPin, Calendar } from 'lucide-react'; 
 import UrgencyTag from './UrgencyTag';
 import StatusBadge from './StatusBadge';
 
 export default function ComplaintCard({ complaint, onStatusChange }) {
   const { title, description, category, urgency, status, location, date } = complaint;
+
+  // 🌟 Helper to pick the perfect icon dynamically
+  const getCategoryIcon = (cat) => {
+    switch (cat?.toLowerCase()) {
+      case 'water':
+        return <Droplet size={14} className="text-blue-500 shrink-0" />;
+      case 'electrical':
+      case 'electricity':
+        return <Zap size={14} className="text-amber-500 shrink-0" />;
+      case 'noise':
+      case 'loud music':
+        return <Volume2 size={14} className="text-purple-500 shrink-0" />;
+      case 'garbage':
+      case 'waste':
+        return <Trash2 size={14} className="text-emerald-500 shrink-0" />;
+      default:
+        return <AlertCircle size={14} className="text-indigo-500 shrink-0" />;
+    }
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-xs border border-gray-200 p-5 hover:shadow-md transition-shadow duration-200 text-left">
@@ -11,9 +30,9 @@ export default function ComplaintCard({ complaint, onStatusChange }) {
       {/* Upper Meta Header section */}
       <div className="flex items-start justify-between gap-4 mb-3">
         <div>
-          {/* Category with inline icon indicator */}
+          {/* 🌟 Dynamic Icon Selection based on category */}
           <div className="flex items-center gap-1.5 text-xs font-semibold text-indigo-600 tracking-wider uppercase">
-            <Droplet size={14} className="text-blue-500 shrink-0" />
+            {getCategoryIcon(category)}
             <span>{category || "General"}</span>
           </div>
           <h3 className="text-lg font-bold text-gray-900 mt-1 capitalize">{title}</h3>
