@@ -17,7 +17,7 @@ export default function LandingPage() {
             <img
               src="/logo_civicpulse.jpeg"
               alt="CivicPulse Logo"
-              className="h-16 w-20 object-contain"
+              className="h-20 w-20 object-contain"
             />
 
             <div>
@@ -73,8 +73,9 @@ export default function LandingPage() {
                 CivicPulse bridges the gap between citizens and municipal
                 administration by making complaint reporting structured,
                 trackable, and transparent.
+                
               </p>
-            </div>
+            <div className="mt-12 grid md:grid-cols-3 gap-6">
 
             <div className="grid md:grid-cols-3 gap-6">
               <Info
