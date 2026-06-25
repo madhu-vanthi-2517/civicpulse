@@ -73,9 +73,8 @@ export default function LandingPage() {
                 CivicPulse bridges the gap between citizens and municipal
                 administration by making complaint reporting structured,
                 trackable, and transparent.
-                
               </p>
-            <div className="mt-12 grid md:grid-cols-3 gap-6">
+            <div>
 
             <div className="grid md:grid-cols-3 gap-6">
               <Info
