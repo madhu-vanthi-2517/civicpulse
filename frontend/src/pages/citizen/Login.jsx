@@ -63,7 +63,7 @@ export default function Login() {
           <img 
             src="/logo_civicpulse.jpeg" 
             alt="CivicPulse Logo" 
-            className="w-35 h-35 object-contain" 
+            className="w-50 h-50 object-contain" 
           />
           <h2 className="text-2xl font-bold text-center text-gray-800 mt-2">
             CivicPulse Login
