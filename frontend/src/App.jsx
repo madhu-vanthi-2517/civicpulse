@@ -17,49 +17,78 @@ function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const [isOpen, setIsOpen] = useState(false); 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const isActive = (path) => location.pathname === path;
 
   const isAdminPage =
-    location.pathname.startsWith('/admin') ||
-    location.pathname.startsWith('/analytics') ||
-    location.pathname.startsWith('/complaint/');
+    location.pathname.startsWith("/admin") ||
+    location.pathname.startsWith("/analytics") ||
+    location.pathname.startsWith("/complaint/");
 
   const isAuthPage =
-    location.pathname === '/login' ||
-    location.pathname === '/register' ||
-    location.pathname === '/';
+    location.pathname === "/login" ||
+    location.pathname === "/register" ||
+    location.pathname === "/";
 
   if (isAdminPage || isAuthPage) return null;
 
   const handleLogout = () => {
     logout();
-    setIsOpen(false); // Close mobile menu if logging out from it
-    navigate('/login');
+    setIsOpen(false);
+    navigate("/login");
   };
 
   return (
     <nav className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-50">
       <div className="flex items-center justify-between max-w-7xl mx-auto">
-        
-        {/* 🌟 Brand Header Link - Optimized to scale the rectangular image asset fluidly */}
-        <Link to="/" className="flex items-center gap-1 font-bold text-indigo-600 text-xl tracking-tight">
-          <img 
-            src="/logo_civicpulse.jpeg" 
-            alt="CivicPulse Logo" 
-            className="h-[95px] w-auto object-contain max-w-[160px]" 
+
+        {/* Logo */}
+        <Link
+          to="/track"
+          className="flex items-center gap-1 font-bold text-indigo-600 text-xl tracking-tight"
+        >
+          <img
+            src="/logo_civicpulse.jpeg"
+            alt="CivicPulse Logo"
+            className="h-[95px] w-auto object-contain max-w-[160px]"
           />
           <span>CivicPulse</span>
         </Link>
 
-        {/* 💻 Desktop Links View (hidden on mobile screens) */}
+        {/* Desktop Navigation */}
         <div className="hidden md:flex gap-6 text-sm items-center font-medium">
-          <Link to="/track" className="text-gray-600 hover:text-indigo-600 transition">
+
+          <Link
+            to="/track"
+            className={`transition-all duration-200 pb-1 ${
+              isActive("/track")
+                ? "text-indigo-600 border-b-2 border-indigo-600"
+                : "text-gray-600 hover:text-indigo-600"
+            }`}
+          >
             Track Complaints
           </Link>
-          <Link to="/submit" className="text-gray-600 hover:text-indigo-600 transition">
+
+          <Link
+            to="/submit"
+            className={`transition-all duration-200 pb-1 ${
+              isActive("/submit")
+                ? "text-indigo-600 border-b-2 border-indigo-600"
+                : "text-gray-600 hover:text-indigo-600"
+            }`}
+          >
             Submit
           </Link>
-          <Link to="/my-complaints" className="text-gray-600 hover:text-indigo-600 transition">
+
+          <Link
+            to="/my-complaints"
+            className={`transition-all duration-200 pb-1 ${
+              isActive("/my-complaints")
+                ? "text-indigo-600 border-b-2 border-indigo-600"
+                : "text-gray-600 hover:text-indigo-600"
+            }`}
+          >
             My Complaints
           </Link>
 
@@ -68,6 +97,7 @@ function Navbar() {
               <span className="text-xs text-gray-400">
                 {user.email}
               </span>
+
               <button
                 onClick={handleLogout}
                 className="bg-gray-100 text-gray-700 px-4 py-1.5 rounded-lg hover:bg-gray-200 font-medium text-sm transition"
@@ -76,44 +106,62 @@ function Navbar() {
               </button>
             </div>
           ) : (
-            <Link to="/login" className="bg-indigo-600 text-white px-4 py-1.5 rounded-lg hover:bg-indigo-700 font-medium transition">
+            <Link
+              to="/login"
+              className="bg-indigo-600 text-white px-4 py-1.5 rounded-lg hover:bg-indigo-700 font-medium transition"
+            >
               Login
             </Link>
           )}
         </div>
 
-        {/* 📱 Mobile Toggle Trigger (hidden on desktops) */}
+        {/* Mobile Menu Button */}
         <div className="flex md:hidden">
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="text-gray-600 hover:text-indigo-600 focus:outline-none"
+            className="text-gray-600 hover:text-indigo-600"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
 
-      {/* 📱 Mobile Dropdown Menu Slider Block */}
+      {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden mt-3 pt-3 border-t border-gray-100 flex flex-col gap-3 pb-2 text-sm font-medium">
-          <Link 
-            to="/track" 
-            onClick={() => setIsOpen(false)} 
-            className="text-gray-600 hover:text-indigo-600 py-1 transition"
+
+          <Link
+            to="/track"
+            onClick={() => setIsOpen(false)}
+            className={`py-1 ${
+              isActive("/track")
+                ? "text-indigo-600 font-semibold"
+                : "text-gray-600"
+            }`}
           >
             Track Complaints
           </Link>
-          <Link 
-            to="/submit" 
-            onClick={() => setIsOpen(false)} 
-            className="text-gray-600 hover:text-indigo-600 py-1 transition"
+
+          <Link
+            to="/submit"
+            onClick={() => setIsOpen(false)}
+            className={`py-1 ${
+              isActive("/submit")
+                ? "text-indigo-600 font-semibold"
+                : "text-gray-600"
+            }`}
           >
             Submit
           </Link>
-          <Link 
-            to="/my-complaints" 
-            onClick={() => setIsOpen(false)} 
-            className="text-gray-600 hover:text-indigo-600 py-1 transition"
+
+          <Link
+            to="/my-complaints"
+            onClick={() => setIsOpen(false)}
+            className={`py-1 ${
+              isActive("/my-complaints")
+                ? "text-indigo-600 font-semibold"
+                : "text-gray-600"
+            }`}
           >
             My Complaints
           </Link>
@@ -123,6 +171,7 @@ function Navbar() {
               <span className="text-xs text-gray-400 truncate">
                 {user.email}
               </span>
+
               <button
                 onClick={handleLogout}
                 className="w-full bg-gray-100 text-gray-700 py-2 rounded-lg text-center font-semibold text-xs"
@@ -131,14 +180,15 @@ function Navbar() {
               </button>
             </div>
           ) : (
-            <Link 
-              to="/login" 
-              onClick={() => setIsOpen(false)} 
+            <Link
+              to="/login"
+              onClick={() => setIsOpen(false)}
               className="w-full bg-indigo-600 text-white py-2 rounded-lg text-center font-semibold text-xs block mt-1"
             >
               Login
             </Link>
           )}
+
         </div>
       )}
     </nav>
