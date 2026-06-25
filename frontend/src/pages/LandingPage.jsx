@@ -16,55 +16,46 @@ export default function LandingPage() {
             <img
               src="/logo_civicpulse.jpeg"
               alt="CivicPulse Logo"
-              className="h-12 w-auto object-contain"
+              className="h-11 w-auto object-contain"
             />
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">CivicPulse</h1>
-              <p className="text-xs text-gray-500">Your City. Your Voice.</p>
+              <h1 className="text-3xl font-bold text-gray-900">
+                CivicPulse
+              </h1>
+              <p className="text-xs text-indigo-600 font-semibold">
+                Smart. Simple. Transparent.
+              </p>
             </div>
           </Link>
 
-          <div className="flex items-center gap-8 text-sm font-medium">
-            <Link
-              to="/"
-              className="text-indigo-600 border-b-2 border-indigo-600 pb-1"
-            >
-              Home
-            </Link>
-
-            <Link to="/track" className="text-gray-600 hover:text-indigo-600">
-              Track Complaint
-            </Link>
-
-            <Link
-              to="/login"
-              className="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
-            >
-              Login
-            </Link>
-          </div>
+          <Link
+            to="/login"
+            className="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold text-sm hover:bg-blue-700 transition"
+          >
+            Login
+          </Link>
         </div>
       </nav>
 
       <section className="bg-gradient-to-r from-blue-50 via-white to-blue-50">
-        <div className="max-w-4xl mx-auto px-6 py-16 text-center">
-          <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold mb-5">
+        <div className="max-w-5xl mx-auto px-6 py-16 text-center">
+          <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold mb-6">
             <ShieldCheck size={14} />
             Smart. Simple. Transparent.
           </div>
 
-          <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 md:p-10">
-            <h2 className="text-3xl font-bold text-gray-900 mb-5">
+          <div className="bg-white rounded-3xl shadow-md border border-gray-100 p-8 md:p-10">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">
               Why CivicPulse?
             </h2>
 
-            <p className="text-gray-600 leading-relaxed max-w-2xl mx-auto mb-8">
+            <p className="text-gray-600 leading-relaxed max-w-2xl mx-auto mb-10">
               CivicPulse bridges the gap between citizens and municipal
               administration by making complaint reporting structured,
               trackable, and transparent.
             </p>
 
-            <div className="grid md:grid-cols-3 gap-4 text-left">
+            <div className="grid md:grid-cols-3 gap-6 text-left">
               <Info
                 title="AI-assisted categorization"
                 text="Complaints are automatically classified into the right civic category."
@@ -156,8 +147,8 @@ export default function LandingPage() {
 
 function Info({ title, text }) {
   return (
-    <div className="border border-gray-100 rounded-xl p-4 bg-gray-50">
-      <h4 className="font-bold text-gray-900 mb-1">{title}</h4>
+    <div className="border border-gray-100 rounded-xl p-5 bg-gray-50 hover:bg-white hover:shadow-sm transition">
+      <h4 className="font-bold text-gray-900 mb-3">{title}</h4>
       <p className="text-sm text-gray-600 leading-relaxed">{text}</p>
     </div>
   );
