@@ -42,6 +42,16 @@ export const api = {
     return res.json();
   },
 
+  // 🌟 Added: Fetches single record dynamically by ID from Render backend
+  getComplaintById: async (id, token) => {
+    const res = await fetch(`${BASE_URL}/api/complaint/${id}`, {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+    return res.json();
+  },
+
   // Fetch only logged-in citizen's complaints
   getMyComplaints: async (userId) => {
     const res = await fetch(
