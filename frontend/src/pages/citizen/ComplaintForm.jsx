@@ -180,9 +180,19 @@ export default function ComplaintForm() {
             <label className="text-sm font-semibold text-gray-700 block mb-1">
               Upload Evidence
             </label>
-            <label className="border-2 border-dashed border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-gray-50 transition">
-              <Upload className="w-6 h-6 text-gray-400" />
-              <span className="text-xs text-gray-500 font-medium">
+            <label className={`border-2 border-dashed rounded-lg p-4 flex flex-col items-center justify-center gap-2 cursor-pointer transition ${
+              image ? 'border-emerald-500 bg-emerald-50/50' : 'border-gray-300 hover:bg-gray-50'
+            }`}>
+              {image ? (
+                <div className="bg-emerald-500 text-white rounded-full p-1 shadow-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-4 h-4">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                  </svg>
+                </div>
+              ) : (
+                <Upload className="w-6 h-6 text-gray-400" />
+              )}
+              <span className={`text-xs font-medium ${image ? 'text-emerald-700 font-semibold' : 'text-gray-500'}`}>
                 {image ? image.name : "Click to select or upload an image"}
               </span>
               <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
@@ -210,7 +220,7 @@ export default function ComplaintForm() {
           {result && (
             <div className="mt-2 p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
               <div className="flex items-center gap-2 text-sm font-bold text-emerald-800 mb-3">
-                <Cpu size={16} className="text-emerald-600 unit-pulse" />
+                <Cpu size={16} className="text-emerald-600 animate-pulse" />
                 <span>AI Classification Analysis Complete</span>
               </div>
               <div className="grid grid-cols-3 gap-3">
