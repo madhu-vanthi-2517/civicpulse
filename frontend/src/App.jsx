@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route,
          Link, useLocation, useNavigate } from 'react-router-dom';
-import { useState } from 'react'; // 📱 Added for mobile menu tracking
-import { Menu, X } from 'lucide-react'; // ☰ Added icon components
+import { useState } from 'react';
+import { Menu, X } from 'lucide-react';  
 import { useAuth } from './context/AuthContext';
 import ComplaintForm from './pages/citizen/ComplaintForm';
 import Login from './pages/citizen/Login';
@@ -17,7 +17,7 @@ function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const [isOpen, setIsOpen] = useState(false); // 📱 Dynamic mobile menu state toggle
+  const [isOpen, setIsOpen] = useState(false); 
 
   const isAdminPage =
     location.pathname.startsWith('/admin') ||
