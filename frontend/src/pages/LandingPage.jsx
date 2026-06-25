@@ -2,42 +2,42 @@ import { Link } from "react-router-dom";
 import {
   ClipboardList,
   Search,
-  UserCheck,
   ShieldCheck,
   Clock,
   Brain,
   ArrowRight,
+  CheckCircle,
 } from "lucide-react";
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
       <nav className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
+        <div className="max-w-7xl mx-auto flex items-start justify-between">
+          <Link to="/" className="flex items-start gap-2">
             <img
               src="/logo_civicpulse.jpeg"
               alt="CivicPulse Logo"
-              className="h-14 w-auto object-contain"
+              className="h-14 w-auto object-contain -mt-2"
             />
             <div>
-              <h1 className="text-xl font-bold text-indigo-600">CivicPulse</h1>
+              <h1 className="text-xl font-bold text-indigo-600">
+                CivicPulse
+              </h1>
               <p className="text-xs text-gray-500">Your City. Your Voice.</p>
             </div>
           </Link>
 
           <div className="hidden md:flex items-center gap-8 text-sm font-medium">
-            <Link to="/" className="text-indigo-600 border-b-2 border-indigo-600 pb-1">
+            <Link
+              to="/"
+              className="text-indigo-600 border-b-2 border-indigo-600 pb-1"
+            >
               Home
             </Link>
+
             <Link to="/track" className="text-gray-600 hover:text-indigo-600">
               Track Complaint
-            </Link>
-            <Link to="/login" className="text-gray-600 hover:text-indigo-600">
-              Submit Complaint
-            </Link>
-            <Link to="/login" className="text-gray-600 hover:text-indigo-600">
-              My Complaints
             </Link>
           </div>
 
@@ -63,7 +63,7 @@ export default function LandingPage() {
               Improve Your City.
             </h2>
 
-            <p className="text-gray-600 text-base md:text-lg max-w-xl mb-7 leading-relaxed">
+            <p className="text-gray-600 text-base md:text-lg max-w-xl mb-10 leading-relaxed">
               CivicPulse helps citizens report civic issues, track complaint
               progress, and support faster resolution through AI-assisted
               complaint management.
@@ -85,14 +85,6 @@ export default function LandingPage() {
                 <Search size={17} />
                 Track Complaint
               </Link>
-
-              <Link
-                to="/login"
-                className="bg-white border border-gray-300 text-gray-700 px-5 py-3 rounded-lg font-semibold text-sm hover:bg-gray-100 transition flex items-center gap-2"
-              >
-                <UserCheck size={17} />
-                My Complaints
-              </Link>
             </div>
 
             <div className="flex flex-wrap gap-6 mt-8 text-sm text-gray-600">
@@ -100,10 +92,12 @@ export default function LandingPage() {
                 <ShieldCheck size={16} className="text-green-500" />
                 Secure & Reliable
               </span>
+
               <span className="flex items-center gap-2">
-                <UserCheck size={16} className="text-blue-500" />
+                <CheckCircle size={16} className="text-blue-500" />
                 Transparent Process
               </span>
+
               <span className="flex items-center gap-2">
                 <Clock size={16} className="text-purple-500" />
                 Faster Tracking
@@ -112,40 +106,31 @@ export default function LandingPage() {
           </div>
 
           <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
-            <div className="rounded-2xl bg-blue-50 p-6">
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 max-w-sm mx-auto">
-                <p className="text-xs font-bold text-blue-600 uppercase mb-2">
-                  Sample Complaint
-                </p>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  Water Leakage
-                </h3>
-                <p className="text-sm text-gray-500 mb-4">
-                  Pipeline leakage near residential street.
-                </p>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              Why CivicPulse?
+            </h3>
 
-                <div className="space-y-3 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Complaint ID</span>
-                    <span className="font-semibold">#CP001</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Category</span>
-                    <span className="font-semibold text-blue-600">Water</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Status</span>
-                    <span className="font-semibold text-amber-600">In Progress</span>
-                  </div>
-                </div>
+            <p className="text-gray-600 leading-relaxed mb-6">
+              CivicPulse bridges the gap between citizens and municipal
+              administration by making complaint reporting structured,
+              trackable, and transparent.
+            </p>
 
-                <Link
-                  to="/track"
-                  className="mt-5 block text-center bg-blue-600 text-white rounded-lg py-2 text-sm font-semibold hover:bg-blue-700 transition"
-                >
-                  Track Now
-                </Link>
-              </div>
+            <div className="space-y-4">
+              <Info
+                title="AI-assisted categorization"
+                text="Complaints are automatically classified into the right civic category."
+              />
+
+              <Info
+                title="Faster department routing"
+                text="Issues are routed based on category, urgency, and department mapping."
+              />
+
+              <Info
+                title="Transparent tracking"
+                text="Citizens can track complaint progress using a complaint ID."
+              />
             </div>
           </div>
         </div>
@@ -160,20 +145,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto px-6 py-12">
-        <h2 className="text-2xl font-bold text-center text-gray-900 mb-10">
-          How It Works
-        </h2>
-
-        <div className="grid md:grid-cols-4 gap-5">
-          <Step number="1" title="Submit" text="Report the issue with details and location." />
-          <Step number="2" title="Classify" text="AI categorizes the complaint automatically." />
-          <Step number="3" title="Track" text="Use complaint ID to check live status." />
-          <Step number="4" title="Resolve" text="Authorities update progress and resolution." />
-        </div>
-      </section>
-
-      <section className="max-w-7xl mx-auto px-6 pb-14">
+      <section className="max-w-7xl mx-auto px-6 pb-10">
         <div className="bg-blue-50 border border-blue-100 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-5">
           <div>
             <h3 className="text-xl font-bold text-gray-900">
@@ -194,6 +166,19 @@ export default function LandingPage() {
         </div>
       </section>
 
+      <section className="max-w-6xl mx-auto px-6 py-12">
+        <h2 className="text-2xl font-bold text-center text-gray-900 mb-10">
+          How It Works
+        </h2>
+
+        <div className="grid md:grid-cols-4 gap-5">
+          <Step number="1" title="Submit" text="Citizen reports the issue with details and location." />
+          <Step number="2" title="Classify" text="AI categorizes the complaint automatically." />
+          <Step number="3" title="Track" text="Citizen tracks status using complaint ID." />
+          <Step number="4" title="Resolve" text="Authority reviews and updates complaint status." />
+        </div>
+      </section>
+
       <footer className="bg-white border-t border-gray-200 px-6 py-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-4 text-sm text-gray-500">
           <div className="flex items-center gap-2">
@@ -206,9 +191,6 @@ export default function LandingPage() {
           </div>
 
           <div className="flex gap-5">
-            <Link to="/track" className="hover:text-indigo-600">
-              Track Complaint
-            </Link>
             <Link to="/login" className="hover:text-indigo-600">
               Login
             </Link>
@@ -220,6 +202,15 @@ export default function LandingPage() {
           <p>© 2026 CivicPulse. All rights reserved.</p>
         </div>
       </footer>
+    </div>
+  );
+}
+
+function Info({ title, text }) {
+  return (
+    <div className="border border-gray-100 rounded-xl p-4 bg-gray-50">
+      <h4 className="font-bold text-gray-900 mb-1">{title}</h4>
+      <p className="text-sm text-gray-600">{text}</p>
     </div>
   );
 }
