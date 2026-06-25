@@ -5,6 +5,7 @@ import {
   Clock,
   Brain,
   ArrowRight,
+  CheckCircle,
 } from "lucide-react";
 
 export default function LandingPage() {
@@ -16,13 +17,14 @@ export default function LandingPage() {
             <img
               src="/logo_civicpulse.jpeg"
               alt="CivicPulse Logo"
-              className="h-11 w-auto object-contain"
+              className="h-12 w-auto object-contain"
             />
+
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-4xl font-bold text-gray-900 leading-none">
                 CivicPulse
               </h1>
-              <p className="text-xs text-indigo-600 font-semibold">
+              <p className="text-sm text-indigo-600 font-semibold mt-2">
                 Smart. Simple. Transparent.
               </p>
             </div>
@@ -30,7 +32,7 @@ export default function LandingPage() {
 
           <Link
             to="/login"
-            className="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold text-sm hover:bg-blue-700 transition"
+            className="bg-blue-600 text-white px-6 py-2.5 rounded-lg font-semibold text-sm hover:bg-blue-700 transition"
           >
             Login
           </Link>
@@ -38,24 +40,21 @@ export default function LandingPage() {
       </nav>
 
       <section className="bg-gradient-to-r from-blue-50 via-white to-blue-50">
-        <div className="max-w-5xl mx-auto px-6 py-16 text-center">
-          <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold mb-6">
-            <ShieldCheck size={14} />
-            Smart. Simple. Transparent.
-          </div>
+        <div className="max-w-6xl mx-auto px-6 py-16">
+          <div className="bg-white rounded-3xl shadow-md border border-gray-100 p-8 md:p-12">
+            <div className="text-center max-w-3xl mx-auto">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                Why CivicPulse?
+              </h2>
 
-          <div className="bg-white rounded-3xl shadow-md border border-gray-100 p-8 md:p-10">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">
-              Why CivicPulse?
-            </h2>
+              <p className="text-gray-600 leading-8 text-base md:text-lg mb-10">
+                CivicPulse bridges the gap between citizens and municipal
+                administration by making complaint reporting structured,
+                trackable, and transparent.
+              </p>
+            </div>
 
-            <p className="text-gray-600 leading-relaxed max-w-2xl mx-auto mb-10">
-              CivicPulse bridges the gap between citizens and municipal
-              administration by making complaint reporting structured,
-              trackable, and transparent.
-            </p>
-
-            <div className="grid md:grid-cols-3 gap-6 text-left">
+            <div className="grid md:grid-cols-3 gap-6">
               <Info
                 title="AI-assisted categorization"
                 text="Complaints are automatically classified into the right civic category."
@@ -147,9 +146,18 @@ export default function LandingPage() {
 
 function Info({ title, text }) {
   return (
-    <div className="border border-gray-100 rounded-xl p-5 bg-gray-50 hover:bg-white hover:shadow-sm transition">
-      <h4 className="font-bold text-gray-900 mb-3">{title}</h4>
-      <p className="text-sm text-gray-600 leading-relaxed">{text}</p>
+    <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 hover:bg-white hover:shadow-md transition">
+      <div className="w-9 h-9 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-4">
+        <CheckCircle size={18} />
+      </div>
+
+      <h4 className="font-bold text-gray-900 mb-3">
+        {title}
+      </h4>
+
+      <p className="text-sm text-gray-600 leading-7">
+        {text}
+      </p>
     </div>
   );
 }
@@ -174,8 +182,14 @@ function Step({ number, title, text }) {
       <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold mx-auto mb-4">
         {number}
       </div>
-      <h3 className="font-bold text-gray-900 mb-2">{title}</h3>
-      <p className="text-sm text-gray-500 leading-relaxed">{text}</p>
+
+      <h3 className="font-bold text-gray-900 mb-2">
+        {title}
+      </h3>
+
+      <p className="text-sm text-gray-500 leading-relaxed">
+        {text}
+      </p>
     </div>
   );
 }
