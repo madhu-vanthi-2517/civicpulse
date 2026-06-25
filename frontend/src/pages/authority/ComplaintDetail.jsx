@@ -18,18 +18,50 @@ export default function ComplaintDetail() {
   useEffect(() => {
     const fetchComplaint = async () => {
       try {
-        const cleanId = id.replace('#', '').trim();
-        const data = await fetch(`http://127.0.0.1:8000/api/complaint/${cleanId}`);
-        const json = await data.json();
-        setComplaint(json);
+        setLoading(true);
+        const cleanId = id.toString().replace('#', '').trim();
+        
+        // 🌟 Replaced with your dynamic api utility file configuration to handle plural routes properly
+        const data = await api.getComplaintById?.(cleanId, token) || await fallbackFetch(cleanId);
+        
+        if (data) {
+          setComplaint(data);
+        } else {
+          setComplaint(null);
+        }
       } catch (err) {
-        console.error("Failed to load complaint");
+        console.error("Failed to load complaint:", err);
+        setComplaint(null);
       } finally {
         setLoading(false);
       }
     };
-    fetchComplaint();
-  }, [id]);
+
+    // 🔄 Fallback fetch if your api.js utility isn't fully bound yet
+    const fallbackFetch = async (cleanId) => {
+      // Trying plural route first, then matching singular if needed
+      const endpoints = [
+        `http://127.0.0.1:8000/api/complaints/${cleanId}`,
+        `http://127.0.0.1:8000/api/complaint/${cleanId}`
+      ];
+      
+      for (const url of endpoints) {
+        try {
+          const res = await fetch(url, {
+            headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+          });
+          if (res.ok) return await res.json();
+        } catch (e) {
+          console.warn(`Failed endpoint target: ${url}`);
+        }
+      }
+      return null;
+    };
+
+    if (id) {
+      fetchComplaint();
+    }
+  }, [id, token]);
 
   const handleStatusChange = async (newStatus) => {
     try {
@@ -45,13 +77,19 @@ export default function ComplaintDetail() {
 
   if (loading) return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <p className="text-gray-400">Loading complaint...</p>
+      <p className="text-gray-400 font-sans">Loading complaint details...</p>
     </div>
   );
 
   if (!complaint) return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <p className="text-red-500">Complaint not found.</p>
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center gap-4">
+      <p className="text-red-500 font-semibold">Complaint not found.</p>
+      <button 
+        onClick={() => navigate('/admin')}
+        className="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-indigo-700 transition"
+      >
+        Return to Command Panel
+      </button>
     </div>
   );
 
@@ -60,7 +98,7 @@ export default function ComplaintDetail() {
       <div className="max-w-2xl mx-auto">
         <button
           onClick={() => navigate('/admin')}
-          className="text-sm text-indigo-600 hover:underline mb-6 flex items-center gap-1"
+          className="text-sm text-indigo-600 hover:underline mb-6 flex items-center gap-1 cursor-pointer"
         >
           {"← Back to Dashboard"}
         </button>
@@ -78,19 +116,19 @@ export default function ComplaintDetail() {
             <UrgencyTag urgency={complaint.urgency} />
           </div>
 
-          <p className="text-sm text-gray-600 mb-4 text-left">
+          <p className="text-sm text-gray-600 mb-4 text-left leading-relaxed">
             {complaint.description}
           </p>
 
           <div className="grid grid-cols-2 gap-3 text-sm mb-6">
             {[
               ["Category", complaint.category],
-              ["Department", complaint.department_name],
+              ["Department", complaint.department_name || complaint.department],
               ["District", complaint.district],
               ["Area", complaint.area],
             ].map(([label, value]) => (
-              <div key={label} className="bg-gray-50 rounded-lg p-3 text-left">
-                <span className="text-xs text-gray-400 block mb-1">
+              <div key={label} className="bg-gray-50 rounded-lg p-3 text-left border border-gray-100/50">
+                <span className="text-xs text-gray-400 block mb-1 font-semibold uppercase tracking-wider">
                   {label}
                 </span>
                 <span className="font-medium text-gray-700">
@@ -100,9 +138,9 @@ export default function ComplaintDetail() {
             ))}
           </div>
 
-          {/* 📸 Mock Evidence Image Showcase Panel */}
+          {/* 📸 Evidence Image Showcase Panel */}
           <div className="mt-4 p-4 border border-gray-100 rounded-xl bg-gray-50/50 text-left">
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider block mb-2">
+            <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">
               Attached Citizen Evidence
             </span>
             {complaint.image_url ? (
@@ -135,7 +173,7 @@ export default function ComplaintDetail() {
               <button
                 key={s}
                 onClick={() => handleStatusChange(s)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
                   complaint.status === s 
                     ? "bg-indigo-600 text-white" 
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
