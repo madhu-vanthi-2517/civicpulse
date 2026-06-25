@@ -42,13 +42,13 @@ export default function AdminDashboard() {
     : complaints;
 
   return (
-    <div className="flex min-h-screen w-full bg-gray-50 text-slate-900 font-sans antialiased overflow-x-hidden">
+    /* 🌟 STRETCH UTILITIES: Removed fixed constraints to enforce true edge-to-edge layout */
+    <div className="flex min-h-screen w-full min-w-full bg-gray-50 text-slate-900 font-sans antialiased m-0 p-0 overflow-x-hidden">
 
-      {/* Sidebar */}
+      {/* Sidebar Area */}
       <aside className={`flex-shrink-0 bg-white border-r border-gray-200 p-4 flex flex-col justify-between text-left transition-all duration-300 ${
         isCollapsed ? 'w-16' : 'w-64'
       }`}>
-        {/* Top Navigation & Logo Branding */}
         <div className="flex flex-col gap-6">
           <div className="flex items-center justify-between border-b border-gray-100 pb-4 min-h-[85px]">
             {!isCollapsed ? (
@@ -88,7 +88,6 @@ export default function AdminDashboard() {
           </nav>
         </div>
 
-        {/* Bottom Panel Actions: Node Security + Logout Trigger */}
         <div className="flex flex-col gap-3 border-t border-gray-100 pt-4">
           <button
             onClick={handleLogoutClick}
@@ -108,9 +107,9 @@ export default function AdminDashboard() {
         </div>
       </aside>
 
-      {/* Main content body canvas */}
+      {/* Main Content Workspace Canvas */}
       <main className="flex-1 w-full p-8 overflow-y-auto bg-gray-50">
-        <header className="mb-8 border-b border-gray-200 pb-4">
+        <header className="mb-8 border-b border-gray-200 pb-4 text-left">
           <h1 className="text-3xl font-bold text-gray-900">
             Authority Command Panel
           </h1>
@@ -119,19 +118,15 @@ export default function AdminDashboard() {
           </p>
         </header>
 
-        {/* Metrics Overview Cards */}
+        {/* Metrics Grid */}
         <div className="grid grid-cols-3 gap-4 mb-8">
           <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-xs text-left">
             <h3 className="text-sm font-medium text-gray-500 uppercase">Total</h3>
-            <p className="text-2xl font-bold text-gray-900 mt-2">
-              {complaints.length}
-            </p>
+            <p className="text-2xl font-bold text-gray-900 mt-2">{complaints.length}</p>
           </div>
           <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-xs text-left">
             <h3 className="text-sm font-medium text-amber-600 uppercase">Pending</h3>
-            <p className="text-2xl font-bold text-amber-700 mt-2">
-              {pendingCount}
-            </p>
+            <p className="text-2xl font-bold text-amber-700 mt-2">{pendingCount}</p>
           </div>
           <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-xs text-left">
             <h3 className="text-sm font-medium text-emerald-600 uppercase">Resolved</h3>
@@ -141,7 +136,6 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Filtering Controllers */}
         <div className="text-left">
           <button
             onClick={() => setSortByReports(!sortByReports)}
@@ -151,7 +145,7 @@ export default function AdminDashboard() {
           </button>
         </div>
 
-        {/* Core Tickets Grid View */}
+        {/* Dynamic Interactive Complaints Data Table */}
         {loading ? (
           <div className="flex flex-col gap-3">
             {[1, 2, 3].map((i) => (
