@@ -1,5 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+
+import os
 
 from app.database import engine
 from app.models import Base
@@ -8,9 +11,19 @@ from app.routers.auth_router import router as auth_router
 from app.routers.complaints import router as complaints_router
 from app.routers.classify import router as classify_router
 
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="CivicPulse API")
+
+UPLOAD_DIR = "uploads"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+app.mount(
+    "/uploads",
+    StaticFiles(directory=UPLOAD_DIR),
+    name="uploads"
+)
 
 app.add_middleware(
     CORSMiddleware,
