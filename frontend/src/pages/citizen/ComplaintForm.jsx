@@ -70,7 +70,7 @@ export default function ComplaintForm() {
               <FileText size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
-                placeholder="e.g. Pothole on main road"
+                placeholder="Enter your complaint here"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 className="w-full border border-gray-300 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
@@ -124,7 +124,7 @@ export default function ComplaintForm() {
               <MapPin size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
-                placeholder="e.g. Anna Nagar, Lawspet"
+                placeholder="Enter the location"
                 value={area}
                 onChange={(e) => setArea(e.target.value)}
                 className="w-full border border-gray-300 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
