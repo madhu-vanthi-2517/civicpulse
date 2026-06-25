@@ -38,16 +38,15 @@ function Navbar() {
   };
 
   return (
-    // 🌟 Expanded vertical padding to py-4 to comfortably fit the larger logo
     <nav className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-50">
       <div className="flex items-center justify-between max-w-7xl mx-auto">
         
-        {/* 🌟 Brand Header Link with a clear, visible 50x50px logo layout */}
-        <Link to="/" className="flex items-center gap-3 font-bold text-indigo-600 text-xl tracking-tight">
+        {/* 🌟 Brand Header Link - Optimized to scale the rectangular image asset fluidly */}
+        <Link to="/" className="flex items-center gap-1 font-bold text-indigo-600 text-xl tracking-tight">
           <img 
             src="/logo_civicpulse.jpeg" 
             alt="CivicPulse Logo" 
-            className="w-[200px] h-[100px] object-contain rounded-md shadow-xs border border-gray-100" 
+            className="h-[55px] w-auto object-contain max-w-[160px]" 
           />
           <span>CivicPulse</span>
         </Link>
