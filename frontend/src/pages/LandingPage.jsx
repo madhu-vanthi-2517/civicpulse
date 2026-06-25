@@ -17,7 +17,7 @@ export default function LandingPage() {
             <img
               src="/logo_civicpulse.jpeg"
               alt="CivicPulse Logo"
-              className="h-14 w-auto object-contain"
+              className="h-16 w-20 object-contain"
             />
 
             <div>
@@ -39,6 +39,28 @@ export default function LandingPage() {
         </div>
       </nav>
 
+
+      <section className="max-w-7xl mx-auto px-6 py-10">
+        <div className="bg-blue-50 border border-blue-100 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-5">
+          <div>
+            <h3 className="text-xl font-bold text-gray-900">
+              Be a responsible citizen.
+            </h3>
+            <p className="text-gray-600 text-sm mt-1">
+              Your small report can help improve public services.
+            </p>
+          </div>
+
+          <Link
+            to="/login"
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold text-sm hover:bg-blue-700 transition flex items-center gap-2"
+          >
+            Submit a Complaint Now
+            <ArrowRight size={18} />
+          </Link>
+        </div>
+      </section>
+      
       <section className="bg-gradient-to-r from-blue-50 via-white to-blue-50">
         <div className="max-w-6xl mx-auto px-6 py-16">
           <div className="bg-white rounded-3xl shadow-md border border-gray-100 p-8 md:p-12">
@@ -74,26 +96,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-6 py-10">
-        <div className="bg-blue-50 border border-blue-100 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-5">
-          <div>
-            <h3 className="text-xl font-bold text-gray-900">
-              Be a responsible citizen.
-            </h3>
-            <p className="text-gray-600 text-sm mt-1">
-              Your small report can help improve public services.
-            </p>
-          </div>
-
-          <Link
-            to="/login"
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold text-sm hover:bg-blue-700 transition flex items-center gap-2"
-          >
-            Submit a Complaint Now
-            <ArrowRight size={18} />
-          </Link>
-        </div>
-      </section>
+      
 
       <section className="max-w-7xl mx-auto px-6 py-8">
         <div className="bg-white border border-gray-100 rounded-2xl shadow-sm grid md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-gray-100">
