@@ -17,11 +17,11 @@ export default function LandingPage() {
             <img
               src="/logo_civicpulse.jpeg"
               alt="CivicPulse Logo"
-              className="h-12 w-auto object-contain"
+              className="h-10 w-auto object-contain"
             />
 
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 leading-none">
+              <h1 className="text-3xl font-bold text-gray-900 leading-none">
                 CivicPulse
               </h1>
               <p className="text-sm text-indigo-600 font-semibold mt-2">
