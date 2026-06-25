@@ -46,7 +46,7 @@ function Navbar() {
           <img 
             src="/logo_civicpulse.jpeg" 
             alt="CivicPulse Logo" 
-            className="h-[55px] w-auto object-contain max-w-[160px]" 
+            className="h-[95px] w-auto object-contain max-w-[160px]" 
           />
           <span>CivicPulse</span>
         </Link>
