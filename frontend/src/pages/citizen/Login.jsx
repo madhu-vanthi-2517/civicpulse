@@ -68,7 +68,7 @@ export default function Login() {
             className="w-[180px] h-auto object-contain -mt-6" 
           />
           <h2 className="text-2xl font-bold text-center text-gray-800 -mt-2">
-            CivicPulse Login
+            Login
           </h2>
         </div>
 
