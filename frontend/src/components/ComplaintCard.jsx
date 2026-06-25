@@ -32,7 +32,7 @@ export default function ComplaintCard({ complaint, onStatusChange }) {
         <div>
           {/* 🌟 Dynamic Icon Selection based on category */}
           <p className="text-xs font-semibold text-indigo-600 mb-1"> 
-            Complaint ID: #{id}
+            Complaint ID: {id}
           </p>
           <div className="flex items-center gap-1.5 text-xs font-semibold text-indigo-600 tracking-wider uppercase">
             {getCategoryIcon(category)}
