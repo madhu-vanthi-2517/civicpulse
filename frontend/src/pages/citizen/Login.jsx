@@ -59,13 +59,15 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
-        <div className="flex flex-col items-center mb-6">
+        
+        {/* 🌟 Updated Branding Block: Shifted logo upside and closed the spacing gap */}
+        <div className="flex flex-col items-center mb-2">
           <img 
             src="/logo_civicpulse.jpeg" 
             alt="CivicPulse Logo" 
-            className="w-50 h-50 object-contain" 
+            className="w-[180px] h-auto object-contain -mt-6" 
           />
-          <h2 className="text-2xl font-bold text-center text-gray-800 mt-2">
+          <h2 className="text-2xl font-bold text-center text-gray-800 -mt-2">
             CivicPulse Login
           </h2>
         </div>
