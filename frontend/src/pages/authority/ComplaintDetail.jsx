@@ -21,10 +21,10 @@ export default function ComplaintDetail() {
         setLoading(true);
         const cleanId = id.toString().replace('#', '').trim();
         
-        // 🌟 Replaced with your dynamic api utility file configuration to handle plural routes properly
-        const data = await api.getComplaintById?.(cleanId, token) || await fallbackFetch(cleanId);
+        // 🌟 Directly hitting the updated Render service function from api.js
+        const data = await api.getComplaintById(cleanId, token);
         
-        if (data) {
+        if (data && !data.detail) {
           setComplaint(data);
         } else {
           setComplaint(null);
@@ -35,27 +35,6 @@ export default function ComplaintDetail() {
       } finally {
         setLoading(false);
       }
-    };
-
-    // 🔄 Fallback fetch if your api.js utility isn't fully bound yet
-    const fallbackFetch = async (cleanId) => {
-      // Trying plural route first, then matching singular if needed
-      const endpoints = [
-        `http://127.0.0.1:8000/api/complaints/${cleanId}`,
-        `http://127.0.0.1:8000/api/complaint/${cleanId}`
-      ];
-      
-      for (const url of endpoints) {
-        try {
-          const res = await fetch(url, {
-            headers: token ? { 'Authorization': `Bearer ${token}` } : {}
-          });
-          if (res.ok) return await res.json();
-        } catch (e) {
-          console.warn(`Failed endpoint target: ${url}`);
-        }
-      }
-      return null;
     };
 
     if (id) {
@@ -86,7 +65,7 @@ export default function ComplaintDetail() {
       <p className="text-red-500 font-semibold">Complaint not found.</p>
       <button 
         onClick={() => navigate('/admin')}
-        className="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-indigo-700 transition"
+        className="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-indigo-700 transition cursor-pointer"
       >
         Return to Command Panel
       </button>
