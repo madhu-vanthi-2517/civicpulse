@@ -24,7 +24,7 @@ TF-IDF Vectorizer → Logistic Regression
 
 ## Accuracy
 
-Accuracy: 98.32%
+Accuracy: 95.9%
 
 The high accuracy is attributed to the
 textual distinction between complaint categories
