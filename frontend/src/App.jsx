@@ -41,9 +41,14 @@ function Navbar() {
     <nav className="bg-white border-b border-gray-200 px-6 py-3 sticky top-0 z-50">
       <div className="flex items-center justify-between max-w-7xl mx-auto">
         
-        {/* Brand Header Link */}
-        <Link to="/" className="font-bold text-indigo-600 text-lg">
-          CivicPulse
+        {/* 🌟 Brand Header Link with Integrated 35x35px Logo */}
+        <Link to="/" className="flex items-center gap-2 font-bold text-indigo-600 text-lg">
+          <img 
+            src="/logo_civicpulse.jpeg" 
+            alt="CivicPulse Logo" 
+            className="w-[35px] h-[35px] object-contain rounded" 
+          />
+          <span>CivicPulse</span>
         </Link>
 
         {/* 💻 Desktop Links View (hidden on mobile screens) */}
