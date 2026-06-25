@@ -1,8 +1,17 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { api } from "../../api";
-// 🌟 Added lucide-react inline icon imports
-import { FileText, AlignLeft, MapPin, Building, Send, Cpu, AlertTriangle } from "lucide-react"; 
+import { 
+  FileText, 
+  AlignLeft, 
+  MapPin, 
+  Building, 
+  Send, 
+  Cpu, 
+  AlertTriangle, 
+  Upload, 
+  Loader2 
+} from "lucide-react"; 
 
 const PUDUCHERRY_DISTRICTS = [
   "Puducherry",
@@ -16,10 +25,38 @@ export default function ComplaintForm() {
   const [description, setDescription] = useState("");
   const [district, setDistrict] = useState("");
   const [area, setArea] = useState("");
+  const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [locLoading, setLocLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
   const { token, user } = useAuth();
+
+  const handleGetCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser");
+      return;
+    }
+    setLocLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setArea(`Coordinates: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
+        setLocLoading(false);
+      },
+      (error) => {
+        console.error(error);
+        alert("Unable to retrieve your location");
+        setLocLoading(false);
+      }
+    );
+  };
+
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setImage(e.target.files[0]);
+    }
+  };
 
   const handleSubmit = async () => {
     if (!title || !description || !district) {
@@ -31,7 +68,7 @@ export default function ComplaintForm() {
     setResult(null);
     try {
       const data = await api.submitComplaint(
-        { title, description, district, area, user_id: user?.id  },
+        { title, description, district, area, user_id: user?.id },
         token
       );
       if (data.id) {
@@ -40,6 +77,7 @@ export default function ComplaintForm() {
         setDescription("");
         setDistrict("");
         setArea("");
+        setImage(null);
       } else {
         setError("Submission failed. Try again.");
       }
@@ -54,14 +92,12 @@ export default function ComplaintForm() {
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-md p-8">
         
-        {/* Main Header Title */}
         <h2 className="text-2xl font-bold text-gray-800 mb-6 text-left">
           Submit a Complaint
         </h2>
 
         <div className="flex flex-col gap-5 text-left">
           
-          {/* Complaint Title Field */}
           <div>
             <label className="text-sm font-semibold text-gray-700 block mb-1">
               Complaint Title *
@@ -78,7 +114,6 @@ export default function ComplaintForm() {
             </div>
           </div>
 
-          {/* Description Field */}
           <div>
             <label className="text-sm font-semibold text-gray-700 block mb-1">
               Description *
@@ -95,7 +130,6 @@ export default function ComplaintForm() {
             </div>
           </div>
 
-          {/* District Select Dropdown Field */}
           <div>
             <label className="text-sm font-semibold text-gray-700 block mb-1">
               District *
@@ -115,24 +149,46 @@ export default function ComplaintForm() {
             </div>
           </div>
 
-          {/* Area / Locality Field */}
           <div>
             <label className="text-sm font-semibold text-gray-700 block mb-1">
               Area / Locality
             </label>
-            <div className="relative w-full">
-              <MapPin size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Enter the location"
-                value={area}
-                onChange={(e) => setArea(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-              />
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <MapPin size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Enter the location"
+                  value={area}
+                  onChange={(e) => setArea(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={handleGetCurrentLocation}
+                disabled={locLoading}
+                className="flex items-center gap-1 bg-indigo-50 text-indigo-600 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-indigo-100 transition disabled:opacity-50 whitespace-nowrap"
+              >
+                {locLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4" />}
+                Use Current Location
+              </button>
             </div>
           </div>
 
-          {/* Error Banner Block */}
+          <div>
+            <label className="text-sm font-semibold text-gray-700 block mb-1">
+              Upload Evidence
+            </label>
+            <label className="border-2 border-dashed border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-gray-50 transition">
+              <Upload className="w-6 h-6 text-gray-400" />
+              <span className="text-xs text-gray-500 font-medium">
+                {image ? image.name : "Click to select or upload an image"}
+              </span>
+              <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+            </label>
+          </div>
+
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-3">
               <p className="text-sm text-red-600">{error}</p>
@@ -142,7 +198,6 @@ export default function ComplaintForm() {
             </div>
           )}
 
-          {/* Action Submit Button Container */}
           <button
             onClick={handleSubmit}
             disabled={loading}
@@ -152,11 +207,10 @@ export default function ComplaintForm() {
             <span>{loading ? "Submitting..." : "Submit Complaint"}</span>
           </button>
 
-          {/* AI Automated Diagnosis Output Analytics Panel */}
           {result && (
             <div className="mt-2 p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
               <div className="flex items-center gap-2 text-sm font-bold text-emerald-800 mb-3">
-                <Cpu size={16} className="text-emerald-600 animate-pulse" />
+                <Cpu size={16} className="text-emerald-600 unit-pulse" />
                 <span>AI Classification Analysis Complete</span>
               </div>
               <div className="grid grid-cols-3 gap-3">
@@ -179,7 +233,6 @@ export default function ComplaintForm() {
             </div>
           )}
 
-          {/* Automated Duplicate Warning Interceptor Drawer Block */}
           {result?.duplicate_warning && (
             <div className="mt-2 p-4 bg-amber-50 border border-amber-200 rounded-xl flex gap-2 items-start">
               <AlertTriangle size={18} className="text-amber-600 shrink-0 mt-0.5" />
@@ -195,180 +248,6 @@ export default function ComplaintForm() {
           )}
 
         </div>
-      </div>
-    </div>
-  );
-}import { useState } from "react";
-import { MapPin, Upload, Loader2 } from "lucide-react";
-
-export default function ComplaintForm() {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [district, setDistrict] = useState("");
-  const [location, setLocation] = useState("");
-  const [image, setImage] = useState(null);
-  const [locLoading, setLocLoading] = useState(false);
-
-  // 📍 Feature 5: Fetch Coordinates via Browser Geolocation API
-  const handleGetCurrentLocation = () => {
-    if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser");
-      return;
-    }
-    setLocLoading(true);
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        // Automatically fills input field with precise coordinates
-        setLocation(`Coordinates: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
-        setLocLoading(false);
-      },
-      (error) => {
-        console.error(error);
-        alert("Unable to retrieve your location");
-        setLocLoading(false);
-      }
-    );
-  };
-
-  const handleImageChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setImage(e.target.files[0]);
-    }
-  };
-
-  return (
-    <div className="max-w-2xl mx-auto my-8 p-6 bg-white rounded-xl shadow-md font-sans">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">Submit a Complaint</h2>
-      
-      <div className="flex flex-col gap-5">
-        {/* Title & Description Fields (Keep your existing ones here) */}
-
-        {/* 📍 Location Field with "Use Current Location" Button */}
-        <div className="flex flex-col gap-2">
-          <label className="text-sm font-semibold text-gray-700">Area / Locality *</label>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              placeholder="e.g. Anna Nagar, Lawspet"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              type="button"
-              onClick={handleGetCurrentLocation}
-              disabled={locLoading}
-              className="flex items-center gap-1 bg-indigo-50 text-indigo-600 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-indigo-100 transition disabled:opacity-50"
-            >
-              {locLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4" />}
-              Use Current Location
-            </button>
-          </div>
-        </div>
-
-        {/* 📸 Feature 4: Upload Evidence Image Box */}
-        <div className="flex flex-col gap-2">
-          <label className="text-sm font-semibold text-gray-700">Upload Evidence</label>
-          <label className="border-2 border-dashed border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-gray-50 transition">
-            <Upload className="w-6 h-6 text-gray-400" />
-            <span className="text-xs text-gray-500 font-medium">
-              {image ? image.name : "Click to select or upload an image"}
-            </span>
-            <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
-          </label>
-        </div>
-
-        <button className="w-full bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 font-semibold text-sm transition mt-2">
-          Submit Complaint
-        </button>
-      </div>
-    </div>
-  );
-}import { useState } from "react";
-import { MapPin, Upload, Loader2 } from "lucide-react";
-
-export default function ComplaintForm() {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [district, setDistrict] = useState("");
-  const [location, setLocation] = useState("");
-  const [image, setImage] = useState(null);
-  const [locLoading, setLocLoading] = useState(false);
-
-  // 📍 Feature 5: Fetch Coordinates via Browser Geolocation API
-  const handleGetCurrentLocation = () => {
-    if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser");
-      return;
-    }
-    setLocLoading(true);
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        // Automatically fills input field with precise coordinates
-        setLocation(`Coordinates: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
-        setLocLoading(false);
-      },
-      (error) => {
-        console.error(error);
-        alert("Unable to retrieve your location");
-        setLocLoading(false);
-      }
-    );
-  };
-
-  const handleImageChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setImage(e.target.files[0]);
-    }
-  };
-
-  return (
-    <div className="max-w-2xl mx-auto my-8 p-6 bg-white rounded-xl shadow-md font-sans">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">Submit a Complaint</h2>
-      
-      <div className="flex flex-col gap-5">
-        {/* Title & Description Fields (Keep your existing ones here) */}
-
-        {/* 📍 Location Field with "Use Current Location" Button */}
-        <div className="flex flex-col gap-2">
-          <label className="text-sm font-semibold text-gray-700">Area / Locality *</label>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              placeholder="e.g. Anna Nagar, Lawspet"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              type="button"
-              onClick={handleGetCurrentLocation}
-              disabled={locLoading}
-              className="flex items-center gap-1 bg-indigo-50 text-indigo-600 px-3 py-2 rounded-lg text-xs font-semibold hover:bg-indigo-100 transition disabled:opacity-50"
-            >
-              {locLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4" />}
-              Use Current Location
-            </button>
-          </div>
-        </div>
-
-        {/* 📸 Feature 4: Upload Evidence Image Box */}
-        <div className="flex flex-col gap-2">
-          <label className="text-sm font-semibold text-gray-700">Upload Evidence</label>
-          <label className="border-2 border-dashed border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-gray-50 transition">
-            <Upload className="w-6 h-6 text-gray-400" />
-            <span className="text-xs text-gray-500 font-medium">
-              {image ? image.name : "Click to select or upload an image"}
-            </span>
-            <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
-          </label>
-        </div>
-
-        <button className="w-full bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 font-semibold text-sm transition mt-2">
-          Submit Complaint
-        </button>
       </div>
     </div>
   );
