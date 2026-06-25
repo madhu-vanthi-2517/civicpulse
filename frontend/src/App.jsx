@@ -1,17 +1,25 @@
-import { BrowserRouter as Router, Routes, Route,
-         Link, useLocation, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { Menu, X } from 'lucide-react';  
-import { useAuth } from './context/AuthContext';
-import ComplaintForm from './pages/citizen/ComplaintForm';
-import Login from './pages/citizen/Login';
-import Register from './pages/citizen/Register';
-import ComplaintTracker from './pages/citizen/ComplaintTracker';
-import PublicTracker from './pages/citizen/PublicTracker';
-import AdminDashboard from './pages/authority/AdminDashboard';
-import Analytics from './pages/authority/Analytics';
-import ComplaintDetail from './pages/authority/ComplaintDetail';
-import ProtectedRoute from './components/ProtectedRoute';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
+
+import { useAuth } from "./context/AuthContext";
+import LandingPage from "./pages/LandingPage";
+import ComplaintForm from "./pages/citizen/ComplaintForm";
+import Login from "./pages/citizen/Login";
+import Register from "./pages/citizen/Register";
+import ComplaintTracker from "./pages/citizen/ComplaintTracker";
+import PublicTracker from "./pages/citizen/PublicTracker";
+import AdminDashboard from "./pages/authority/AdminDashboard";
+import Analytics from "./pages/authority/Analytics";
+import ComplaintDetail from "./pages/authority/ComplaintDetail";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function Navbar() {
   const location = useLocation();
@@ -27,9 +35,9 @@ function Navbar() {
     location.pathname.startsWith("/complaint/");
 
   const isAuthPage =
+    location.pathname === "/" ||
     location.pathname === "/login" ||
-    location.pathname === "/register" ||
-    location.pathname === "/";
+    location.pathname === "/register";
 
   if (isAdminPage || isAuthPage) return null;
 
@@ -42,8 +50,6 @@ function Navbar() {
   return (
     <nav className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-50">
       <div className="flex items-center justify-between max-w-7xl mx-auto">
-
-        {/* Logo */}
         <Link
           to="/track"
           className="flex items-center gap-1 font-bold text-indigo-600 text-xl tracking-tight"
@@ -56,9 +62,7 @@ function Navbar() {
           <span>CivicPulse</span>
         </Link>
 
-        {/* Desktop Navigation */}
         <div className="hidden md:flex gap-6 text-sm items-center font-medium">
-
           <Link
             to="/track"
             className={`transition-all duration-200 pb-1 ${
@@ -94,9 +98,7 @@ function Navbar() {
 
           {user ? (
             <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
-              <span className="text-xs text-gray-400">
-                {user.email}
-              </span>
+              <span className="text-xs text-gray-400">{user.email}</span>
 
               <button
                 onClick={handleLogout}
@@ -115,7 +117,6 @@ function Navbar() {
           )}
         </div>
 
-        {/* Mobile Menu Button */}
         <div className="flex md:hidden">
           <button
             onClick={() => setIsOpen(!isOpen)}
@@ -126,10 +127,8 @@ function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden mt-3 pt-3 border-t border-gray-100 flex flex-col gap-3 pb-2 text-sm font-medium">
-
           <Link
             to="/track"
             onClick={() => setIsOpen(false)}
@@ -188,7 +187,6 @@ function Navbar() {
               Login
             </Link>
           )}
-
         </div>
       )}
     </nav>
@@ -200,17 +198,59 @@ export default function App() {
     <Router>
       <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
         <Navbar />
+
         <main>
           <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/submit" element={<ProtectedRoute requiredRole="citizen"><ComplaintForm /></ProtectedRoute>} />
-            <Route path="/my-complaints" element={<ProtectedRoute requiredRole="citizen"><ComplaintTracker /></ProtectedRoute>} />
+
+            <Route
+              path="/submit"
+              element={
+                <ProtectedRoute requiredRole="citizen">
+                  <ComplaintForm />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/my-complaints"
+              element={
+                <ProtectedRoute requiredRole="citizen">
+                  <ComplaintTracker />
+                </ProtectedRoute>
+              }
+            />
+
             <Route path="/track" element={<PublicTracker />} />
-            <Route path="/admin" element={<ProtectedRoute requiredRole="authority"><AdminDashboard /></ProtectedRoute>} />
-            <Route path="/analytics" element={<ProtectedRoute requiredRole="authority"><Analytics /></ProtectedRoute>} />
-            <Route path="/complaint/:id" element={<ProtectedRoute requiredRole="authority"><ComplaintDetail /></ProtectedRoute>} />
+
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute requiredRole="authority">
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/analytics"
+              element={
+                <ProtectedRoute requiredRole="authority">
+                  <Analytics />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/complaint/:id"
+              element={
+                <ProtectedRoute requiredRole="authority">
+                  <ComplaintDetail />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </main>
       </div>
