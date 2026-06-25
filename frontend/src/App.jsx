@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Routes, Route,
          Link, useLocation, useNavigate } from 'react-router-dom';
+import { useState } from 'react'; // 📱 Added for mobile menu tracking
+import { Menu, X } from 'lucide-react'; // ☰ Added icon components
 import { useAuth } from './context/AuthContext';
 import ComplaintForm from './pages/citizen/ComplaintForm';
 import Login from './pages/citizen/Login';
@@ -15,6 +17,7 @@ function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const [isOpen, setIsOpen] = useState(false); // 📱 Dynamic mobile menu state toggle
 
   const isAdminPage =
     location.pathname.startsWith('/admin') ||
@@ -30,50 +33,109 @@ function Navbar() {
 
   const handleLogout = () => {
     logout();
+    setIsOpen(false); // Close mobile menu if logging out from it
     navigate('/login');
   };
 
   return (
-    <nav className="bg-white border-b border-gray-200
-                    px-6 py-3 flex items-center
-                    justify-between sticky top-0 z-10">
-      <Link to="/" className="font-bold text-indigo-600 text-lg">
-        CivicPulse
-      </Link>
-      <div className="flex gap-4 text-sm items-center">
-        <Link to="/track" className="text-gray-600 hover:text-indigo-600">
-          Track Complaints
-        </Link>
-        <Link to="/submit" className="text-gray-600 hover:text-indigo-600">
-          Submit
-        </Link>
-        <Link to="/my-complaints" className="text-gray-600 hover:text-indigo-600">
-          My Complaints
+    <nav className="bg-white border-b border-gray-200 px-6 py-3 sticky top-0 z-50">
+      <div className="flex items-center justify-between max-w-7xl mx-auto">
+        
+        {/* Brand Header Link */}
+        <Link to="/" className="font-bold text-indigo-600 text-lg">
+          CivicPulse
         </Link>
 
-        {user ? (
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-gray-400">
-              {user.email}
-            </span>
-            <button
-              onClick={handleLogout}
-              className="bg-gray-100 text-gray-700 px-4
-                         py-1.5 rounded-lg hover:bg-gray-200
-                         font-medium text-sm"
-            >
-              Logout
-            </button>
-          </div>
-        ) : (
-          <Link to="/login"
-                className="bg-indigo-600 text-white px-4
-                           py-1.5 rounded-lg hover:bg-indigo-700
-                           font-medium">
-            Login
+        {/* 💻 Desktop Links View (hidden on mobile screens) */}
+        <div className="hidden md:flex gap-6 text-sm items-center font-medium">
+          <Link to="/track" className="text-gray-600 hover:text-indigo-600 transition">
+            Track Complaints
           </Link>
-        )}
+          <Link to="/submit" className="text-gray-600 hover:text-indigo-600 transition">
+            Submit
+          </Link>
+          <Link to="/my-complaints" className="text-gray-600 hover:text-indigo-600 transition">
+            My Complaints
+          </Link>
+
+          {user ? (
+            <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
+              <span className="text-xs text-gray-400">
+                {user.email}
+              </span>
+              <button
+                onClick={handleLogout}
+                className="bg-gray-100 text-gray-700 px-4 py-1.5 rounded-lg hover:bg-gray-200 font-medium text-sm transition"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link to="/login" className="bg-indigo-600 text-white px-4 py-1.5 rounded-lg hover:bg-indigo-700 font-medium transition">
+              Login
+            </Link>
+          )}
+        </div>
+
+        {/* 📱 Mobile Toggle Trigger (hidden on desktops) */}
+        <div className="flex md:hidden">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="text-gray-600 hover:text-indigo-600 focus:outline-none"
+          >
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
+
+      {/* 📱 Mobile Dropdown Menu Slider Block */}
+      {isOpen && (
+        <div className="md:hidden mt-3 pt-3 border-t border-gray-100 flex flex-col gap-3 pb-2 text-sm font-medium">
+          <Link 
+            to="/track" 
+            onClick={() => setIsOpen(false)} 
+            className="text-gray-600 hover:text-indigo-600 py-1 transition"
+          >
+            Track Complaints
+          </Link>
+          <Link 
+            to="/submit" 
+            onClick={() => setIsOpen(false)} 
+            className="text-gray-600 hover:text-indigo-600 py-1 transition"
+          >
+            Submit
+          </Link>
+          <Link 
+            to="/my-complaints" 
+            onClick={() => setIsOpen(false)} 
+            className="text-gray-600 hover:text-indigo-600 py-1 transition"
+          >
+            My Complaints
+          </Link>
+
+          {user ? (
+            <div className="flex flex-col gap-2 pt-2 border-t border-gray-100">
+              <span className="text-xs text-gray-400 truncate">
+                {user.email}
+              </span>
+              <button
+                onClick={handleLogout}
+                className="w-full bg-gray-100 text-gray-700 py-2 rounded-lg text-center font-semibold text-xs"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link 
+              to="/login" 
+              onClick={() => setIsOpen(false)} 
+              className="w-full bg-indigo-600 text-white py-2 rounded-lg text-center font-semibold text-xs block mt-1"
+            >
+              Login
+            </Link>
+          )}
+        </div>
+      )}
     </nav>
   );
 }
