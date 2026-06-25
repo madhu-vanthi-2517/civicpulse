@@ -18,9 +18,8 @@ export default function ComplaintDetail() {
   useEffect(() => {
     const fetchComplaint = async () => {
       try {
-        const data = await fetch(
-          `http://127.0.0.1:8000/api/complaint/${id}`
-        );
+        const cleanId = id.replace('#', '').trim();
+        const data = await fetch(`http://127.0.0.1:8000/api/complaint/${cleanId}`);
         const json = await data.json();
         setComplaint(json);
       } catch (err) {
@@ -34,7 +33,8 @@ export default function ComplaintDetail() {
 
   const handleStatusChange = async (newStatus) => {
     try {
-      await api.updateStatus(id, newStatus, token);
+      const cleanId = id.replace('#', '').trim();
+      await api.updateStatus(cleanId, newStatus, token);
       setComplaint({ ...complaint, status: newStatus });
       setUpdated(true);
       setTimeout(() => setUpdated(false), 3000);
@@ -44,15 +44,13 @@ export default function ComplaintDetail() {
   };
 
   if (loading) return (
-    <div className="min-h-screen bg-gray-50 flex
-                    items-center justify-center">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <p className="text-gray-400">Loading complaint...</p>
     </div>
   );
 
   if (!complaint) return (
-    <div className="min-h-screen bg-gray-50 flex
-                    items-center justify-center">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <p className="text-red-500">Complaint not found.</p>
     </div>
   );
@@ -62,58 +60,68 @@ export default function ComplaintDetail() {
       <div className="max-w-2xl mx-auto">
         <button
           onClick={() => navigate('/admin')}
-          className="text-sm text-indigo-600 hover:underline
-                     mb-6 flex items-center gap-1"
+          className="text-sm text-indigo-600 hover:underline mb-6 flex items-center gap-1"
         >
-          ← Back to Dashboard
+          {"← Back to Dashboard"}
         </button>
 
-        <div className="bg-white rounded-xl border
-                        border-gray-100 shadow-xs p-6 mb-4">
-          <div className="flex justify-between
-                          items-start mb-4">
+        <div className="bg-white rounded-xl border border-gray-100 shadow-xs p-6 mb-4">
+          <div className="flex justify-between items-start mb-4">
             <div>
-              <span className="text-xs font-mono
-                               text-indigo-500">
+              <span className="text-xs font-mono text-indigo-500">
                 #{complaint.id}
               </span>
-              <h1 className="text-xl font-bold
-                             text-gray-900 mt-1">
+              <h1 className="text-xl font-bold text-gray-900 mt-1">
                 {complaint.title}
               </h1>
             </div>
             <UrgencyTag urgency={complaint.urgency} />
           </div>
 
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-gray-600 mb-4 text-left">
             {complaint.description}
           </p>
 
-          <div className="grid grid-cols-2 gap-3 text-sm">
+          <div className="grid grid-cols-2 gap-3 text-sm mb-6">
             {[
               ["Category", complaint.category],
               ["Department", complaint.department_name],
               ["District", complaint.district],
               ["Area", complaint.area],
             ].map(([label, value]) => (
-              <div key={label}
-                   className="bg-gray-50 rounded-lg p-3">
-                <span className="text-xs text-gray-400
-                                 block mb-1">
+              <div key={label} className="bg-gray-50 rounded-lg p-3 text-left">
+                <span className="text-xs text-gray-400 block mb-1">
                   {label}
                 </span>
                 <span className="font-medium text-gray-700">
-                  {value}
+                  {value || "N/A"}
                 </span>
               </div>
             ))}
           </div>
+
+          {/* 📸 Mock Evidence Image Showcase Panel */}
+          <div className="mt-4 p-4 border border-gray-100 rounded-xl bg-gray-50/50 text-left">
+            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider block mb-2">
+              Attached Citizen Evidence
+            </span>
+            {complaint.image_url ? (
+              <img 
+                src={complaint.image_url} 
+                alt="Evidence Upload" 
+                className="max-w-xs h-auto rounded-lg border border-gray-200 shadow-xs"
+              />
+            ) : (
+              <div className="flex items-center gap-2 text-sm text-gray-400 py-1 font-sans">
+                <span>📷 Placeholder View: Using default workspace logo context</span>
+                <img src="/logo_civicpulse.jpeg" className="w-12 h-12 object-contain ml-auto opacity-40" alt="mock" />
+              </div>
+            )}
+          </div>
         </div>
 
-        <div className="bg-white rounded-xl border
-                        border-gray-100 shadow-xs p-6">
-          <h2 className="text-sm font-semibold text-gray-700
-                         uppercase tracking-wider mb-4">
+        <div className="bg-white rounded-xl border border-gray-100 shadow-xs p-6 text-left">
+          <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-4">
             Update Status
           </h2>
           <div className="flex items-center gap-3 mb-4">
@@ -127,7 +135,11 @@ export default function ComplaintDetail() {
               <button
                 key={s}
                 onClick={() => handleStatusChange(s)}
-               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${complaint.status === s ? "bg-indigo-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  complaint.status === s 
+                    ? "bg-indigo-600 text-white" 
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
               >
                 {s}
               </button>
