@@ -4,13 +4,14 @@ import { api } from '../../api';
 import { useAuth } from '../../context/AuthContext';
 import StatusBadge from '../../components/StatusBadge';
 import UrgencyTag from '../../components/UrgencyTag';
+import { LogOut, ClipboardList, BarChart3 } from 'lucide-react'; // Added icons for layout polish
 
 export default function AdminDashboard() {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [sortByReports, setSortByReports] = useState(false);
-  const { token } = useAuth();
+  const { token, logout } = useAuth(); // Extracted logout handler from auth context
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,6 +28,11 @@ export default function AdminDashboard() {
     fetchComplaints();
   }, [token]);
 
+  const handleLogoutClick = () => {
+    if (logout) logout();
+    navigate('/login');
+  };
+
   const pendingCount = complaints.filter(
     c => c.status === "Pending"
   ).length;
@@ -36,53 +42,70 @@ export default function AdminDashboard() {
     : complaints;
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-gray-50 text-slate-900 font-sans">
+    // 🛠️ FIX: Changed w-screen to w-full & h-screen to min-h-screen to fix horizontal layout whitespace stretching
+    <div className="flex min-h-screen w-full bg-gray-50 text-slate-900 font-sans antialiased">
 
       {/* Sidebar */}
-      <aside className={`flex-shrink-0 bg-white border-r border-gray-200 p-4 flex flex-col gap-6 text-left transition-all duration-300 ${
+      <aside className={`flex-shrink-0 bg-white border-r border-gray-200 p-4 flex flex-col justify-between text-left transition-all duration-300 ${
         isCollapsed ? 'w-16' : 'w-64'
       }`}>
-        <div className="flex items-center justify-between border-b border-gray-100 pb-4 min-h-[85px]">
-          {!isCollapsed ? (
-            <img 
-              src="/logo_civicpulse.jpeg" 
-              alt="CivicPulse Logo" 
-              className="h-[90px] w-auto max-w-[200px] object-contain"
-            />
-          ) : (
-            <span className="text-xl font-bold text-gray-900 mx-auto">CP</span>
-          )}
-          <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-600 font-mono text-sm border border-gray-200 cursor-pointer shadow-xs ml-2"
-          >
-            {isCollapsed ? "▶" : "◀"}
-          </button>
+        {/* Top Section */}
+        <div className="flex flex-col gap-6">
+          <div className="flex items-center justify-between border-b border-gray-100 pb-4 min-h-[85px]">
+            {!isCollapsed ? (
+              <img 
+                src="/logo_civicpulse.jpeg" 
+                alt="CivicPulse Logo" 
+                className="h-[75px] w-auto max-w-[180px] object-contain"
+              />
+            ) : (
+              <span className="text-xl font-bold text-gray-900 mx-auto">CP</span>
+            )}
+            <button
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-600 font-mono text-sm border border-gray-200 cursor-pointer shadow-xs ml-2"
+            >
+              {isCollapsed ? "▶" : "◀"}
+            </button>
+          </div>
+
+          <nav className="flex flex-col gap-1">
+            <button
+              onClick={() => navigate('/admin')}
+              className={`w-full flex items-center gap-3 font-medium text-sm px-3 py-2.5 bg-indigo-50 text-indigo-700 rounded-lg cursor-pointer ${
+                isCollapsed ? 'justify-center' : 'text-left'
+              }`}>
+              <ClipboardList size={18} />
+              {!isCollapsed && <span>Complaints</span>}
+            </button>
+            <button
+              onClick={() => navigate('/analytics')}
+              className={`w-full flex items-center gap-3 font-medium text-sm px-3 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg cursor-pointer ${
+                isCollapsed ? 'justify-center' : 'text-left'
+              }`}>
+              <BarChart3 size={18} />
+              {!isCollapsed && <span>Analytics</span>}
+            </button>
+          </nav>
         </div>
 
-        <nav className="flex flex-col gap-1 flex-1">
+        {/* Bottom Section: Node Info + Actionable Logout Block */}
+        <div className="flex flex-col gap-3 border-t border-gray-100 pt-4">
           <button
-            onClick={() => navigate('/admin')}
-            className={`w-full flex items-center gap-3 font-medium text-sm px-3 py-2.5 bg-indigo-50 text-indigo-700 rounded-lg ${
+            onClick={handleLogoutClick}
+            className={`w-full flex items-center gap-3 font-medium text-sm px-3 py-2 rounded-lg text-red-600 hover:bg-red-50 transition cursor-pointer ${
               isCollapsed ? 'justify-center' : 'text-left'
-            }`}>
-            <span>📋</span>
-            {!isCollapsed && <span>Complaints</span>}
+            }`}
+          >
+            <LogOut size={18} />
+            {!isCollapsed && <span>Logout</span>}
           </button>
-          <button
-            onClick={() => navigate('/analytics')}
-            className={`w-full flex items-center gap-3 font-medium text-sm px-3 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg ${
-              isCollapsed ? 'justify-center' : 'text-left'
-            }`}>
-            <span>📊</span>
-            {!isCollapsed && <span>Analytics</span>}
-          </button>
-        </nav>
-
-        <div className={`text-[10px] text-gray-400 border-t border-gray-100 pt-4 ${
-          isCollapsed ? 'text-center' : 'text-left'
-        }`}>
-          {isCollapsed ? "🔒" : "Secured Authority Node"}
+          
+          <div className={`text-[10px] text-gray-400 ${
+            isCollapsed ? 'text-center' : 'text-left'
+          }`}>
+            {isCollapsed ? "🔒" : "Secured Authority Node"}
+          </div>
         </div>
       </aside>
 
