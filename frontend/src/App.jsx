@@ -47,7 +47,7 @@ function Navbar() {
           <img 
             src="/logo_civicpulse.jpeg" 
             alt="CivicPulse Logo" 
-            className="w-[50px] h-[50px] object-contain rounded-md shadow-xs border border-gray-100" 
+            className="w-[120px] h-[55px] object-contain rounded-md shadow-xs border border-gray-100" 
           />
           <span>CivicPulse</span>
         </Link>
