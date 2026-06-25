@@ -52,13 +52,18 @@ export default function AdminDashboard() {
         <div className="flex flex-col gap-6">
           <div className="flex items-center justify-between border-b border-gray-100 pb-4 min-h-[85px]">
             {!isCollapsed ? (
-              <img 
-                src="/logo_civicpulse.jpeg" 
-                alt="CivicPulse Logo" 
-                className="h-[75px] w-auto max-w-[180px] object-contain"
-              />
-            ) : (
-              <span className="text-xl font-bold text-gray-900 mx-auto">CP</span>
+              <div className="flex items-center gap-3">
+                <img 
+                 src="/logo_civicpulse.jpeg" 
+                 alt="CivicPulse Logo" 
+                 className="h-[58px] w-auto object-contain"
+                />
+                <span className="text-xl font-bold text-indigo-600">
+                  CivicPulse
+                </span>
+              </div>
+           ) : (
+              <span className="text-xl font-bold text-indigo-600 mx-auto">CP</span>
             )}
             <button
               onClick={() => setIsCollapsed(!isCollapsed)}
