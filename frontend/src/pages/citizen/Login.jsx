@@ -14,11 +14,19 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
   const handleLogin = async () => {
     if (!email || !password) {
       setError("Please fill all fields");
       return;
     }
+
+    if (!isValidEmail(email)) {
+      setError("Please enter a valid email address");
+      return;
+    }
+
     setLoading(true);
     setError("");
     try {

@@ -13,16 +13,25 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
+  const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
   const handleRegister = async () => {
     if (!name || !email || !password) {
       setError("Please fill all fields");
       return;
     }
+
+    if (!isValidEmail(email)) {
+      setError("Please enter a valid email address");
+      return;
+    }
+
     setLoading(true);
     setError("");
     try {
       const data = await api.register(name, email, password);
-      if (data.message === "Registered successfully") {
+      if (data.message === "Registered successfully" || data.message === "Registration successful") {
+        window.alert("Registration successful");
         navigate("/login");
       } else {
         setError(data.detail || "Registration failed");
