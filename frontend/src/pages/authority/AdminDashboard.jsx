@@ -38,7 +38,7 @@ export default function AdminDashboard() {
   ).length;
 
   const displayedComplaints = sortByReports
-    ? [...complaints].sort((a, b) => b.report_count - a.report_count)
+    ? [...complaints].sort((a, b) => (Number(b.report_count || 0)) - (Number(a.report_count || 0)))
     : complaints;
 
   return (
@@ -141,12 +141,21 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <div className="text-left">
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+          <p className="text-sm text-gray-600">
+            {sortByReports
+              ? "Showing complaints with the highest report counts first."
+              : "Use the button below to prioritize the most-reported complaints."}
+          </p>
           <button
             onClick={() => setSortByReports(!sortByReports)}
-            className="mb-4 text-sm text-indigo-600 hover:underline cursor-pointer"
+            className={`inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium transition-colors cursor-pointer ${
+              sortByReports
+                ? "bg-indigo-600 text-white"
+                : "bg-white text-indigo-600 border border-indigo-200 hover:bg-indigo-50"
+            }`}
           >
-            {sortByReports ? "✓ Sorted by most reported" : "Sort by most reported"}
+            {sortByReports ? "✓ Most reported first" : "Sort by reports"}
           </button>
         </div>
 
