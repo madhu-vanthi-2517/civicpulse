@@ -7,205 +7,130 @@ import {
   ArrowRight,
   CheckCircle,
 } from "lucide-react";
+import { Box, Button, Container, Grid, Paper, Stack, Typography } from "@mui/material";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen w-full bg-gray-50 text-slate-900 font-sans antialiased overflow-x-hidden">
-      <nav className="w-full bg-white border-b border-gray-200 px-4 py-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-screen-xl mx-auto flex items-center justify-between gap-4">
-          <Link to="/" className="flex items-center gap-3 min-w-0">
-            <img
-              src="/logo_civicpulse.jpeg"
-              alt="CivicPulse Logo"
-              className="h-12 w-auto object-contain sm:h-14"
-            />
-
-            <div className="flex flex-col justify-center min-w-0">
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight leading-none">
-                CivicPulse
-              </h1>
-              <span className="text-[11px] sm:text-xs text-indigo-600 font-semibold tracking-wide mt-1 leading-none">
+    <Box sx={{ minHeight: "100vh", width: "100%", bgcolor: "grey.50", color: "text.primary" }}>
+      <Box component="nav" sx={{ bgcolor: "white", borderBottom: 1, borderColor: "divider", px: { xs: 2, sm: 3, lg: 4 }, py: { xs: 2, sm: 2.5 } }}>
+        <Container maxWidth="xl" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 2 }}>
+          <Link to="/" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", minWidth: 0 }}>
+            <img src="/logo_civicpulse.jpeg" alt="CivicPulse Logo" style={{ height: 48, width: "auto", objectFit: "contain" }} />
+            <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", minWidth: 0 }}>
+              <Typography variant="h6" sx={{ color: "text.primary", fontWeight: 700, lineHeight: 1.1 }}>CivicPulse</Typography>
+              <Typography variant="caption" sx={{ color: "primary.main", fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase" }}>
                 Smart. Simple. Transparent.
-              </span>
-            </div>
+              </Typography>
+            </Box>
           </Link>
-
-          <Link
-            to="/login"
-            className="shrink-0 bg-indigo-600 text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-indigo-700 transition"
-          >
+          <Button component={Link} to="/login" variant="contained" sx={{ borderRadius: 2, px: { xs: 2, sm: 3 }, py: 1.2 }}>
             Login
-          </Link>
-        </div>
-      </nav>
+          </Button>
+        </Container>
+      </Box>
 
-      <main className="w-full max-w-screen-xl mx-auto px-4 py-10 sm:px-6 lg:px-8 text-center">
-        <header className="max-w-3xl mx-auto mb-10">
-          <h2 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-gray-900 tracking-tight">
+      <Container maxWidth="xl" sx={{ py: { xs: 5, sm: 7, md: 10 }, textAlign: "center" }}>
+        <Box sx={{ maxWidth: 780, mx: "auto", mb: { xs: 5, md: 8 } }}>
+          <Typography variant="h3" sx={{ fontWeight: 800, fontSize: { xs: "2rem", sm: "2.5rem", md: "3.25rem" }, mb: 2 }}>
             Why CivicPulse?
-          </h2>
+          </Typography>
+          <Typography variant="body1" sx={{ color: "text.secondary", fontSize: { xs: "0.95rem", md: "1.05rem" }, lineHeight: 1.8 }}>
+            Bridging the gap between citizens and municipal administration. CivicPulse makes complaint reporting structured, trackable, and transparent by reducing manual sorting and processing delays.
+          </Typography>
+        </Box>
 
-          <p className="text-sm sm:text-base md:text-lg text-gray-500 mt-4 leading-relaxed">
-            Bridging the gap between citizens and municipal administration.
-            CivicPulse makes complaint reporting structured, trackable, and
-            transparent by reducing manual sorting and processing delays.
-          </p>
-        </header>
-
-        <section className="bg-white border border-gray-100 rounded-3xl p-6 sm:p-8 md:p-12 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 text-left mb-12">
-          <div className="w-full">
-            <h3 className="text-xl md:text-2xl font-bold text-gray-900">
-              Ready to improve your neighborhood?
-            </h3>
-
-            <p className="text-sm text-gray-500 mt-2 max-w-2xl leading-relaxed">
-              Sign in to report civic issues, track complaint progress, and
-              support faster resolution through a transparent public platform.
-            </p>
-          </div>
-
-          <Link
-            to="/login"
-            className="w-full md:w-auto bg-indigo-600 text-white font-semibold px-6 py-3.5 rounded-xl hover:bg-indigo-700 transition flex items-center justify-center gap-2 whitespace-nowrap"
-          >
+        <Paper elevation={0} sx={{ border: 1, borderColor: "divider", borderRadius: 4, p: { xs: 3, sm: 4, md: 6 }, mb: { xs: 5, md: 8 }, display: "flex", flexDirection: { xs: "column", md: "row" }, alignItems: { xs: "flex-start", md: "center" }, justifyContent: "space-between", gap: 3, textAlign: { xs: "left", md: "left" } }}>
+          <Box sx={{ flex: 1 }}>
+            <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>Ready to improve your neighborhood?</Typography>
+            <Typography variant="body2" sx={{ color: "text.secondary", maxWidth: 640, lineHeight: 1.7 }}>
+              Sign in to report civic issues, track complaint progress, and support faster resolution through a transparent public platform.
+            </Typography>
+          </Box>
+          <Button component={Link} to="/login" variant="contained" sx={{ minWidth: { xs: "100%", md: 220 }, borderRadius: 2, py: 1.4, whiteSpace: "nowrap" }}>
             Submit a Complaint Now
-            <ArrowRight size={18} />
-          </Link>
-        </section>
+            <ArrowRight size={18} style={{ marginLeft: 8 }} />
+          </Button>
+        </Paper>
 
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 text-left">
-          <Info
-            title="AI-assisted categorization"
-            text="Complaints are parsed and automatically classified into the correct civic category fields instantly upon submission."
-          />
+        <Grid container spacing={{ xs: 2, md: 3 }} sx={{ mb: { xs: 5, md: 8 } }}>
+          <Grid item xs={12} md={4}>
+            <Info title="AI-assisted categorization" text="Complaints are parsed and automatically classified into the correct civic category fields instantly upon submission." />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Info title="Faster department routing" text="Issues are systematically dispatched to the respective departments based on category, urgency, and regional details." />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Info title="Transparent tracking" text="Citizens can track complaint progress using a complaint ID and stay updated through every stage of resolution." />
+          </Grid>
+        </Grid>
 
-          <Info
-            title="Faster department routing"
-            text="Issues are systematically dispatched to the respective departments based on category, urgency, and regional details."
-          />
+        <Paper elevation={0} sx={{ border: 1, borderColor: "divider", borderRadius: 3, overflow: "hidden", mb: { xs: 5, md: 8 } }}>
+          <Grid container>
+            <Grid item xs={12} sm={6} lg={3}><Stat icon={<ClipboardList />} value="Live" label="Complaints Registered" /></Grid>
+            <Grid item xs={12} sm={6} lg={3}><Stat icon={<Clock />} value="24×7" label="Availability" /></Grid>
+            <Grid item xs={12} sm={6} lg={3}><Stat icon={<Brain />} value="AI" label="Complaint Categorization" /></Grid>
+            <Grid item xs={12} sm={6} lg={3}><Stat icon={<ShieldCheck />} value="Secure" label="Citizen Tracking" /></Grid>
+          </Grid>
+        </Paper>
 
-          <Info
-            title="Transparent tracking"
-            text="Citizens can track complaint progress using a complaint ID and stay updated through every stage of resolution."
-          />
-        </section>
+        <Box sx={{ py: 2 }}>
+          <Typography variant="h5" sx={{ fontWeight: 700, mb: { xs: 3, md: 4 } }}>How It Works</Typography>
+          <Grid container spacing={{ xs: 2, md: 3 }}>
+            <Grid item xs={12} sm={6} lg={3}><Step number="1" title="Submit" text="Citizen reports the issue with details, location, and description." /></Grid>
+            <Grid item xs={12} sm={6} lg={3}><Step number="2" title="Classify" text="The system categorizes the complaint and identifies urgency." /></Grid>
+            <Grid item xs={12} sm={6} lg={3}><Step number="3" title="Track" text="Citizens monitor complaint progress using their complaint ID." /></Grid>
+            <Grid item xs={12} sm={6} lg={3}><Step number="4" title="Resolve" text="Authority reviews the issue and updates complaint status." /></Grid>
+          </Grid>
+        </Box>
+      </Container>
 
-        <section className="bg-white border border-gray-100 rounded-2xl shadow-sm grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-gray-100 mb-12 overflow-hidden">
-          <Stat
-            icon={<ClipboardList />}
-            value="Live"
-            label="Complaints Registered"
-          />
-          <Stat icon={<Clock />} value="24×7" label="Availability" />
-          <Stat icon={<Brain />} value="AI" label="Complaint Categorization" />
-          <Stat icon={<ShieldCheck />} value="Secure" label="Citizen Tracking" />
-        </section>
-
-        <section className="py-4">
-          <h3 className="text-2xl font-bold text-gray-900 mb-8">
-            How It Works
-          </h3>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            <Step
-              number="1"
-              title="Submit"
-              text="Citizen reports the issue with details, location, and description."
-            />
-
-            <Step
-              number="2"
-              title="Classify"
-              text="The system categorizes the complaint and identifies urgency."
-            />
-
-            <Step
-              number="3"
-              title="Track"
-              text="Citizens monitor complaint progress using their complaint ID."
-            />
-
-            <Step
-              number="4"
-              title="Resolve"
-              text="Authority reviews the issue and updates complaint status."
-            />
-          </div>
-        </section>
-      </main>
-
-      <footer className="bg-white border-t border-gray-200 px-4 py-8 mt-10 sm:px-6 lg:px-8">
-        <div className="w-full max-w-screen-xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-gray-500">
-          <div className="flex items-center gap-2">
-            <img
-              src="/logo_civicpulse.jpeg"
-              alt="CivicPulse Logo"
-              className="h-8 w-auto object-contain"
-            />
-            <span className="font-bold text-indigo-600">CivicPulse</span>
-          </div>
-
-          <div className="flex gap-6">
-            <Link to="/login" className="hover:text-indigo-600 transition">
-              Login
-            </Link>
-            <Link to="/register" className="hover:text-indigo-600 transition">
-              Register
-            </Link>
-          </div>
-
-          <p className="text-xs md:text-sm">
-            © 2026 CivicPulse. All rights reserved.
-          </p>
-        </div>
-      </footer>
-    </div>
+      <Box component="footer" sx={{ bgcolor: "white", borderTop: 1, borderColor: "divider", px: { xs: 2, sm: 3, lg: 4 }, py: 6 }}>
+        <Container maxWidth="xl" sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, alignItems: "center", justifyContent: "space-between", gap: 2, textAlign: { xs: "center", md: "left" } }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+            <img src="/logo_civicpulse.jpeg" alt="CivicPulse Logo" style={{ height: 28, width: "auto", objectFit: "contain" }} />
+            <Typography variant="subtitle1" sx={{ fontWeight: 700, color: "primary.main" }}>CivicPulse</Typography>
+          </Box>
+          <Stack direction="row" spacing={2}>
+            <Link to="/login" style={{ color: "#64748b", textDecoration: "none" }}>Login</Link>
+            <Link to="/register" style={{ color: "#64748b", textDecoration: "none" }}>Register</Link>
+          </Stack>
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>© 2026 CivicPulse. All rights reserved.</Typography>
+        </Container>
+      </Box>
+    </Box>
   );
 }
 
 function Info({ title, text }) {
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-md transition duration-300 flex flex-col items-start">
-      <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-6">
+    <Paper elevation={0} sx={{ border: 1, borderColor: "divider", borderRadius: 3, p: { xs: 3, sm: 4 }, height: "100%", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+      <Box sx={{ width: 42, height: 42, bgcolor: "primary.50", color: "primary.main", borderRadius: 2, display: "flex", alignItems: "center", justifyContent: "center", mb: 2 }}>
         <CheckCircle size={20} />
-      </div>
-
-      <h4 className="font-bold text-gray-900 text-lg mb-2">{title}</h4>
-
-      <p className="text-sm text-gray-500 leading-relaxed">{text}</p>
-    </div>
+      </Box>
+      <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>{title}</Typography>
+      <Typography variant="body2" sx={{ color: "text.secondary", lineHeight: 1.7 }}>{text}</Typography>
+    </Paper>
   );
 }
 
 function Stat({ icon, value, label }) {
   return (
-    <div className="p-6 flex items-center gap-4 justify-start text-left">
-      <div className="bg-indigo-50 text-indigo-600 p-3 rounded-xl shrink-0">
-        {icon}
-      </div>
-
-      <div>
-        <p className="text-2xl font-bold text-gray-900 leading-tight">
-          {value}
-        </p>
-        <p className="text-xs text-gray-400 font-medium mt-0.5 uppercase tracking-wider">
-          {label}
-        </p>
-      </div>
-    </div>
+    <Box sx={{ p: { xs: 3, sm: 4 }, display: "flex", alignItems: "center", gap: 2, justifyContent: "flex-start", textAlign: "left", borderBottom: { xs: 1, lg: 0 }, borderRight: { xs: 0, lg: 1 }, borderColor: "divider" }}>
+      <Box sx={{ bgcolor: "primary.50", color: "primary.main", p: 1.5, borderRadius: 2, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{icon}</Box>
+      <Box>
+        <Typography variant="h5" sx={{ fontWeight: 700, lineHeight: 1.2 }}>{value}</Typography>
+        <Typography variant="caption" sx={{ color: "text.secondary", textTransform: "uppercase", letterSpacing: 1.2, fontWeight: 700 }}>{label}</Typography>
+      </Box>
+    </Box>
   );
 }
 
 function Step({ number, title, text }) {
   return (
-    <div className="bg-white border border-gray-100 rounded-xl shadow-sm p-6 text-center hover:shadow-md transition duration-300">
-      <div className="w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center text-sm font-bold mx-auto mb-4">
-        {number}
-      </div>
-
-      <h4 className="font-bold text-gray-900 mb-2">{title}</h4>
-
-      <p className="text-sm text-gray-400 leading-relaxed">{text}</p>
-    </div>
+    <Paper elevation={0} sx={{ border: 1, borderColor: "divider", borderRadius: 3, p: { xs: 3, sm: 4 }, textAlign: "center", height: "100%" }}>
+      <Box sx={{ width: 34, height: 34, bgcolor: "primary.main", color: "white", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", mx: "auto", mb: 2, fontWeight: 700 }}>{number}</Box>
+      <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>{title}</Typography>
+      <Typography variant="body2" sx={{ color: "text.secondary", lineHeight: 1.7 }}>{text}</Typography>
+    </Paper>
   );
 }

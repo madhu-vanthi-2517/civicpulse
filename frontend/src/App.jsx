@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { Box, Container, IconButton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 
 import { useAuth } from "./context/AuthContext";
 import LandingPage from "./pages/LandingPage";
@@ -24,23 +25,21 @@ import ProtectedRoute from "./components/ProtectedRoute";
 function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   const isActive = (path) => location.pathname === path;
-
-  // 🌟 Authority routes check (Sidebar handled internally)
   const isAdminPage =
     location.pathname.startsWith("/admin") ||
     location.pathname.startsWith("/analytics") ||
     location.pathname.startsWith("/complaint/");
-
-  // 🌟 Public unauthenticated pages check (Hides general navbar)
   const isAuthPage =
     location.pathname === "/" ||
     location.pathname === "/login" ||
     location.pathname === "/register" ||
-    location.pathname === "/public-tracker"; // Safe fallback match
+    location.pathname === "/public-tracker";
 
   if (isAdminPage || isAuthPage) return null;
 
@@ -50,204 +49,103 @@ function Navbar() {
     navigate("/login");
   };
 
+  const navLinks = [
+    { label: "Track Complaints", path: "/track" },
+    { label: "Submit", path: "/submit" },
+    { label: "My Complaints", path: "/my-complaints" },
+  ];
+
   return (
-    <nav className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-50 w-full">
-      <div className="flex items-center justify-between w-full mx-auto">
-        <Link
-          to="/track"
-          className="flex items-center gap-3 font-bold text-indigo-600 text-xl tracking-tight"
-        >
-          <img
-            src="/logo_civicpulse.jpeg"
-            alt="CivicPulse Logo"
-            className="h-14 w-auto object-contain"
-          />
-          <div className="flex flex-col justify-center">
-            <span className="text-xl font-bold text-gray-900 leading-none">CivicPulse</span>
-            <span className="text-[10px] text-indigo-600 font-semibold tracking-wider mt-0.5 leading-none">
+    <Box component="nav" sx={{ bgcolor: "white", borderBottom: 1, borderColor: "divider", position: "sticky", top: 0, zIndex: 1200, width: "100%", px: { xs: 2, sm: 3, md: 4 }, py: { xs: 1.5, sm: 2 } }}>
+      <Container maxWidth="xl" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 2 }}>
+        <Link to="/track" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", minWidth: 0 }}>
+          <img src="/logo_civicpulse.jpeg" alt="CivicPulse Logo" style={{ height: 48, width: "auto", objectFit: "contain" }} />
+          <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", minWidth: 0 }}>
+            <Typography variant="h6" sx={{ color: "text.primary", fontWeight: 700, lineHeight: 1.1 }}>CivicPulse</Typography>
+            <Typography variant="caption" sx={{ color: "primary.main", fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase" }}>
               Smart. Simple. Transparent.
-            </span>
-          </div>
+            </Typography>
+          </Box>
         </Link>
 
-        <div className="hidden md:flex gap-6 text-sm items-center font-medium">
-          <Link
-            to="/track"
-            className={`transition-all duration-200 pb-1 ${
-              isActive("/track")
-                ? "text-indigo-600 border-b-2 border-indigo-600 font-semibold"
-                : "text-gray-600 hover:text-indigo-600"
-            }`}
-          >
-            Track Complaints
-          </Link>
+        {!isMobile ? (
+          <Stack direction="row" spacing={2.5} alignItems="center" sx={{ flexShrink: 0 }}>
+            {navLinks.map((link) => (
+              <Link key={link.path} to={link.path} style={{ textDecoration: "none", color: isActive(link.path) ? "#4f46e5" : "#64748b", fontWeight: isActive(link.path) ? 700 : 500, borderBottom: isActive(link.path) ? "2px solid #4f46e5" : "2px solid transparent", paddingBottom: 4 }}>
+                {link.label}
+              </Link>
+            ))}
 
-          <Link
-            to="/submit"
-            className={`transition-all duration-200 pb-1 ${
-              isActive("/submit")
-                ? "text-indigo-600 border-b-2 border-indigo-600 font-semibold"
-                : "text-gray-600 hover:text-indigo-600"
-            }`}
-          >
-            Submit
-          </Link>
+            {user ? (
+              <Stack direction="row" spacing={1.5} alignItems="center" sx={{ pl: 2, borderLeft: "1px solid", borderColor: "divider" }}>
+                <Typography variant="caption" sx={{ color: "text.secondary", display: { xs: "none", lg: "block" } }}>{user.email}</Typography>
+                <button onClick={handleLogout} style={{ background: "#f1f5f9", color: "#334155", border: "none", borderRadius: 8, padding: "8px 12px", cursor: "pointer", fontWeight: 600 }}>
+                  Logout
+                </button>
+              </Stack>
+            ) : (
+              <Link to="/login" style={{ textDecoration: "none", background: "#4f46e5", color: "#fff", padding: "8px 14px", borderRadius: 8, fontWeight: 600 }}>
+                Login
+              </Link>
+            )}
+          </Stack>
+        ) : (
+          <IconButton onClick={() => setIsOpen((prev) => !prev)} size="small" sx={{ color: "text.secondary" }}>
+            {isOpen ? <X size={22} /> : <Menu size={22} />}
+          </IconButton>
+        )}
+      </Container>
 
-          <Link
-            to="/my-complaints"
-            className={`transition-all duration-200 pb-1 ${
-              isActive("/my-complaints")
-                ? "text-indigo-600 border-b-2 border-indigo-600 font-semibold"
-                : "text-gray-600 hover:text-indigo-600"
-            }`}
-          >
-            My Complaints
-          </Link>
-
+      {isMobile && isOpen && (
+        <Box sx={{ borderTop: 1, borderColor: "divider", px: 2, py: 2, display: "flex", flexDirection: "column", gap: 1.2 }}>
+          {navLinks.map((link) => (
+            <Link key={link.path} to={link.path} onClick={() => setIsOpen(false)} style={{ textDecoration: "none", color: isActive(link.path) ? "#4f46e5" : "#64748b", fontWeight: isActive(link.path) ? 700 : 500 }}>
+              {link.label}
+            </Link>
+          ))}
           {user ? (
-            <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
-              <span className="text-xs text-gray-400">{user.email}</span>
-              <button
-                onClick={handleLogout}
-                className="bg-gray-100 text-gray-700 px-4 py-1.5 rounded-lg hover:bg-gray-200 font-medium text-sm transition cursor-pointer"
-              >
+            <Box sx={{ pt: 1, borderTop: 1, borderColor: "divider", display: "flex", flexDirection: "column", gap: 1 }}>
+              <Typography variant="caption" sx={{ color: "text.secondary" }}>{user.email}</Typography>
+              <button onClick={handleLogout} style={{ background: "#f1f5f9", color: "#334155", border: "none", borderRadius: 8, padding: "8px 12px", cursor: "pointer", fontWeight: 600, textAlign: "left" }}>
                 Logout
               </button>
-            </div>
+            </Box>
           ) : (
-            <Link
-              to="/login"
-              className="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 font-semibold text-sm transition shadow-xs"
-            >
+            <Link to="/login" onClick={() => setIsOpen(false)} style={{ textDecoration: "none", background: "#4f46e5", color: "#fff", padding: "8px 12px", borderRadius: 8, fontWeight: 600, textAlign: "center" }}>
               Login
             </Link>
           )}
-        </div>
-
-        <div className="flex md:hidden">
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="text-gray-600 hover:text-indigo-600"
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile drop layout */}
-      {isOpen && (
-        <div className="md:hidden mt-3 pt-3 border-t border-gray-100 flex flex-col gap-3 pb-2 text-sm font-medium">
-          <Link
-            to="/track"
-            onClick={() => setIsOpen(false)}
-            className={`py-1 ${isActive("/track") ? "text-indigo-600 font-semibold" : "text-gray-600"}`}
-          >
-            Track Complaints
-          </Link>
-
-          <Link
-            to="/submit"
-            onClick={() => setIsOpen(false)}
-            className={`py-1 ${isActive("/submit") ? "text-indigo-600 font-semibold" : "text-gray-600"}`}
-          >
-            Submit
-          </Link>
-
-          <Link
-            to="/my-complaints"
-            onClick={() => setIsOpen(false)}
-            className={`py-1 ${isActive("/my-complaints") ? "text-indigo-600 font-semibold" : "text-gray-600"}`}
-          >
-            My Complaints
-          </Link>
-
-          {user ? (
-            <div className="flex flex-col gap-2 pt-2 border-t border-gray-100">
-              <span className="text-xs text-gray-400 truncate">{user.email}</span>
-              <button
-                onClick={handleLogout}
-                className="w-full bg-gray-100 text-gray-700 py-2 rounded-lg text-center font-semibold text-xs"
-              >
-                Logout
-              </button>
-            </div>
-          ) : (
-            <Link
-              to="/login"
-              onClick={() => setIsOpen(false)}
-              className="w-full bg-indigo-600 text-white py-2 rounded-lg text-center font-semibold text-xs block mt-1"
-            >
-              Login
-            </Link>
-          )}
-        </div>
+        </Box>
       )}
-    </nav>
+    </Box>
   );
 }
 
 export default function App() {
   return (
     <Router>
-      {/* 🌟 FIXED: Dropped all screen boxing limits to force true edge-to-edge width layout */}
-      <div className="min-h-screen w-full m-0 p-0 bg-gray-50 text-slate-900 font-sans overflow-x-hidden">
+      <Box sx={{ minHeight: "100vh", width: "100%", m: 0, p: 0, bgcolor: "grey.50", color: "text.primary", overflowX: "hidden" }}>
         <Navbar />
-        <main className="w-full m-0 p-0">
+        <Box component="main" sx={{ width: "100%", m: 0, p: 0 }}>
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
-            <Route
-              path="/submit"
-              element={
-                <ProtectedRoute requiredRole="citizen">
-                  <ComplaintForm />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/submit" element={<ProtectedRoute requiredRole="citizen"><ComplaintForm /></ProtectedRoute>} />
 
-            <Route
-              path="/my-complaints"
-              element={
-                <ProtectedRoute requiredRole="citizen">
-                  <ComplaintTracker />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/my-complaints" element={<ProtectedRoute requiredRole="citizen"><ComplaintTracker /></ProtectedRoute>} />
 
-            {/* 🌟 SYNCED PATHNAME: Maps public analytics grid right to /track */}
             <Route path="/track" element={<PublicTracker />} />
 
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute requiredRole="authority">
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/admin" element={<ProtectedRoute requiredRole="authority"><AdminDashboard /></ProtectedRoute>} />
 
-            <Route
-              path="/analytics"
-              element={
-                <ProtectedRoute requiredRole="authority">
-                  <Analytics />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/analytics" element={<ProtectedRoute requiredRole="authority"><Analytics /></ProtectedRoute>} />
 
-            <Route
-              path="/complaint/:id"
-              element={
-                <ProtectedRoute requiredRole="authority">
-                  <ComplaintDetail />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/complaint/:id" element={<ProtectedRoute requiredRole="authority"><ComplaintDetail /></ProtectedRoute>} />
           </Routes>
-        </main>
-      </div>
+        </Box>
+      </Box>
     </Router>
   );
 }
