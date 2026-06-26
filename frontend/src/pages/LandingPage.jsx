@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   ClipboardList,
   ShieldCheck,
@@ -10,6 +11,16 @@ import {
 import { Box, Button, Container, Grid, Paper, Stack, Typography } from "@mui/material";
 
 export default function LandingPage() {
+  const location = useLocation();
+  const [logoutNotice, setLogoutNotice] = useState("");
+
+  useEffect(() => {
+    const state = location.state;
+    if (state?.logoutMessage) {
+      setLogoutNotice(state.logoutMessage);
+    }
+  }, [location]);
+
   return (
     <Box sx={{ minHeight: "100vh", width: "100%", bgcolor: "grey.50", color: "text.primary" }}>
       <Box component="nav" sx={{ bgcolor: "white", borderBottom: 1, borderColor: "divider", px: { xs: 2, sm: 3, lg: 4 }, py: { xs: 2.25, sm: 2.75, md: 3.25 } }}>
@@ -30,6 +41,14 @@ export default function LandingPage() {
       </Box>
 
       <Container maxWidth="xl" sx={{ py: { xs: 5, sm: 7, md: 10 }, textAlign: "center" }}>
+        {logoutNotice && (
+          <Box sx={{ maxWidth: 560, mx: "auto", mb: 3, bgcolor: "success.50", border: 1, borderColor: "success.100", borderRadius: 2, p: 2 }}>
+            <Typography variant="body2" sx={{ color: "success.dark", fontWeight: 600 }}>
+              {logoutNotice}
+            </Typography>
+          </Box>
+        )}
+
         <Box sx={{ maxWidth: 780, mx: "auto", mb: { xs: 5, md: 8 } }}>
           <Typography variant="h3" sx={{ fontWeight: 800, fontSize: { xs: "2rem", sm: "2.5rem", md: "3.25rem" }, mb: 2 }}>
             Why CivicPulse?
