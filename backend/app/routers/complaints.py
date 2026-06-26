@@ -1,7 +1,7 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from app.database import SessionLocal
 from app.models import Complaint, StatusLog, ComplaintReporter
-from app.schemas import ComplaintCreate, StatusUpdate
+from app.schemas import StatusUpdate
 from app.ai.classifier import (
     predict_category,
     predict_urgency,
@@ -9,38 +9,90 @@ from app.ai.classifier import (
     check_duplicate
 )
 
+import os
+import shutil
+from uuid import uuid4
+
 router = APIRouter()
 
 VALID_DISTRICTS = ["Puducherry", "Karaikal", "Mahe", "Yanam"]
 
+UPLOAD_DIR = "uploads"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+
+def save_uploaded_image(image):
+    if not image or not getattr(image, "filename", None):
+        return None
+
+    file_extension = os.path.splitext(image.filename)[1]
+    unique_filename = f"{uuid4()}{file_extension}"
+    file_path = os.path.join(UPLOAD_DIR, unique_filename)
+
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(image.file, buffer)
+
+    return f"/uploads/{unique_filename}"
+
 
 @router.post("/complaint")
-def submit_complaint(complaint: ComplaintCreate):
-    if not complaint.title or not complaint.title.strip():
+async def submit_complaint(request: Request):
+    content_type = request.headers.get("content-type", "")
+
+    image = None
+
+    if "multipart/form-data" in content_type:
+        form = await request.form()
+
+        title = form.get("title")
+        description = form.get("description")
+        district = form.get("district")
+        area = form.get("area")
+        user_id = form.get("user_id")
+        image = form.get("image")
+
+    else:
+        data = await request.json()
+
+        title = data.get("title")
+        description = data.get("description")
+        district = data.get("district")
+        area = data.get("area")
+        user_id = data.get("user_id")
+
+    if not title or not title.strip():
         raise HTTPException(
             status_code=400,
             detail="Title cannot be empty"
         )
 
-    if not complaint.description or not complaint.description.strip():
+    if not description or not description.strip():
         raise HTTPException(
             status_code=400,
             detail="Description cannot be empty"
         )
 
-    if complaint.district not in VALID_DISTRICTS:
+    if district not in VALID_DISTRICTS:
         raise HTTPException(
             status_code=400,
             detail=f"District must be one of {VALID_DISTRICTS}"
         )
 
+    try:
+        user_id = int(user_id)
+    except Exception:
+        raise HTTPException(
+            status_code=400,
+            detail="Valid user_id is required"
+        )
+
     db = SessionLocal()
 
     try:
-        text = f"{complaint.title} {complaint.description}"
+        text = f"{title} {description}"
 
         existing_complaints = db.query(Complaint).filter(
-            Complaint.district == complaint.district,
+            Complaint.district == district,
             Complaint.status != "Resolved"
         ).all()
 
@@ -67,7 +119,7 @@ def submit_complaint(complaint: ComplaintCreate):
 
             reporter_entry = ComplaintReporter(
                 complaint_id=original.id,
-                user_id=complaint.user_id
+                user_id=user_id
             )
 
             db.add(reporter_entry)
@@ -83,7 +135,8 @@ def submit_complaint(complaint: ComplaintCreate):
                 "status": original.status,
                 "duplicate_warning": True,
                 "similar_to_id": original.id,
-                "report_count": original.report_count
+                "report_count": original.report_count,
+                "image_url": original.image_url
             }
 
         try:
@@ -96,17 +149,20 @@ def submit_complaint(complaint: ComplaintCreate):
                 detail=f"AI classification failed: {str(e)}"
             )
 
+        image_url = save_uploaded_image(image)
+
         new_complaint = Complaint(
-            title=complaint.title,
-            description=complaint.description,
-            district=complaint.district,
-            area=complaint.area,
+            title=title,
+            description=description,
+            district=district,
+            area=area,
             category=category,
             urgency=urgency,
             department_name=department_name,
             status="Pending",
             report_count=1,
-            user_id=complaint.user_id
+            user_id=user_id,
+            image_url=image_url
         )
 
         db.add(new_complaint)
@@ -115,7 +171,7 @@ def submit_complaint(complaint: ComplaintCreate):
 
         reporter_entry = ComplaintReporter(
             complaint_id=new_complaint.id,
-            user_id=complaint.user_id
+            user_id=user_id
         )
 
         db.add(reporter_entry)
@@ -129,7 +185,8 @@ def submit_complaint(complaint: ComplaintCreate):
             "department": department_name,
             "status": "Pending",
             "duplicate_warning": False,
-            "report_count": 1
+            "report_count": 1,
+            "image_url": image_url
         }
 
     finally:
