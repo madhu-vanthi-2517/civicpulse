@@ -15,7 +15,8 @@ export default function LandingPage() {
       {/* 🧭 Clean Navbar */}
       <nav className="w-full bg-white border-b border-gray-200 px-8 py-4 shadow-xs">
         <div className="w-full mx-auto flex items-center justify-between">
-          {/* Logo and Brand Title Block */}
+          
+          {/* 🌟 FIXED: Spacing compressed and logo vertical height alignment balanced */}
           <Link to="/" className="flex items-center gap-3">
             <img
               src="/logo_civicpulse.jpeg"
@@ -26,13 +27,12 @@ export default function LandingPage() {
               <h1 className="text-2xl font-bold text-gray-900 tracking-tight leading-none">
                 CivicPulse
               </h1>
-              <span className="text-xs text-indigo-600 font-semibold tracking-wider mt-0.5 leading-none">
+              <span className="text-xs text-indigo-600 font-semibold tracking-wider mt-1 leading-none">
                 Smart. Simple. Transparent.
               </span>
             </div>
           </Link>
 
-          {/* Navigation Actions */}
           <div className="flex items-center gap-6">
             <Link
               to="/public-tracker"
@@ -50,8 +50,10 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* 🚀 Introduction Header Banner */}
+      {/* 🚀 New Structured Introduction Header Banner */}
       <main className="max-w-5xl mx-auto px-6 py-16 text-center">
+        
+        {/* 🌟 FIXED: Strict reordering of the layout presentation elements */}
         <header className="max-w-3xl mx-auto mb-16">
           <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-full">
             Smart City Initiative
