@@ -15,8 +15,6 @@ export default function LandingPage() {
       {/* 🧭 Clean Navbar */}
       <nav className="w-full bg-white border-b border-gray-200 px-8 py-4 shadow-xs">
         <div className="w-full mx-auto flex items-center justify-between">
-          
-          {/* 🌟 FIXED: Spacing compressed and logo vertical height alignment balanced */}
           <Link to="/" className="flex items-center gap-3">
             <img
               src="/logo_civicpulse.jpeg"
@@ -35,7 +33,7 @@ export default function LandingPage() {
 
           <div className="flex items-center gap-6">
             <Link
-              to="/public-tracker"
+              to="/track"
               className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition"
             >
               Track Complaints
@@ -50,11 +48,11 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* 🚀 New Structured Introduction Header Banner */}
-      <main className="max-w-5xl mx-auto px-6 py-16 text-center">
+      {/* 🚀 Main Layout Flow */}
+      <main className="max-w-5xl mx-auto px-6 py-12 text-center">
         
-        {/* 🌟 FIXED: Strict reordering of the layout presentation elements */}
-        <header className="max-w-3xl mx-auto mb-16">
+        {/* 🏛️ 1st: The Introduction Header Stays at the Top */}
+        <header className="max-w-3xl mx-auto mb-12">
           <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-full">
             Smart City Initiative
           </span>
@@ -69,23 +67,7 @@ export default function LandingPage() {
           </p>
         </header>
 
-        {/* ⚡ Core Value Pillar Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 text-left">
-          <Info
-            title="AI-assisted categorization"
-            text="Complaints are parsed and automatically classified into the correct civic category fields instantly upon submission."
-          />
-          <Info
-            title="Faster department routing"
-            text="Issues are systematically dispatched straight to respective engineering departments based on regional urgency profiles."
-          />
-          <Info
-            title="Transparent tracking"
-            text="Citizens maintain real-time visibility over complaint status pipelines using an encrypted identifier key."
-          />
-        </div>
-
-        {/* 🎯 Interactive Call To Action Container Card Block */}
+        {/* 🎯 2nd: Submit a Complaint Card (Placed right below the header text) */}
         <div className="bg-white border border-gray-100 rounded-3xl p-8 md:p-12 shadow-xs flex flex-col md:flex-row items-center justify-between gap-6 text-left mb-16">
           <div>
             <h3 className="text-xl md:text-2xl font-bold text-gray-900">
@@ -105,7 +87,23 @@ export default function LandingPage() {
           </Link>
         </div>
 
-        {/* 📊 Live Statistics Row Grid Panel */}
+        {/* ⚡ 3rd: Core Value Pillar Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 text-left">
+          <Info
+            title="AI-assisted categorization"
+            text="Complaints are parsed and automatically classified into the correct civic category fields instantly upon submission."
+          />
+          <Info
+            title="Faster department routing"
+            text="Issues are systematically dispatched straight to respective engineering departments based on regional urgency profiles."
+          />
+          <Info
+            title="Transparent tracking"
+            text="Citizens maintain real-time visibility over complaint status pipelines using an encrypted identifier key."
+          />
+        </div>
+
+        {/* 📊 4th: Live Statistics Row Grid Panel */}
         <section className="bg-white border border-gray-100 rounded-2xl shadow-xs grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-gray-100 mb-16">
           <Stat icon={<ClipboardList />} value="Live" label="Complaints Registered" />
           <Stat icon={<Clock />} value="24×7" label="Availability" />
@@ -113,7 +111,7 @@ export default function LandingPage() {
           <Stat icon={<ShieldCheck />} value="Secure" label="Citizen Tracking" />
         </section>
 
-        {/* 📋 Application Process Steps Walkthrough */}
+        {/* 📋 5th: Application Process Steps Walkthrough */}
         <section className="py-4">
           <h3 className="text-2xl font-bold text-gray-900 mb-10">
             How It Works
