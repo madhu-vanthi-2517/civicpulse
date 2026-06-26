@@ -21,7 +21,7 @@ export default function ComplaintDetail() {
         setLoading(true);
         const cleanId = id.toString().replace('#', '').trim();
         
-        // 🌟 Directly hitting the updated Render service function from api.js
+        // 🌟 Fetching data straight from Jeeva's updated Render API endpoint
         const data = await api.getComplaintById(cleanId, token);
         
         if (data && !data.detail) {
@@ -122,16 +122,23 @@ export default function ComplaintDetail() {
             <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">
               Attached Citizen Evidence
             </span>
+            
+            {/* 🌟 Matches Jeeva's exact backend field 'image_url' gracefully */}
             {complaint.image_url ? (
               <img 
                 src={complaint.image_url} 
                 alt="Evidence Upload" 
-                className="max-w-xs h-auto rounded-lg border border-gray-200 shadow-xs"
+                className="max-w-xs h-auto rounded-lg border border-gray-200 shadow-xs object-cover"
+                onError={(e) => {
+                  // Fallback if the image path is local relative instead of an absolute static URL
+                  if (!complaint.image_url.startsWith('http')) {
+                    e.target.src = `${api.BASE_URL || 'http://localhost:8000'}${complaint.image_url}`;
+                  }
+                }}
               />
             ) : (
-              <div className="flex items-center gap-2 text-sm text-gray-400 py-1 font-sans">
-                <span>📷 Placeholder View: Using default workspace logo context</span>
-                <img src="/logo_civicpulse.jpeg" className="w-12 h-12 object-contain ml-auto opacity-40" alt="mock" />
+              <div className="text-sm text-gray-400 py-2 font-sans italic">
+                No visual image evidence was attached for this grievance ticket.
               </div>
             )}
           </div>
