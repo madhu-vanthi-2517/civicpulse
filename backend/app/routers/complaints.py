@@ -13,6 +13,7 @@ import os
 import shutil
 from uuid import uuid4
 
+
 router = APIRouter()
 
 VALID_DISTRICTS = ["Puducherry", "Karaikal", "Mahe", "Yanam"]
@@ -22,8 +23,10 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
 def save_uploaded_image(image):
-    if not image or not getattr(image, "filename", None):
+    if image is None or not getattr(image, "filename", None):
         return None
+
+    os.makedirs(UPLOAD_DIR, exist_ok=True)
 
     file_extension = os.path.splitext(image.filename)[1]
     unique_filename = f"{uuid4()}{file_extension}"
@@ -60,13 +63,13 @@ async def submit_complaint(request: Request):
         area = data.get("area")
         user_id = data.get("user_id")
 
-    if not title or not title.strip():
+    if not title or not str(title).strip():
         raise HTTPException(
             status_code=400,
             detail="Title cannot be empty"
         )
 
-    if not description or not description.strip():
+    if not description or not str(description).strip():
         raise HTTPException(
             status_code=400,
             detail="Description cannot be empty"
