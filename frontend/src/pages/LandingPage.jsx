@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   ClipboardList,
   ShieldCheck,
@@ -9,32 +9,30 @@ import {
 } from "lucide-react";
 
 export default function LandingPage() {
-  const navigate = useNavigate();
-
   return (
     <div className="min-h-screen w-full bg-gray-50 text-slate-900 font-sans antialiased m-0 p-0 overflow-x-hidden">
       
       {/* 🧭 Clean Navbar */}
       <nav className="w-full bg-white border-b border-gray-200 px-8 py-4 shadow-xs">
         <div className="w-full mx-auto flex items-center justify-between">
-          {/* 🌟 FIXED: Placed logo and text into a perfect vertical balance alignment */}
+          {/* Logo and Brand Title Block */}
           <Link to="/" className="flex items-center gap-3">
             <img
               src="/logo_civicpulse.jpeg"
               alt="CivicPulse Logo"
               className="h-14 w-auto object-contain"
             />
-            {/* 🌟 FIXED: Snapped the tagline directly below the header title text with zero extra space */}
             <div className="flex flex-col justify-center">
               <h1 className="text-2xl font-bold text-gray-900 tracking-tight leading-none">
                 CivicPulse
               </h1>
-              <span className="text-xs text-indigo-600 font-semibold tracking-wider mt-1 leading-none">
+              <span className="text-xs text-indigo-600 font-semibold tracking-wider mt-0.5 leading-none">
                 Smart. Simple. Transparent.
               </span>
             </div>
           </Link>
 
+          {/* Navigation Actions */}
           <div className="flex items-center gap-6">
             <Link
               to="/public-tracker"
@@ -52,9 +50,8 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* 🚀 New Introduction Header Banner */}
+      {/* 🚀 Introduction Header Banner */}
       <main className="max-w-5xl mx-auto px-6 py-16 text-center">
-        {/* 🌟 FIXED: Restructured text flow order -> Initiative Tag, Title, Subtitle Description */}
         <header className="max-w-3xl mx-auto mb-16">
           <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-full">
             Smart City Initiative
