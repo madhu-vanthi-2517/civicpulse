@@ -41,7 +41,7 @@ export default function LandingPage() {
 
         <Paper elevation={0} sx={{ border: 1, borderColor: "divider", borderRadius: 4, p: { xs: 3, sm: 4, md: 6 }, mb: { xs: 5, md: 8 }, display: "flex", flexDirection: { xs: "column", md: "row" }, alignItems: { xs: "flex-start", md: "center" }, justifyContent: "space-between", gap: 3, textAlign: { xs: "left", md: "left" } }}>
           <Box sx={{ flex: 1 }}>
-            <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>Ready to improve your neighborhood?</Typography>
+            <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>Be a responsible citizen</Typography>
             <Typography variant="body2" sx={{ color: "text.secondary", maxWidth: 640, lineHeight: 1.7 }}>
               Sign in to report civic issues, track complaint progress, and support faster resolution through a transparent public platform.
             </Typography>
@@ -104,10 +104,10 @@ export default function LandingPage() {
 function Info({ title, text }) {
   return (
     <Paper elevation={0} sx={{ border: 1, borderColor: "divider", borderRadius: 3, p: { xs: 3, sm: 4 }, height: "100%", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-      <Box sx={{ width: 42, height: 42, bgcolor: "primary.50", color: "primary.main", borderRadius: 2, display: "flex", alignItems: "center", justifyContent: "center", mb: 2 }}>
+      <Box sx={{ width: 42, height: 42, bgcolor: "primary.50", color: "primary.main", borderRadius: 2, display: "flex", alignItems: "center", justifyContent: "center", mb: 2, alignSelf: "center" }}>
         <CheckCircle size={20} />
       </Box>
-      <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>{title}</Typography>
+      <Typography variant="h6" sx={{ fontWeight: 700, mb: 1, width: "100%", textAlign: "center" }}>{title}</Typography>
       <Typography variant="body2" sx={{ color: "text.secondary", lineHeight: 1.7 }}>{text}</Typography>
     </Paper>
   );
