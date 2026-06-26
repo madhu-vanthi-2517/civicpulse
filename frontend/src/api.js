@@ -1,6 +1,9 @@
 const BASE_URL = "https://civicpulse-backend-dlyv.onrender.com";
 
 export const api = {
+  // Exposing the base url to allow relative static image path assembly in details pages
+  BASE_URL,
+
   // Auth
   register: async (name, email, password) => {
     const res = await fetch(`${BASE_URL}/auth/register`, {
@@ -21,14 +24,15 @@ export const api = {
   },
 
   // Complaints
-  submitComplaint: async (data, token) => {
+  submitComplaint: async (formData, token) => {
     const res = await fetch(`${BASE_URL}/api/complaint`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        // 🌟 FIXED: Removed "Content-Type" entirely so the browser can 
+        // automatically handle the multipart boundary headers for FormData!
         "Authorization": `Bearer ${token}`
       },
-      body: JSON.stringify(data)
+      body: formData // Directly passing the FormData instance stream
     });
     return res.json();
   },
