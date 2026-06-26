@@ -36,8 +36,8 @@ CivicPulse is an open-source, AI-powered grievance platform that:
 2. FastAPI receives it, stores the photo if attached, and calls the AI pipeline
 3. Scikit-Learn classifies the text → returns Category, Urgency, Department
 4. The system checks for similar existing complaints in the same district
-   - If none found, a new complaint is created
-   - If a match is found, the report is linked to the original and its report count increases
+    - If none found, a new complaint is created
+   - If a match is found, the report is linked to the original and its report count 
 5. All fields saved to PostgreSQL database
 6. Authority sees the complaint on the dashboard, including the photo and report count
 7. Authority updates status → Pending to Resolved
@@ -131,6 +131,9 @@ npm install
 npm run dev
 ```
 
+### Live link
+https://civicpulse-wheat.vercel.app
+
 ### Test accounts
 |Role|E-mail|Password|
 |----|------|--------|
@@ -138,7 +141,7 @@ npm run dev
 |Citizen|citizen1@test.com|citizen@12345|
 
 ## Demo Video
-_Will be added before final submission._
+https://youtu.be/tP4Wmauv1cI?si=zYkcwOtqQZRsbRi5
 
 ## Team
 
