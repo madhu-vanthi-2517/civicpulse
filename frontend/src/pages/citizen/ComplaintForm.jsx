@@ -94,7 +94,7 @@ export default function ComplaintForm() {
         setImage(null);
         setImagePreview(null);
       } else {
-        setError("Submission failed. Try again.");
+        setError(data.detail || "Submission failed. Try again.");
       }
     } catch (err) {
       setError("Cannot connect to server.");

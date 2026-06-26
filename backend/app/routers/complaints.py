@@ -3,6 +3,7 @@ from app.database import SessionLocal
 from app.models import Complaint, ComplaintReporter
 from app.schemas import StatusUpdate
 from app.ai.classifier import (
+    is_valid_complaint_text,
     predict_category,
     predict_urgency,
     predict_department,
@@ -75,6 +76,13 @@ async def submit_complaint(request: Request):
             detail="Description cannot be empty"
         )
 
+    complaint_text = f"{title} {description}"
+    if not is_valid_complaint_text(complaint_text):
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid complaint. Please enter a clear and meaningful issue description."
+        )
+
     if district not in VALID_DISTRICTS:
         raise HTTPException(
             status_code=400,
@@ -92,7 +100,7 @@ async def submit_complaint(request: Request):
     db = SessionLocal()
 
     try:
-        text = f"{title} {description}"
+        text = complaint_text
 
         existing_complaints = db.query(Complaint).filter(
             Complaint.district == district,
@@ -145,7 +153,7 @@ async def submit_complaint(request: Request):
         try:
             category = predict_category(text)
             urgency = predict_urgency(text)
-            department_name = predict_department(category)
+            department_name = predict_department(category, text)
         except Exception as e:
             raise HTTPException(
                 status_code=500,
