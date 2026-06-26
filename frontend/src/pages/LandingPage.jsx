@@ -17,11 +17,11 @@ export default function LandingPage() {
         <div className="w-full mx-auto flex items-center justify-between">
           {/* Logo and Balanced Title Text Block */}
           <Link to="/" className="flex items-center gap-3">
-            {/* 🌟 FIXED: Scaled height to h-7 to perfectly match the height of the capital 'C' */}
+            {/* 🌟 FIXED: Increased the shield logo size to h-16 so it looks prominent and balanced */}
             <img
               src="/logo_civicpulse.jpeg"
               alt="CivicPulse Logo"
-              className="h-7 w-auto object-contain"
+              className="h-16 w-auto object-contain"
             />
             <div className="flex flex-col justify-center">
               <h1 className="text-2xl font-bold text-gray-900 tracking-tight leading-none">
@@ -48,7 +48,6 @@ export default function LandingPage() {
       <main className="max-w-5xl mx-auto px-6 py-12 text-center">
         
         {/* 🏛️ 1st: The Introduction Header Stays at the Top */}
-        {/* 🌟 FIXED: Removed duplicate "Improve your neighborhood" phrase so "Why CivicPulse?" leads cleanly */}
         <header className="max-w-3xl mx-auto mb-12">
           <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">
             Why CivicPulse?
@@ -58,7 +57,7 @@ export default function LandingPage() {
           </p>
         </header>
 
-        {/* 🎯 2nd: Submit a Complaint Card (Keeps the high-impact neighborhood text here) */}
+        {/* 🎯 2nd: Submit a Complaint Card */}
         <div className="bg-white border border-gray-100 rounded-3xl p-8 md:p-12 shadow-xs flex flex-col md:flex-row items-center justify-between gap-6 text-left mb-16">
           <div>
             <h3 className="text-xl md:text-2xl font-bold text-gray-900">
