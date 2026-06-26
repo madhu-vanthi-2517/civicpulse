@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Request
 from app.database import SessionLocal
-from app.models import Complaint, StatusLog, ComplaintReporter
+from app.models import Complaint, ComplaintReporter
 from app.schemas import StatusUpdate
 from app.ai.classifier import (
     predict_category,
@@ -192,6 +192,17 @@ async def submit_complaint(request: Request):
             "image_url": image_url
         }
 
+    except HTTPException:
+        db.rollback()
+        raise
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
+
     finally:
         db.close()
 
@@ -298,6 +309,12 @@ def update_status(complaint_id: int, body: StatusUpdate):
     db = SessionLocal()
 
     try:
+        if complaint_id <= 0:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid complaint ID"
+            )
+
         complaint = db.query(Complaint).filter(
             Complaint.id == complaint_id
         ).first()
@@ -308,25 +325,39 @@ def update_status(complaint_id: int, body: StatusUpdate):
                 detail="Complaint not found"
             )
 
+        valid_statuses = ["Pending", "In Progress", "Resolved"]
+
+        if body.status not in valid_statuses:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid status"
+            )
+
         old_status = complaint.status
         complaint.status = body.status
 
-        log = StatusLog(
-            complaint_id=complaint_id,
-            old_status=old_status,
-            new_status=body.status,
-            remarks=body.remarks
-        )
-
-        db.add(log)
         db.commit()
+        db.refresh(complaint)
 
         return {
             "message": "Status updated successfully",
-            "id": complaint_id,
+            "id": complaint.id,
+            "complaint_id": complaint.id,
             "old_status": old_status,
-            "new_status": body.status
+            "new_status": complaint.status,
+            "status": complaint.status
         }
+
+    except HTTPException:
+        db.rollback()
+        raise
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
 
     finally:
         db.close()
