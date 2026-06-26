@@ -5,8 +5,7 @@ import {
   Clock,
   Brain,
   ArrowRight,
-  CheckCircle,
-  Activity
+  CheckCircle
 } from "lucide-react";
 
 export default function LandingPage() {
@@ -18,17 +17,19 @@ export default function LandingPage() {
       {/* 🧭 Clean Navbar */}
       <nav className="w-full bg-white border-b border-gray-200 px-8 py-4 shadow-xs">
         <div className="w-full mx-auto flex items-center justify-between">
+          {/* 🌟 FIXED: Placed logo and text into a perfect vertical balance alignment */}
           <Link to="/" className="flex items-center gap-3">
             <img
               src="/logo_civicpulse.jpeg"
               alt="CivicPulse Logo"
               className="h-14 w-auto object-contain"
             />
-            <div>
+            {/* 🌟 FIXED: Snapped the tagline directly below the header title text with zero extra space */}
+            <div className="flex flex-col justify-center">
               <h1 className="text-2xl font-bold text-gray-900 tracking-tight leading-none">
                 CivicPulse
               </h1>
-              <span className="text-xs text-indigo-600 font-semibold tracking-wider block mt-1">
+              <span className="text-xs text-indigo-600 font-semibold tracking-wider mt-1 leading-none">
                 Smart. Simple. Transparent.
               </span>
             </div>
@@ -53,13 +54,17 @@ export default function LandingPage() {
 
       {/* 🚀 New Introduction Header Banner */}
       <main className="max-w-5xl mx-auto px-6 py-16 text-center">
+        {/* 🌟 FIXED: Restructured text flow order -> Initiative Tag, Title, Subtitle Description */}
         <header className="max-w-3xl mx-auto mb-16">
           <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-full">
             Smart City Initiative
           </span>
           <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mt-5 tracking-tight">
-            Why CivicPulse?
+            Improve your neighborhood
           </h2>
+          <h3 className="text-xl md:text-2xl font-bold text-gray-600 mt-3 tracking-tight">
+            Why CivicPulse?
+          </h3>
           <p className="text-base md:text-lg text-gray-500 mt-4 leading-relaxed">
             Bridging the gap between citizens and municipal administration. CivicPulse makes complaint reporting structured, trackable, and completely transparent by cutting down manual sorting processing times.
           </p>
@@ -118,7 +123,7 @@ export default function LandingPage() {
             <Step number="1" title="Submit" text="Citizen reports the urban issue with details, category notes, and photos." />
             <Step number="2" title="Classify" text="The backend system categorizes the incoming database token seamlessly." />
             <Step number="3" title="Track" text="Citizens monitor the resolution updates through open interface nodes." />
-            <Step number="4" title="Resolve" text="Assigned authority nodes complete maintenance works and sign off." />
+            <Step number="4" title="Resolve" text="Authority reviews and updates complaint status." />
           </div>
         </section>
       </main>
