@@ -15,6 +15,7 @@ export default function LandingPage() {
       {/* 🧭 Clean Navbar */}
       <nav className="w-full bg-white border-b border-gray-200 px-8 py-4 shadow-xs">
         <div className="w-full mx-auto flex items-center justify-between">
+          {/* Logo and Balanced Title Text Block */}
           <Link to="/" className="flex items-center gap-3">
             <img
               src="/logo_civicpulse.jpeg"
@@ -31,13 +32,8 @@ export default function LandingPage() {
             </div>
           </Link>
 
+          {/* 🌟 FIXED: Removed "Track Complaints" link entirely per your request */}
           <div className="flex items-center gap-6">
-            <Link
-              to="/track"
-              className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition"
-            >
-              Track Complaints
-            </Link>
             <Link
               to="/login"
               className="bg-indigo-600 text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-indigo-700 transition shadow-xs"
@@ -52,11 +48,9 @@ export default function LandingPage() {
       <main className="max-w-5xl mx-auto px-6 py-12 text-center">
         
         {/* 🏛️ 1st: The Introduction Header Stays at the Top */}
+        {/* 🌟 FIXED: Removed the "Smart City Initiative" badge so "Improve your neighborhood" leads the page */}
         <header className="max-w-3xl mx-auto mb-12">
-          <span className="text-xs font-bold uppercase tracking-widest text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-full">
-            Smart City Initiative
-          </span>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mt-5 tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">
             Improve your neighborhood
           </h2>
           <h3 className="text-xl md:text-2xl font-bold text-gray-600 mt-3 tracking-tight">
