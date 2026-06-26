@@ -29,15 +29,18 @@ function Navbar() {
 
   const isActive = (path) => location.pathname === path;
 
+  // 🌟 Authority routes check (Sidebar handled internally)
   const isAdminPage =
     location.pathname.startsWith("/admin") ||
     location.pathname.startsWith("/analytics") ||
     location.pathname.startsWith("/complaint/");
 
+  // 🌟 Public unauthenticated pages check (Hides general navbar)
   const isAuthPage =
     location.pathname === "/" ||
     location.pathname === "/login" ||
-    location.pathname === "/register";
+    location.pathname === "/register" ||
+    location.pathname === "/public-tracker"; // Safe fallback match
 
   if (isAdminPage || isAuthPage) return null;
 
@@ -48,18 +51,23 @@ function Navbar() {
   };
 
   return (
-    <nav className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-50">
-      <div className="flex items-center justify-between max-w-7xl mx-auto">
+    <nav className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-50 w-full">
+      <div className="flex items-center justify-between w-full mx-auto">
         <Link
           to="/track"
-          className="flex items-center gap-1 font-bold text-indigo-600 text-xl tracking-tight"
+          className="flex items-center gap-3 font-bold text-indigo-600 text-xl tracking-tight"
         >
           <img
             src="/logo_civicpulse.jpeg"
             alt="CivicPulse Logo"
-            className="h-[95px] w-auto object-contain max-w-[160px]"
+            className="h-14 w-auto object-contain"
           />
-          <span>CivicPulse</span>
+          <div className="flex flex-col justify-center">
+            <span className="text-xl font-bold text-gray-900 leading-none">CivicPulse</span>
+            <span className="text-[10px] text-indigo-600 font-semibold tracking-wider mt-0.5 leading-none">
+              Smart. Simple. Transparent.
+            </span>
+          </div>
         </Link>
 
         <div className="hidden md:flex gap-6 text-sm items-center font-medium">
@@ -67,7 +75,7 @@ function Navbar() {
             to="/track"
             className={`transition-all duration-200 pb-1 ${
               isActive("/track")
-                ? "text-indigo-600 border-b-2 border-indigo-600"
+                ? "text-indigo-600 border-b-2 border-indigo-600 font-semibold"
                 : "text-gray-600 hover:text-indigo-600"
             }`}
           >
@@ -78,7 +86,7 @@ function Navbar() {
             to="/submit"
             className={`transition-all duration-200 pb-1 ${
               isActive("/submit")
-                ? "text-indigo-600 border-b-2 border-indigo-600"
+                ? "text-indigo-600 border-b-2 border-indigo-600 font-semibold"
                 : "text-gray-600 hover:text-indigo-600"
             }`}
           >
@@ -89,7 +97,7 @@ function Navbar() {
             to="/my-complaints"
             className={`transition-all duration-200 pb-1 ${
               isActive("/my-complaints")
-                ? "text-indigo-600 border-b-2 border-indigo-600"
+                ? "text-indigo-600 border-b-2 border-indigo-600 font-semibold"
                 : "text-gray-600 hover:text-indigo-600"
             }`}
           >
@@ -99,10 +107,9 @@ function Navbar() {
           {user ? (
             <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
               <span className="text-xs text-gray-400">{user.email}</span>
-
               <button
                 onClick={handleLogout}
-                className="bg-gray-100 text-gray-700 px-4 py-1.5 rounded-lg hover:bg-gray-200 font-medium text-sm transition"
+                className="bg-gray-100 text-gray-700 px-4 py-1.5 rounded-lg hover:bg-gray-200 font-medium text-sm transition cursor-pointer"
               >
                 Logout
               </button>
@@ -110,7 +117,7 @@ function Navbar() {
           ) : (
             <Link
               to="/login"
-              className="bg-indigo-600 text-white px-4 py-1.5 rounded-lg hover:bg-indigo-700 font-medium transition"
+              className="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 font-semibold text-sm transition shadow-xs"
             >
               Login
             </Link>
@@ -127,16 +134,13 @@ function Navbar() {
         </div>
       </div>
 
+      {/* Mobile drop layout */}
       {isOpen && (
         <div className="md:hidden mt-3 pt-3 border-t border-gray-100 flex flex-col gap-3 pb-2 text-sm font-medium">
           <Link
             to="/track"
             onClick={() => setIsOpen(false)}
-            className={`py-1 ${
-              isActive("/track")
-                ? "text-indigo-600 font-semibold"
-                : "text-gray-600"
-            }`}
+            className={`py-1 ${isActive("/track") ? "text-indigo-600 font-semibold" : "text-gray-600"}`}
           >
             Track Complaints
           </Link>
@@ -144,11 +148,7 @@ function Navbar() {
           <Link
             to="/submit"
             onClick={() => setIsOpen(false)}
-            className={`py-1 ${
-              isActive("/submit")
-                ? "text-indigo-600 font-semibold"
-                : "text-gray-600"
-            }`}
+            className={`py-1 ${isActive("/submit") ? "text-indigo-600 font-semibold" : "text-gray-600"}`}
           >
             Submit
           </Link>
@@ -156,21 +156,14 @@ function Navbar() {
           <Link
             to="/my-complaints"
             onClick={() => setIsOpen(false)}
-            className={`py-1 ${
-              isActive("/my-complaints")
-                ? "text-indigo-600 font-semibold"
-                : "text-gray-600"
-            }`}
+            className={`py-1 ${isActive("/my-complaints") ? "text-indigo-600 font-semibold" : "text-gray-600"}`}
           >
             My Complaints
           </Link>
 
           {user ? (
             <div className="flex flex-col gap-2 pt-2 border-t border-gray-100">
-              <span className="text-xs text-gray-400 truncate">
-                {user.email}
-              </span>
-
+              <span className="text-xs text-gray-400 truncate">{user.email}</span>
               <button
                 onClick={handleLogout}
                 className="w-full bg-gray-100 text-gray-700 py-2 rounded-lg text-center font-semibold text-xs"
@@ -196,10 +189,10 @@ function Navbar() {
 export default function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50 text-slate-900 font-sans">
+      {/* 🌟 FIXED: Dropped all screen boxing limits to force true edge-to-edge width layout */}
+      <div className="min-h-screen w-full m-0 p-0 bg-gray-50 text-slate-900 font-sans overflow-x-hidden">
         <Navbar />
-
-        <main>
+        <main className="w-full m-0 p-0">
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
@@ -223,6 +216,7 @@ export default function App() {
               }
             />
 
+            {/* 🌟 SYNCED PATHNAME: Maps public analytics grid right to /track */}
             <Route path="/track" element={<PublicTracker />} />
 
             <Route
