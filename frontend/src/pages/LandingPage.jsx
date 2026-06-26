@@ -12,12 +12,12 @@ import { Box, Button, Container, Grid, Paper, Stack, Typography } from "@mui/mat
 export default function LandingPage() {
   return (
     <Box sx={{ minHeight: "100vh", width: "100%", bgcolor: "grey.50", color: "text.primary" }}>
-      <Box component="nav" sx={{ bgcolor: "white", borderBottom: 1, borderColor: "divider", px: { xs: 2, sm: 3, lg: 4 }, py: { xs: 2, sm: 2.5 } }}>
+      <Box component="nav" sx={{ bgcolor: "white", borderBottom: 1, borderColor: "divider", px: { xs: 2, sm: 3, lg: 4 }, py: { xs: 2.25, sm: 2.75, md: 3.25 } }}>
         <Container maxWidth="xl" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 2 }}>
           <Link to="/" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", minWidth: 0 }}>
-            <img src="/logo_civicpulse.jpeg" alt="CivicPulse Logo" style={{ height: 48, width: "auto", objectFit: "contain" }} />
+            <img src="/logo_civicpulse.jpeg" alt="CivicPulse Logo" style={{ height: 56, width: "auto", objectFit: "contain" }} />
             <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", minWidth: 0 }}>
-              <Typography variant="h6" sx={{ color: "text.primary", fontWeight: 700, lineHeight: 1.1 }}>CivicPulse</Typography>
+              <Typography variant="h5" sx={{ color: "text.primary", fontWeight: 700, lineHeight: 1.1 }}>CivicPulse</Typography>
               <Typography variant="caption" sx={{ color: "primary.main", fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase" }}>
                 Smart. Simple. Transparent.
               </Typography>

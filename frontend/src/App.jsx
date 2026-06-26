@@ -43,6 +43,8 @@ function Navbar() {
 
   if (isAdminPage || isAuthPage) return null;
 
+  const isLandingPage = location.pathname === "/";
+
   const handleLogout = () => {
     logout();
     setIsOpen(false);
@@ -56,12 +58,12 @@ function Navbar() {
   ];
 
   return (
-    <Box component="nav" sx={{ bgcolor: "white", borderBottom: 1, borderColor: "divider", position: "sticky", top: 0, zIndex: 1200, width: "100%", px: { xs: 2, sm: 3, md: 4 }, py: { xs: 1.5, sm: 2 } }}>
+    <Box component="nav" sx={{ bgcolor: "white", borderBottom: 1, borderColor: "divider", position: "sticky", top: 0, zIndex: 1200, width: "100%", px: { xs: 2, sm: 3, md: 4 }, py: isLandingPage ? { xs: 2, sm: 2.5, md: 3 } : { xs: 1.5, sm: 2 } }}>
       <Container maxWidth="xl" sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 2 }}>
         <Link to="/track" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", minWidth: 0 }}>
-          <img src="/logo_civicpulse.jpeg" alt="CivicPulse Logo" style={{ height: 48, width: "auto", objectFit: "contain" }} />
+          <img src="/logo_civicpulse.jpeg" alt="CivicPulse Logo" style={{ height: isLandingPage ? 56 : 48, width: "auto", objectFit: "contain" }} />
           <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", minWidth: 0 }}>
-            <Typography variant="h6" sx={{ color: "text.primary", fontWeight: 700, lineHeight: 1.1 }}>CivicPulse</Typography>
+            <Typography variant={isLandingPage ? "h5" : "h6"} sx={{ color: "text.primary", fontWeight: 700, lineHeight: 1.1 }}>CivicPulse</Typography>
             <Typography variant="caption" sx={{ color: "primary.main", fontWeight: 700, letterSpacing: 1.2, textTransform: "uppercase" }}>
               Smart. Simple. Transparent.
             </Typography>
