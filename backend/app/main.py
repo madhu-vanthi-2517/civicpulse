@@ -16,6 +16,7 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="CivicPulse API")
 
+# Upload folder setup
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
@@ -25,6 +26,7 @@ app.mount(
     name="uploads"
 )
 
+# CORS setup
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -37,6 +39,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Routers
 app.include_router(
     auth_router,
     prefix="/auth",
