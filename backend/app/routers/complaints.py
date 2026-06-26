@@ -1,7 +1,7 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from app.database import SessionLocal
-from app.models import Complaint, StatusLog, ComplaintReporter
-from app.schemas import ComplaintCreate, StatusUpdate
+from app.models import Complaint, ComplaintReporter
+from app.schemas import StatusUpdate
 from app.ai.classifier import (
     predict_category,
     predict_urgency,
@@ -9,49 +9,128 @@ from app.ai.classifier import (
     check_duplicate
 )
 
+import os
+import shutil
+from uuid import uuid4
+
+
 router = APIRouter()
 
 VALID_DISTRICTS = ["Puducherry", "Karaikal", "Mahe", "Yanam"]
 
+UPLOAD_DIR = "uploads"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+
+def save_uploaded_image(image):
+    if image is None or not getattr(image, "filename", None):
+        return None
+
+    os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+    file_extension = os.path.splitext(image.filename)[1]
+    unique_filename = f"{uuid4()}{file_extension}"
+    file_path = os.path.join(UPLOAD_DIR, unique_filename)
+
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(image.file, buffer)
+
+    return f"/uploads/{unique_filename}"
+
+
 @router.post("/complaint")
-def submit_complaint(complaint: ComplaintCreate):
-    if complaint.district not in VALID_DISTRICTS:
+async def submit_complaint(request: Request):
+    content_type = request.headers.get("content-type", "")
+
+    image = None
+
+    if "multipart/form-data" in content_type:
+        form = await request.form()
+
+        title = form.get("title")
+        description = form.get("description")
+        district = form.get("district")
+        area = form.get("area")
+        user_id = form.get("user_id")
+        image = form.get("image")
+
+    else:
+        data = await request.json()
+
+        title = data.get("title")
+        description = data.get("description")
+        district = data.get("district")
+        area = data.get("area")
+        user_id = data.get("user_id")
+
+    if not title or not str(title).strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Title cannot be empty"
+        )
+
+    if not description or not str(description).strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Description cannot be empty"
+        )
+
+    if district not in VALID_DISTRICTS:
         raise HTTPException(
             status_code=400,
             detail=f"District must be one of {VALID_DISTRICTS}"
         )
 
-    db = SessionLocal()
     try:
-        text = f"{complaint.title} {complaint.description}"
+        user_id = int(user_id)
+    except Exception:
+        raise HTTPException(
+            status_code=400,
+            detail="Valid user_id is required"
+        )
 
-        # Pass actual Complaint objects directly —
-        # check_duplicate reads .title and .description itself
-        existing = db.query(Complaint).filter(
-            Complaint.district == complaint.district,
+    db = SessionLocal()
+
+    try:
+        text = f"{title} {description}"
+
+        existing_complaints = db.query(Complaint).filter(
+            Complaint.district == district,
             Complaint.status != "Resolved"
         ).all()
 
-        duplicate = check_duplicate(text, existing)
+        try:
+            duplicate = check_duplicate(text, existing_complaints)
+        except Exception as e:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Duplicate checking failed: {str(e)}"
+            )
 
         if duplicate:
             original = db.query(Complaint).filter(
                 Complaint.id == duplicate.id
             ).first()
 
-            original.report_count += 1
+            if not original:
+                raise HTTPException(
+                    status_code=404,
+                    detail="Original complaint not found"
+                )
+
+            original.report_count = (original.report_count or 0) + 1
 
             reporter_entry = ComplaintReporter(
                 complaint_id=original.id,
-                user_id=complaint.user_id
+                user_id=user_id
             )
+
             db.add(reporter_entry)
             db.commit()
             db.refresh(original)
 
             return {
-                "message": "Similar complaint already exists. "
-                            "Your report has been linked to it.",
+                "message": "Similar complaint already exists. Your report has been linked to it.",
                 "id": original.id,
                 "category": original.category,
                 "urgency": original.urgency,
@@ -59,33 +138,45 @@ def submit_complaint(complaint: ComplaintCreate):
                 "status": original.status,
                 "duplicate_warning": True,
                 "similar_to_id": original.id,
-                "report_count": original.report_count
+                "report_count": original.report_count,
+                "image_url": original.image_url
             }
 
-        category = predict_category(text)
-        urgency = predict_urgency(text)
-        department_name = predict_department(category)
+        try:
+            category = predict_category(text)
+            urgency = predict_urgency(text)
+            department_name = predict_department(category)
+        except Exception as e:
+            raise HTTPException(
+                status_code=500,
+                detail=f"AI classification failed: {str(e)}"
+            )
+
+        image_url = save_uploaded_image(image)
 
         new_complaint = Complaint(
-            title=complaint.title,
-            description=complaint.description,
-            district=complaint.district,
-            area=complaint.area,
+            title=title,
+            description=description,
+            district=district,
+            area=area,
             category=category,
             urgency=urgency,
             department_name=department_name,
             status="Pending",
             report_count=1,
-            user_id=complaint.user_id
+            user_id=user_id,
+            image_url=image_url
         )
+
         db.add(new_complaint)
         db.commit()
         db.refresh(new_complaint)
 
         reporter_entry = ComplaintReporter(
             complaint_id=new_complaint.id,
-            user_id=complaint.user_id
+            user_id=user_id
         )
+
         db.add(reporter_entry)
         db.commit()
 
@@ -97,8 +188,21 @@ def submit_complaint(complaint: ComplaintCreate):
             "department": department_name,
             "status": "Pending",
             "duplicate_warning": False,
-            "report_count": 1
+            "report_count": 1,
+            "image_url": image_url
         }
+
+    except HTTPException:
+        db.rollback()
+        raise
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
+
     finally:
         db.close()
 
@@ -110,17 +214,23 @@ def get_complaints(
     department: str = None
 ):
     db = SessionLocal()
+
     try:
         query = db.query(Complaint)
+
         if status:
             query = query.filter(Complaint.status == status)
+
         if district:
             query = query.filter(Complaint.district == district)
+
         if department:
             query = query.filter(
                 Complaint.department_name == department
             )
+
         return query.all()
+
     finally:
         db.close()
 
@@ -128,11 +238,15 @@ def get_complaints(
 @router.get("/complaints/public")
 def get_public_complaints(district: str = None):
     db = SessionLocal()
+
     try:
         query = db.query(Complaint)
+
         if district:
             query = query.filter(Complaint.district == district)
+
         return query.all()
+
     finally:
         db.close()
 
@@ -140,13 +254,15 @@ def get_public_complaints(district: str = None):
 @router.get("/complaints/mine")
 def get_my_complaints(user_id: int):
     db = SessionLocal()
+
     try:
         reported_ids = db.query(
             ComplaintReporter.complaint_id
         ).filter(
             ComplaintReporter.user_id == user_id
         ).all()
-        ids = [r[0] for r in reported_ids]
+
+        ids = [item[0] for item in reported_ids]
 
         if not ids:
             return []
@@ -154,7 +270,9 @@ def get_my_complaints(user_id: int):
         complaints = db.query(Complaint).filter(
             Complaint.id.in_(ids)
         ).all()
+
         return complaints
+
     finally:
         db.close()
 
@@ -162,21 +280,26 @@ def get_my_complaints(user_id: int):
 @router.get("/complaint/{complaint_id}")
 def get_complaint(complaint_id: int):
     db = SessionLocal()
+
     try:
         if complaint_id <= 0:
             raise HTTPException(
                 status_code=400,
                 detail="Invalid complaint ID"
             )
+
         complaint = db.query(Complaint).filter(
             Complaint.id == complaint_id
         ).first()
+
         if not complaint:
             raise HTTPException(
                 status_code=404,
                 detail="Complaint not found"
             )
+
         return complaint
+
     finally:
         db.close()
 
@@ -184,32 +307,58 @@ def get_complaint(complaint_id: int):
 @router.put("/complaint/{complaint_id}/status")
 def update_status(complaint_id: int, body: StatusUpdate):
     db = SessionLocal()
+
     try:
+        if complaint_id <= 0:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid complaint ID"
+            )
+
         complaint = db.query(Complaint).filter(
             Complaint.id == complaint_id
         ).first()
+
         if not complaint:
             raise HTTPException(
                 status_code=404,
                 detail="Complaint not found"
             )
+
+        valid_statuses = ["Pending", "In Progress", "Resolved"]
+
+        if body.status not in valid_statuses:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid status"
+            )
+
         old_status = complaint.status
         complaint.status = body.status
 
-        log = StatusLog(
-            complaint_id=complaint_id,
-            old_status=old_status,
-            new_status=body.status,
-            remarks=body.remarks
-        )
-        db.add(log)
         db.commit()
+        db.refresh(complaint)
+
         return {
             "message": "Status updated successfully",
-            "id": complaint_id,
+            "id": complaint.id,
+            "complaint_id": complaint.id,
             "old_status": old_status,
-            "new_status": body.status
+            "new_status": complaint.status,
+            "status": complaint.status
         }
+
+    except HTTPException:
+        db.rollback()
+        raise
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
+
     finally:
         db.close()
 
@@ -217,33 +366,42 @@ def update_status(complaint_id: int, body: StatusUpdate):
 @router.get("/analytics")
 def get_analytics():
     db = SessionLocal()
+
     try:
         complaints = db.query(Complaint).all()
 
         category_counts = {}
         district_counts = {}
-        status_counts = {"Pending": 0, "In Progress": 0, "Resolved": 0}
+        status_counts = {
+            "Pending": 0,
+            "In Progress": 0,
+            "Resolved": 0
+        }
 
-        for c in complaints:
-            category_counts[c.category] = category_counts.get(c.category, 0) + 1
-            district_counts[c.district] = district_counts.get(c.district, 0) + 1
-            if c.status in status_counts:
-                status_counts[c.status] += 1
+        for complaint in complaints:
+            category = complaint.category or "General"
+            district = complaint.district or "Unknown"
+            status = complaint.status or "Pending"
+
+            category_counts[category] = category_counts.get(category, 0) + 1
+            district_counts[district] = district_counts.get(district, 0) + 1
+            status_counts[status] = status_counts.get(status, 0) + 1
 
         return {
             "total": len(complaints),
             "by_category": [
-                {"category": k, "count": v}
-                for k, v in category_counts.items()
+                {"category": category, "count": count}
+                for category, count in category_counts.items()
             ],
             "by_district": [
-                {"district": k, "count": v}
-                for k, v in district_counts.items()
+                {"district": district, "count": count}
+                for district, count in district_counts.items()
             ],
             "by_status": [
-                {"name": k, "value": v}
-                for k, v in status_counts.items()
+                {"name": status, "value": count}
+                for status, count in status_counts.items()
             ]
         }
+
     finally:
         db.close()

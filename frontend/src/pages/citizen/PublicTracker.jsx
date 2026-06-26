@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { api } from "../../api";
 import ComplaintCard from "../../components/ComplaintCard";
+import { Search, Map } from "lucide-react";
+import { Box, Button, Container, Paper, Stack, TextField, Typography } from "@mui/material";
 
-const PUDUCHERRY_DISTRICTS = [
-  "Puducherry", "Karaikal", "Mahe", "Yanam"
-];
+const PUDUCHERRY_DISTRICTS = ["Puducherry", "Karaikal", "Mahe", "Yanam"];
 
 export default function PublicTracker() {
   const [complaints, setComplaints] = useState([]);
@@ -18,9 +18,7 @@ export default function PublicTracker() {
     const fetchComplaints = async () => {
       setLoading(true);
       try {
-        const data = await api.getPublicComplaints(
-          selectedDistrict
-        );
+        const data = await api.getPublicComplaints(selectedDistrict);
         if (Array.isArray(data)) {
           setComplaints(data);
         }
@@ -36,9 +34,7 @@ export default function PublicTracker() {
   const handleSearch = () => {
     if (!searchId.trim()) return;
     const found = complaints.find(
-      (c) => String(c.id) === searchId.trim() ||
-             `CP${String(c.id).padStart(3,"0")}` ===
-             searchId.trim().toUpperCase()
+      (c) => String(c.id) === searchId.trim() || `CP${String(c.id).padStart(3, "0")}` === searchId.trim().toUpperCase()
     );
     if (found) {
       setSearchResult(found);
@@ -50,130 +46,73 @@ export default function PublicTracker() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-3xl mx-auto">
+    <Box sx={{ minHeight: "100vh", bgcolor: "grey.50", py: { xs: 3, sm: 5 } }}>
+      <Container maxWidth="lg">
+        <Box sx={{ mb: { xs: 3, sm: 4 } }}>
+          <Typography variant="h4" sx={{ fontWeight: 700 }}>CivicPulse</Typography>
+          <Typography variant="body2" sx={{ color: "text.secondary", mt: 0.5 }}>Public Complaint Tracker — Puducherry Territory</Typography>
+        </Box>
 
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">
-            CivicPulse
-          </h1>
-          <p className="text-gray-500 mt-1">
-            Public Complaint Tracker — Puducherry
-          </p>
-        </div>
-
-        {/* Search */}
-        <div className="bg-white rounded-xl shadow-sm
-                        p-6 mb-6">
-          <h2 className="text-lg font-semibold
-                         text-gray-700 mb-3">
-            Track Your Complaint
-          </h2>
-          <div className="flex gap-3">
-            <input
-              type="text"
-              placeholder="Enter Complaint ID (e.g. 1)"
-              value={searchId}
-              onChange={(e) => setSearchId(e.target.value)}
-              className="flex-1 border border-gray-300
-                         rounded-lg px-4 py-2
-                         focus:outline-none
-                         focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              onClick={handleSearch}
-              className="bg-blue-600 text-white px-6
-                         py-2 rounded-lg hover:bg-blue-700
-                         font-semibold"
-            >
-              Search
-            </button>
-          </div>
+        <Paper elevation={0} sx={{ border: 1, borderColor: "divider", borderRadius: 3, p: { xs: 2.5, sm: 3 }, mb: 3 }}>
+          <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
+            <Search size={18} color="#64748b" />
+            <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>Track Individual Ticket ID</Typography>
+          </Stack>
+          <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 1.5 }}>
+            <TextField fullWidth placeholder="Enter Complaint ID (e.g. 1 or CP001)" value={searchId} onChange={(e) => setSearchId(e.target.value)} />
+            <Button variant="contained" onClick={handleSearch} sx={{ minWidth: { xs: "100%", sm: 140 }, py: 1.4, borderRadius: 2 }}>Search</Button>
+          </Box>
           {searchResult && (
-            <div className="mt-4">
-              <ComplaintCard
-                complaint={{
-                  ...searchResult,
-                  location: `${searchResult.district} — ${searchResult.area}`
-                }}
-              />
-            </div>
+            <Box sx={{ mt: 2, pt: 2, borderTop: 1, borderColor: "divider" }}>
+              <Typography variant="caption" sx={{ color: "success.main", fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.1, mb: 1, display: "block" }}>Search Match Found:</Typography>
+              <ComplaintCard complaint={{ ...searchResult, location: `${searchResult.district} — ${searchResult.area}` }} />
+            </Box>
           )}
           {notFound && (
-            <p className="mt-3 text-sm text-red-500">
-              No complaint found with that ID.
-            </p>
+            <Typography variant="body2" sx={{ mt: 2, color: "error.main", bgcolor: "error.50", border: 1, borderColor: "error.100", borderRadius: 2, p: 1.5, display: "inline-block" }}>
+              ⚠ No system complaint matched that identifier value.
+            </Typography>
           )}
-        </div>
+        </Paper>
 
-        {/* District Filter */}
-        <div className="bg-white rounded-xl shadow-sm
-                        p-6 mb-6">
-          <h2 className="text-lg font-semibold
-                         text-gray-700 mb-3">
-            Browse by District
-          </h2>
-          <div className="flex gap-2 flex-wrap">
-            <button
-              onClick={() => setSelectedDistrict("")}
-              className={`px-4 py-1.5 rounded-full
-                text-sm font-medium ${
-                selectedDistrict === ""
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-600"
-              }`}
-            >
-              All
-            </button>
+        <Paper elevation={0} sx={{ border: 1, borderColor: "divider", borderRadius: 3, p: { xs: 2.5, sm: 3 }, mb: 3 }}>
+          <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
+            <Map size={18} color="#64748b" />
+            <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>Filter Jurisdiction Node</Typography>
+          </Stack>
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+            <Button variant={selectedDistrict === "" ? "contained" : "outlined"} onClick={() => setSelectedDistrict("")} sx={{ borderRadius: 999, px: 2, py: 0.8 }}>
+              All Regions
+            </Button>
             {PUDUCHERRY_DISTRICTS.map((d) => (
-              <button
-                key={d}
-                onClick={() => setSelectedDistrict(d)}
-                className={`px-4 py-1.5 rounded-full
-                  text-sm font-medium ${
-                  selectedDistrict === d
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-100 text-gray-600"
-                }`}
-              >
+              <Button key={d} variant={selectedDistrict === d ? "contained" : "outlined"} onClick={() => setSelectedDistrict(d)} sx={{ borderRadius: 999, px: 2, py: 0.8 }}>
                 {d}
-              </button>
+              </Button>
             ))}
-          </div>
-        </div>
+          </Box>
+        </Paper>
 
-        {/* Complaint List with loading skeleton — NEW for Day 7 */}
         {loading ? (
-          <div className="flex flex-col gap-4">
+          <Stack spacing={2}>
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white rounded-xl
-                                      shadow-sm p-5 animate-pulse">
-                <div className="h-4 bg-gray-200 rounded
-                                w-1/3 mb-2" />
-                <div className="h-3 bg-gray-100 rounded w-2/3" />
-              </div>
+              <Paper key={i} elevation={0} sx={{ border: 1, borderColor: "divider", borderRadius: 3, p: 2.5, animation: "pulse 1.5s ease-in-out infinite" }}>
+                <Box sx={{ height: 12, bgcolor: "grey.200", borderRadius: 999, width: "30%", mb: 1.5 }} />
+                <Box sx={{ height: 10, bgcolor: "grey.100", borderRadius: 999, width: "60%" }} />
+              </Paper>
             ))}
-          </div>
+          </Stack>
         ) : (
-          <div className="flex flex-col gap-4">
+          <Stack spacing={2}>
             {complaints.length === 0 ? (
-              <p className="text-center text-gray-400 py-8">
-                No complaints found.
-              </p>
+              <Paper elevation={0} sx={{ border: 1, borderColor: "divider", borderRadius: 3, p: 5, textAlign: "center", color: "text.secondary" }}>
+                No active public complaints registered inside this node filter.
+              </Paper>
             ) : (
-              complaints.map((complaint) => (
-                <ComplaintCard
-                  key={complaint.id}
-                  complaint={{
-                    ...complaint,
-                    location: `${complaint.district} — ${complaint.area}`
-                  }}
-                />
-              ))
+              complaints.map((complaint) => <ComplaintCard key={complaint.id} complaint={{ ...complaint, location: `${complaint.district} — ${complaint.area}` }} />)
             )}
-          </div>
+          </Stack>
         )}
-      </div>
-    </div>
+      </Container>
+    </Box>
   );
 }

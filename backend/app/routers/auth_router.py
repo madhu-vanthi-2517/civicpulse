@@ -1,82 +1,100 @@
-from fastapi import APIRouter, HTTPException
-from app.schemas import UserRegister, UserLogin
-from app.database import SessionLocal
-from app.models import User
-from passlib.context import CryptContext
-from jose import jwt
-from datetime import datetime, timedelta
 import os
 
-router = APIRouter()
-pwd_context = CryptContext(
-    schemes=["bcrypt"], deprecated="auto"
-)
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel, EmailStr
+from passlib.context import CryptContext
+from jose import jwt
 
-SECRET_KEY = os.getenv("SECRET_KEY", "civicpulse-secret")
+from app.database import SessionLocal
+from app.models import User
+
+
+router = APIRouter()
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+SECRET_KEY = os.getenv("SECRET_KEY", "civicpulse-secret-key")
 ALGORITHM = "HS256"
 
-def create_token(email: str) -> str:
-    expire = datetime.utcnow() + timedelta(hours=24)
-    return jwt.encode(
-        {"sub": email, "exp": expire},
-        SECRET_KEY,
-        algorithm=ALGORITHM
-    )
+
+class RegisterRequest(BaseModel):
+    name: str
+    email: EmailStr
+    password: str
+
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
+
 
 @router.post("/register")
-def register(user: UserRegister):
+def register(request: RegisterRequest):
     db = SessionLocal()
+
     try:
-        existing = db.query(User).filter(
-            User.email == user.email
-        ).first()
-        if existing:
-            raise HTTPException(
-                status_code=400,
-                detail="Email already registered"
-            )
-        hashed = pwd_context.hash(user.password)
+        existing_user = db.query(User).filter(User.email == request.email).first()
+
+        if existing_user:
+            raise HTTPException(status_code=400, detail="Email already registered")
+
+        hashed_password = pwd_context.hash(request.password)
+
         new_user = User(
-            name=user.name,
-            email=user.email,
-            password=hashed,
+            name=request.name,
+            email=request.email,
+            password=hashed_password,
             role="citizen"
         )
+
         db.add(new_user)
         db.commit()
+        db.refresh(new_user)
+
         return {
             "message": "Registered successfully",
-            "email": user.email
+            "id": new_user.id,
+            "name": new_user.name,
+            "email": new_user.email,
+            "role": new_user.role
         }
+
     finally:
         db.close()
 
+
 @router.post("/login")
-def login(user: UserLogin):
+def login(request: LoginRequest):
     db = SessionLocal()
+
     try:
-        db_user = db.query(User).filter(
-            User.email == user.email
-        ).first()
-        if not db_user:
-            raise HTTPException(
-                status_code=401,
-                detail="Invalid credentials"
-            )
-        if not pwd_context.verify(
-            user.password, db_user.password
-        ):
-            raise HTTPException(
-                status_code=401,
-                detail="Invalid credentials"
-            )
-        token = create_token(db_user.email)
+        user = db.query(User).filter(User.email == request.email).first()
+
+        if not user:
+            raise HTTPException(status_code=401, detail="Invalid credentials")
+
+        if not pwd_context.verify(request.password, user.password):
+            raise HTTPException(status_code=401, detail="Invalid credentials")
+
+        token = jwt.encode(
+            {
+                "sub": user.email,
+                "id": user.id,
+                "role": user.role
+            },
+            SECRET_KEY,
+            algorithm=ALGORITHM
+        )
+
         return {
+            "message": "Login successful",
             "access_token": token,
             "token_type": "bearer",
-            "role": db_user.role,
-            "email": db_user.email,
-            "id": db_user.id
+            "id": user.id,
+            "name": user.name,
+            "email": user.email,
+            "role": user.role
         }
+
     finally:
         db.close()
