@@ -48,7 +48,7 @@ function Navbar() {
   const handleLogout = () => {
     logout();
     setIsOpen(false);
-    navigate("/login");
+    navigate("/", { state: { logoutMessage: "You have been logged out successfully." } });
   };
 
   const navLinks = [

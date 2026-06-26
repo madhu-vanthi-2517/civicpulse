@@ -4,10 +4,10 @@ import { useAuth } from "../context/AuthContext";
 export default function ProtectedRoute({ children, requiredRole }) {
   const { user, token } = useAuth();
 
-  // 1. If token or user context state isn't initialized yet, bounce to login
+  // 1. If token or user context state isn't initialized yet, bounce to landing page
   if (!token || !user) {
-    console.log("Access Denied: Unauthenticated session. Redirecting to /login");
-    return <Navigate to="/login" replace />;
+    console.log("Access Denied: Unauthenticated session. Redirecting to /");
+    return <Navigate to="/" replace />;
   }
 
   // 2. Normalize and check if user role matches route access rules

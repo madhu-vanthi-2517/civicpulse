@@ -30,7 +30,7 @@ export default function AdminDashboard() {
 
   const handleLogoutClick = () => {
     if (logout) logout();
-    navigate('/login');
+    navigate('/', { state: { logoutMessage: 'You have been logged out successfully.' } });
   };
 
   const pendingCount = complaints.filter(
