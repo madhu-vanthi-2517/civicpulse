@@ -22,9 +22,6 @@ export default function Login() {
     setError("");
     try {
       const data = await api.login(email, password);
-      
-      console.log("Database Auth Response Object:", data);
-
       if (data.access_token) {
         const cleanedRole = data.role ? data.role.toLowerCase().trim() : "";
         console.log("Processed normalized user role string:", cleanedRole);
