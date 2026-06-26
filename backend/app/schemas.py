@@ -36,6 +36,8 @@ class ComplaintResponse(BaseModel):
 
     duplicate_warning: bool = False
     similar_to_id: Optional[int] = None
+    report_count: Optional[int] = 1
+    image_url: Optional[str] = None
 
     class Config:
         from_attributes = True
