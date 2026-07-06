@@ -20,24 +20,72 @@ export default function ComplaintForm() {
   const [locLoading, setLocLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
+  const [locationError, setLocationError] = useState("");
   const { token, user } = useAuth();
+
+const buildDisplayLocation = (data) => {
+    const address = data?.address || {};
+    const parts = [
+      address.road,
+      address.suburb,
+      address.neighbourhood,
+      address.village,
+      address.town,
+      address.city,
+      address.state,
+    ].filter(Boolean);
+
+    if (parts.length > 0) {
+      return parts.slice(0, 4).join(", ");
+    }
+
+    if (address.city || address.town || address.state) {
+      return [address.city || address.town, address.state].filter(Boolean).join(", ");
+    }
+
+    return "Current location detected";
+  };
 
   const handleGetCurrentLocation = () => {
     if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser");
+      setLocationError("Location access is not available in this browser.");
       return;
     }
+
+    if (!window.isSecureContext && window.location.hostname !== "localhost") {
+      setLocationError("Please use a secure connection or localhost to allow current location access.");
+      return;
+    }
+
     setLocLoading(true);
+    setLocationError("");
+
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (position) => {
         const { latitude, longitude } = position.coords;
-        setArea(`Coordinates: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
-        setLocLoading(false);
+
+        try {
+          const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`);
+          const data = await response.json();
+          const displayLocation = buildDisplayLocation(data);
+          setArea(displayLocation);
+          setLocationError("");
+        } catch (error) {
+          setArea("Current location detected");
+          setLocationError("");
+        } finally {
+          setLocLoading(false);
+        }
       },
-      () => {
-        alert("Unable to retrieve your location");
+      (error) => {
         setLocLoading(false);
-      }
+        if (error.code === 1) {
+          setLocationError("Please allow location access so we can fill your current area automatically.");
+        } else {
+          setLocationError("We could not read your current location right now. Please enter the area manually.");
+        }
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
     );
   };
 
@@ -55,11 +103,49 @@ export default function ComplaintForm() {
     setImagePreview(null);
   };
 
+  const isMeaningfulComplaint = (text) => {
+    const cleaned = text.toLowerCase().replace(/[^a-z0-9\s]/g, " ").trim();
+    if (!cleaned || cleaned.split(/\s+/).length < 3) return false;
+
+    const blockedPhrases = [
+      "i am sleeping",
+      "sleeping",
+      "nothing",
+      "no issue",
+      "fine",
+      "asdf",
+      "qwerty",
+      "hello",
+      "hi",
+      "random",
+      "spam",
+      "test"
+    ];
+
+    if (blockedPhrases.some((phrase) => cleaned.includes(phrase))) return false;
+
+    const civicKeywords = [
+      "road", "pothole", "street", "drain", "drainage", "water", "sewage",
+      "garbage", "trash", "waste", "light", "streetlight", "electric",
+      "power", "outage", "noise", "traffic", "pollution", "tree", "broken",
+      "leak", "overflow", "damaged", "dump", "smell", "construction", "public"
+    ];
+
+    return civicKeywords.some((keyword) => cleaned.includes(keyword));
+  };
+
   const handleSubmit = async () => {
     if (!title || !description || !district) {
       setError("Please fill all required fields");
       return;
     }
+
+    const combinedText = `${title} ${description}`;
+    if (!isMeaningfulComplaint(combinedText)) {
+      setError("Invalid complaint. Please enter a clear civic issue such as a road, water, sanitation, or electricity problem.");
+      return;
+    }
+
     setLoading(true);
     setError("");
     setResult(null);
@@ -126,9 +212,14 @@ export default function ComplaintForm() {
               <TextField label="Area / Locality" placeholder="Enter the location" value={area} onChange={(e) => setArea(e.target.value)} InputProps={{ startAdornment: <Box sx={{ mr: 1, color: "text.secondary" }}><MapPin size={18} /></Box> }} fullWidth />
               <Button variant="outlined" onClick={handleGetCurrentLocation} disabled={locLoading} sx={{ minWidth: { xs: "100%", sm: 210 }, py: 1.4, borderRadius: 2, whiteSpace: "nowrap" }}>
                 {locLoading ? <Loader2 className="animate-spin" size={16} style={{ marginRight: 8 }} /> : <MapPin size={16} style={{ marginRight: 8 }} />}
-                Use Current Location
+                Allow Current Location
               </Button>
             </Box>
+            {locationError && (
+              <Typography variant="caption" sx={{ color: "error.main", mt: -0.5 }}>
+                {locationError}
+              </Typography>
+            )}
 
             {/* 📸 Evidence Selection Box with Interactive File Input Preview and Dismiss Actions */}
             <Box>

@@ -29,12 +29,36 @@ def is_valid_complaint_text(text):
 
     common_noise = [
         "asdf", "qwerty", "lorem", "ipsum", "test", "hello", "hi",
-        "random", "spam", "asdfghjkl", "abc"
+        "random", "spam", "asdfghjkl", "abc", "i am sleeping", "sleeping",
+        "nothing", "idk", "dont know", "no issue", "fine"
     ]
     if any(token in cleaned for token in common_noise):
         return False
 
+    blocked_patterns = [
+        r"\bi\s*(?:am|m)\s+(?:sleeping|resting|bored|fine|okay|good|well)\b",
+        r"\bi['’]m\s+(?:sleeping|resting|bored|fine|okay|good|well)\b",
+        r"\bi\s+feel(?:ing)?\s+(?:fine|okay|good|well|better)\b"
+    ]
+    if any(re.search(pattern, cleaned) for pattern in blocked_patterns):
+        return False
+
     english_words = re.findall(r"[a-z]+", cleaned)
+    if len(english_words) < 3:
+        return False
+
+    if len(set(english_words)) <= 2 and len(english_words) <= 6:
+        return False
+
+    civic_keywords = [
+        "road", "pothole", "street", "drain", "drainage", "water", "sewage",
+        "garbage", "trash", "waste", "light", "streetlight", "electric",
+        "power", "outage", "noise", "traffic", "pollution", "tree", "broken",
+        "leak", "overflow", "damaged", "dump", "smell", "construction", "public"
+    ]
+    if not any(keyword in cleaned for keyword in civic_keywords):
+        return False
+
     if not english_words:
         return False
 

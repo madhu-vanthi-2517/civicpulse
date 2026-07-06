@@ -21,6 +21,7 @@ class ComplaintClassifierTests(unittest.TestCase):
     def test_invalid_spam_complaints_are_rejected(self):
         self.assertFalse(is_valid_complaint_text("asdfghjkl qwerty"))
         self.assertFalse(is_valid_complaint_text("こんにちは、何もわからない"))
+        self.assertFalse(is_valid_complaint_text("I am resting on the road"))
         self.assertTrue(is_valid_complaint_text("There are large potholes on the road near my house"))
 
 
