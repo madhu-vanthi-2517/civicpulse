@@ -1,15 +1,14 @@
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://civicpulse-backend-dlyv.onrender.com";
+const authHeaders = (token) => ({ Authorization: "Bearer ".concat(token) });
 
 export const api = {
-  // Exposing the base url to allow relative static image path assembly in details pages
   BASE_URL,
 
-  // Auth
   register: async (name, email, password) => {
     const res = await fetch(`${BASE_URL}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password })
+      body: JSON.stringify({ name, email, password }),
     });
     return res.json();
   },
@@ -18,59 +17,49 @@ export const api = {
     const res = await fetch(`${BASE_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ email, password }),
     });
     return res.json();
   },
 
-  // Complaints
   submitComplaint: async (formData, token) => {
     const res = await fetch(`${BASE_URL}/api/complaint`, {
       method: "POST",
-      headers: {
-        // 🌟 FIXED: Removed "Content-Type" entirely so the browser can 
-        // automatically handle the multipart boundary headers for FormData!
-        "Authorization": `Bearer ${token}`
-      },
-      body: formData // Directly passing the FormData instance stream
+      headers: authHeaders(token),
+      body: formData,
     });
     return res.json();
   },
 
   getComplaints: async (token) => {
     const res = await fetch(`${BASE_URL}/api/complaints`, {
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
+      headers: authHeaders(token),
     });
     return res.json();
   },
 
-  // 🌟 Added: Fetches single record dynamically by ID from Render backend
   getComplaintById: async (id, token) => {
     const res = await fetch(`${BASE_URL}/api/complaint/${id}`, {
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
+      headers: authHeaders(token),
     });
     return res.json();
   },
 
-  // Fetch only logged-in citizen's complaints
-  getMyComplaints: async (userId) => {
-    const res = await fetch(
-      `${BASE_URL}/api/complaints/mine?user_id=${userId}`
-    );
+  getMyComplaints: async (token) => {
+    const res = await fetch(`${BASE_URL}/api/complaints/mine`, {
+      headers: authHeaders(token),
+    });
     return res.json();
   },
 
-  getPublicComplaints: async (district = "") => {
-    const url = district
-      ? `${BASE_URL}/api/complaints/public?district=${district}`
-      : `${BASE_URL}/api/complaints/public`;
-
-    const res = await fetch(url);
-    return res.json();
+  getComplaintImage: async (id, token) => {
+    const res = await fetch(`${BASE_URL}/api/complaint/${id}/image`, {
+      headers: authHeaders(token),
+    });
+    if (!res.ok) {
+      throw new Error("Could not load complaint evidence.");
+    }
+    return res.blob();
   },
 
   updateStatus: async (id, status, token) => {
@@ -78,20 +67,17 @@ export const api = {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        ...authHeaders(token),
       },
-      body: JSON.stringify({ status, remarks: "" })
+      body: JSON.stringify({ status, remarks: "" }),
     });
     return res.json();
   },
 
-  // Analytics
   getAnalytics: async (token) => {
     const res = await fetch(`${BASE_URL}/api/analytics`, {
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
+      headers: authHeaders(token),
     });
     return res.json();
-  }
+  },
 };

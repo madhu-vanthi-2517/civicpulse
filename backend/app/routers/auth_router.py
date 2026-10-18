@@ -1,10 +1,11 @@
-import os
+from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, EmailStr
-from passlib.context import CryptContext
 from jose import jwt
+from passlib.context import CryptContext
 
+from app.auth import ALGORITHM, SECRET_KEY
 from app.database import SessionLocal
 from app.models import User
 
@@ -12,9 +13,6 @@ from app.models import User
 router = APIRouter()
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-SECRET_KEY = os.getenv("SECRET_KEY", "civicpulse-secret-key")
-ALGORITHM = "HS256"
 
 
 class RegisterRequest(BaseModel):
@@ -80,7 +78,8 @@ def login(request: LoginRequest):
             {
                 "sub": user.email,
                 "id": user.id,
-                "role": user.role
+                "role": user.role,
+                "exp": datetime.now(timezone.utc) + timedelta(hours=12),
             },
             SECRET_KEY,
             algorithm=ALGORITHM

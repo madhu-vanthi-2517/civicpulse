@@ -10,12 +10,12 @@ export default function ComplaintTracker() {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { user } = useAuth();
+  const { token } = useAuth();
 
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
-        const data = await api.getMyComplaints(user?.id);
+        const data = await api.getMyComplaints(token);
         if (Array.isArray(data)) {
           setComplaints(data);
         } else {
@@ -27,12 +27,12 @@ export default function ComplaintTracker() {
         setLoading(false);
       }
     };
-    if (user?.id) fetchComplaints();
-  }, [user]);
+    if (token) fetchComplaints();
+  }, [token]);
 
   // 🌟 Day 7 Analytics Aggregations (Resolves Point 7 for Hackathon Panels)
   const totalCount = complaints.length;
-  const pendingCount = complaints.filter(c => c.status?.toLowerCase() !== 'resolved').length;
+  const inProgressCount = complaints.filter(c => c.status?.toLowerCase() === 'in progress').length;
   const resolvedCount = complaints.filter(c => c.status?.toLowerCase() === 'resolved').length;
 
   return (
@@ -63,7 +63,7 @@ export default function ComplaintTracker() {
               <div className="bg-amber-50 p-2 rounded-lg text-amber-600"><Loader size={20} className="animate-spin" /></div>
               <div>
                 <p className="text-[11px] text-gray-400 font-bold uppercase tracking-wider">In Progress</p>
-                <p className="text-xl font-bold text-gray-800">{pendingCount}</p>
+                <p className="text-xl font-bold text-gray-800">{inProgressCount}</p>
               </div>
             </div>
             <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center gap-3">

@@ -14,6 +14,7 @@ export default function ComplaintDetail() {
   const [complaint, setComplaint] = useState(null);
   const [loading, setLoading] = useState(true);
   const [updated, setUpdated] = useState(false);
+  const [evidence, setEvidence] = useState({ complaintId: null, url: "", error: "" });
 
   useEffect(() => {
     const fetchComplaint = async () => {
@@ -41,6 +42,30 @@ export default function ComplaintDetail() {
       fetchComplaint();
     }
   }, [id, token]);
+
+  useEffect(() => {
+    if (!complaint?.image_url) return undefined;
+
+    let objectUrl;
+    let active = true;
+
+    api.getComplaintImage(complaint.id, token)
+      .then((image) => {
+        if (active) {
+          objectUrl = URL.createObjectURL(image);
+          setEvidence({ complaintId: complaint.id, url: objectUrl, error: "" });
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to load complaint evidence:", err);
+        if (active) setEvidence({ complaintId: complaint.id, url: "", error: "Evidence image could not be loaded." });
+      });
+
+    return () => {
+      active = false;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [complaint?.id, complaint?.image_url, token]);
 
   const handleStatusChange = async (newStatus) => {
     try {
@@ -124,18 +149,16 @@ export default function ComplaintDetail() {
             </span>
             
             {/* 🌟 Matches Jeeva's exact backend field 'image_url' gracefully */}
-            {complaint.image_url ? (
+            {complaint.image_url && evidence.complaintId === complaint.id && evidence.url ? (
               <img 
-                src={complaint.image_url} 
+                src={evidence.url}
                 alt="Evidence Upload" 
                 className="max-w-xs h-auto rounded-lg border border-gray-200 shadow-xs object-cover"
-                onError={(e) => {
-                  // Fallback if the image path is local relative instead of an absolute static URL
-                  if (!complaint.image_url.startsWith('http')) {
-                    e.target.src = `${api.BASE_URL || 'http://localhost:8000'}${complaint.image_url}`;
-                  }
-                }}
               />
+            ) : complaint.image_url && evidence.complaintId === complaint.id && evidence.error ? (
+              <div className="text-sm text-red-500 py-2">{evidence.error}</div>
+            ) : complaint.image_url ? (
+              <div className="text-sm text-gray-400 py-2">Loading private evidence...</div>
             ) : (
               <div className="text-sm text-gray-400 py-2 font-sans italic">
                 No visual image evidence was attached for this grievance ticket.

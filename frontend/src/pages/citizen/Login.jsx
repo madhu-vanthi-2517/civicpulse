@@ -38,7 +38,7 @@ export default function Login() {
           if (cleanedRole === "authority" || cleanedRole === "admin") {
             navigate("/admin", { replace: true });
           } else {
-            navigate("/submit", { replace: true });
+            navigate("/my-complaints", { replace: true });
           }
         }, 100);
       } else {

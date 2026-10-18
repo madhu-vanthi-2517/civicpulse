@@ -1,6 +1,13 @@
-from fastapi import APIRouter, HTTPException, Request
+import mimetypes
+import os
+import shutil
+from uuid import uuid4
+
+from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.responses import FileResponse
 from app.database import SessionLocal
-from app.models import Complaint, ComplaintReporter
+from app.dependencies import get_current_user, require_authority, require_citizen
+from app.models import Complaint, ComplaintReporter, User
 from app.schemas import StatusUpdate
 from app.ai.classifier import (
     is_valid_complaint_text,
@@ -10,16 +17,11 @@ from app.ai.classifier import (
     check_duplicate
 )
 
-import os
-import shutil
-from uuid import uuid4
-
-
 router = APIRouter()
 
 VALID_DISTRICTS = ["Puducherry", "Karaikal", "Mahe", "Yanam"]
 
-UPLOAD_DIR = "uploads"
+UPLOAD_DIR = os.path.abspath("uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
@@ -40,7 +42,10 @@ def save_uploaded_image(image):
 
 
 @router.post("/complaint")
-async def submit_complaint(request: Request):
+async def submit_complaint(
+    request: Request,
+    current_user: User = Depends(require_citizen),
+):
     content_type = request.headers.get("content-type", "")
 
     image = None
@@ -52,7 +57,6 @@ async def submit_complaint(request: Request):
         description = form.get("description")
         district = form.get("district")
         area = form.get("area")
-        user_id = form.get("user_id")
         image = form.get("image")
 
     else:
@@ -62,7 +66,6 @@ async def submit_complaint(request: Request):
         description = data.get("description")
         district = data.get("district")
         area = data.get("area")
-        user_id = data.get("user_id")
 
     if not title or not str(title).strip():
         raise HTTPException(
@@ -87,14 +90,6 @@ async def submit_complaint(request: Request):
         raise HTTPException(
             status_code=400,
             detail=f"District must be one of {VALID_DISTRICTS}"
-        )
-
-    try:
-        user_id = int(user_id)
-    except Exception:
-        raise HTTPException(
-            status_code=400,
-            detail="Valid user_id is required"
         )
 
     db = SessionLocal()
@@ -130,7 +125,7 @@ async def submit_complaint(request: Request):
 
             reporter_entry = ComplaintReporter(
                 complaint_id=original.id,
-                user_id=user_id
+                user_id=current_user.id
             )
 
             db.add(reporter_entry)
@@ -172,7 +167,7 @@ async def submit_complaint(request: Request):
             department_name=department_name,
             status="Pending",
             report_count=1,
-            user_id=user_id,
+            user_id=current_user.id,
             image_url=image_url
         )
 
@@ -182,7 +177,7 @@ async def submit_complaint(request: Request):
 
         reporter_entry = ComplaintReporter(
             complaint_id=new_complaint.id,
-            user_id=user_id
+            user_id=current_user.id
         )
 
         db.add(reporter_entry)
@@ -219,7 +214,8 @@ async def submit_complaint(request: Request):
 def get_complaints(
     status: str = None,
     district: str = None,
-    department: str = None
+    department: str = None,
+    current_user: User = Depends(require_authority),
 ):
     db = SessionLocal()
 
@@ -243,31 +239,15 @@ def get_complaints(
         db.close()
 
 
-@router.get("/complaints/public")
-def get_public_complaints(district: str = None):
-    db = SessionLocal()
-
-    try:
-        query = db.query(Complaint)
-
-        if district:
-            query = query.filter(Complaint.district == district)
-
-        return query.all()
-
-    finally:
-        db.close()
-
-
 @router.get("/complaints/mine")
-def get_my_complaints(user_id: int):
+def get_my_complaints(current_user: User = Depends(require_citizen)):
     db = SessionLocal()
 
     try:
         reported_ids = db.query(
             ComplaintReporter.complaint_id
         ).filter(
-            ComplaintReporter.user_id == user_id
+            ComplaintReporter.user_id == current_user.id
         ).all()
 
         ids = [item[0] for item in reported_ids]
@@ -286,7 +266,10 @@ def get_my_complaints(user_id: int):
 
 
 @router.get("/complaint/{complaint_id}")
-def get_complaint(complaint_id: int):
+def get_complaint(
+    complaint_id: int,
+    current_user: User = Depends(require_authority),
+):
     db = SessionLocal()
 
     try:
@@ -312,8 +295,41 @@ def get_complaint(complaint_id: int):
         db.close()
 
 
+@router.get("/complaint/{complaint_id}/image")
+def get_complaint_image(
+    complaint_id: int,
+    current_user: User = Depends(require_authority),
+):
+    db = SessionLocal()
+    try:
+        complaint = db.query(Complaint).filter(
+            Complaint.id == complaint_id
+        ).first()
+
+        if not complaint:
+            raise HTTPException(status_code=404, detail="Complaint not found")
+        if not complaint.image_url:
+            raise HTTPException(status_code=404, detail="No evidence image attached")
+
+        filename = os.path.basename(complaint.image_url)
+        image_path = os.path.abspath(os.path.join(UPLOAD_DIR, filename))
+        if os.path.commonpath([UPLOAD_DIR, image_path]) != UPLOAD_DIR:
+            raise HTTPException(status_code=404, detail="Evidence image not found")
+        if not os.path.isfile(image_path):
+            raise HTTPException(status_code=404, detail="Evidence image not found")
+
+        media_type = mimetypes.guess_type(image_path)[0] or "application/octet-stream"
+        return FileResponse(image_path, media_type=media_type)
+    finally:
+        db.close()
+
+
 @router.put("/complaint/{complaint_id}/status")
-def update_status(complaint_id: int, body: StatusUpdate):
+def update_status(
+    complaint_id: int,
+    body: StatusUpdate,
+    current_user: User = Depends(require_authority),
+):
     db = SessionLocal()
 
     try:
@@ -372,7 +388,7 @@ def update_status(complaint_id: int, body: StatusUpdate):
 
 
 @router.get("/analytics")
-def get_analytics():
+def get_analytics(current_user: User = Depends(require_authority)):
     db = SessionLocal()
 
     try:

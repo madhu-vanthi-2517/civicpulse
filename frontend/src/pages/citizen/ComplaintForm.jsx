@@ -24,7 +24,7 @@ export default function ComplaintForm() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
   const [locationError, setLocationError] = useState("");
-  const { token, user } = useAuth();
+  const { token } = useAuth();
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
   useEffect(() => () => recognitionRef.current?.abort(), []);
@@ -208,11 +208,6 @@ const buildDisplayLocation = (data) => {
       formData.append("district", district);
       formData.append("area", area);
       
-      // Check if user object has id before passing
-      if (user?.id) {
-        formData.append("user_id", user.id);
-      }
-
       // 🌟 FIXED (Requirement 4): Append the file binary using Jeeva's exact required key: "image"
       if (image) {
         formData.append("image", image);

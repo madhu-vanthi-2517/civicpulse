@@ -67,7 +67,7 @@ export default function LandingPage() {
             </Link>
 
             <Stack direction="row" spacing={{ xs: 1, sm: 3 }} alignItems="center">
-              <Button component={Link} to="/track" color="inherit" sx={{ display: { xs: "none", sm: "inline-flex" }, fontWeight: 600 }}>
+              <Button component={Link} to="/my-complaints" color="inherit" sx={{ display: { xs: "none", sm: "inline-flex" }, fontWeight: 600 }}>
                 Track a report
               </Button>
               <Button component={Link} to="/login" variant="contained" endIcon={<ArrowRight size={16} />} sx={{ px: { xs: 1.5, sm: 2.25 }, py: 1, borderRadius: 2.5, boxShadow: "none", fontWeight: 700 }}>
@@ -105,7 +105,7 @@ export default function LandingPage() {
               <Button component={Link} to="/login" variant="contained" endIcon={<ArrowRight size={17} />} sx={{ px: 2.5, py: 1.35, borderRadius: 2.5, boxShadow: "0 10px 24px rgba(79,70,229,0.2)", fontWeight: 700 }}>
                 Report an issue
               </Button>
-              <Button component={Link} to="/track" variant="outlined" endIcon={<ArrowDownRight size={17} />} sx={{ px: 2.5, py: 1.35, borderRadius: 2.5, borderColor: "#d8deeb", color: "#26334b", fontWeight: 700 }}>
+              <Button component={Link} to="/my-complaints" variant="outlined" endIcon={<ArrowDownRight size={17} />} sx={{ px: 2.5, py: 1.35, borderRadius: 2.5, borderColor: "#d8deeb", color: "#26334b", fontWeight: 700 }}>
                 Track a complaint
               </Button>
             </Stack>
@@ -113,7 +113,7 @@ export default function LandingPage() {
             <Stack direction="row" spacing={2.5} alignItems="center" sx={{ mt: 3.5, flexWrap: "wrap", rowGap: 1 }}>
               <Stack direction="row" spacing={0.8} alignItems="center">
                 <ShieldCheck size={16} color="#596780" />
-                <Typography variant="caption" sx={{ color: "#68748b", fontWeight: 600 }}>Transparent status</Typography>
+                <Typography variant="caption" sx={{ color: "#68748b", fontWeight: 600 }}>Private status tracking</Typography>
               </Stack>
               <Stack direction="row" spacing={0.8} alignItems="center">
                 <Clock3 size={16} color="#596780" />
@@ -233,7 +233,7 @@ export default function LandingPage() {
               <Typography variant="caption" sx={{ color: "#97a0b1" }}>· Open civic technology</Typography>
             </Stack>
             <Stack direction="row" spacing={2.5}>
-              <Button component={Link} to="/track" size="small" color="inherit">Track</Button>
+              <Button component={Link} to="/my-complaints" size="small" color="inherit">Track</Button>
               <Button component={Link} to="/login" size="small" color="inherit">Sign in</Button>
               <Button component={Link} to="/register" size="small" color="inherit">Register</Button>
             </Stack>

@@ -41,7 +41,7 @@ Response:
 ## Complaints
 
 ### POST /api/complaint
-Submits a new complaint. AI auto-classifies category, urgency, and department. Also checks for duplicate complaints in the same district.
+Submits a new complaint. Requires a citizen bearer token; the server takes the reporter identity from the token, not from request data. AI auto-classifies category, urgency, and department and checks for similar complaints in the same district.
 
 Request:
 ```json
@@ -68,20 +68,23 @@ Response:
 ```
 
 ### GET /api/complaints
-Returns all complaints. Requires authentication.
+Returns the full complaint queue. Requires an authority bearer token.
 
 Optional query params: `status`, `district`, `department`
 
-### GET /api/complaints/public
-Returns all complaints. No authentication required.
+### GET /api/complaints/mine
+Returns reports linked to the authenticated citizen. Requires a citizen bearer token. The user identity is taken from the token; no user ID query parameter is accepted.
 
-Optional query param: `district`
+There is no public complaint-list endpoint.
 
 ### GET /api/complaint/{id}
-Returns a single complaint by ID.
+Returns a single complaint by ID. Requires an authority bearer token.
+
+### GET /api/complaint/{id}/image
+Returns attached evidence for a complaint. Requires an authority bearer token. Evidence is not exposed through a public static-files route.
 
 ### PUT /api/complaint/{id}/status
-Updates a complaint's status. Requires authentication.
+Updates a complaint's status. Requires an authority bearer token.
 
 Request:
 ```json
@@ -114,7 +117,7 @@ Response:
 ## Analytics
 
 ### GET /api/analytics
-Returns aggregate complaint statistics. Requires authentication.
+Returns aggregate complaint statistics. Requires an authority bearer token.
 
 Response:
 ```json

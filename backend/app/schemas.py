@@ -19,7 +19,6 @@ class ComplaintCreate(BaseModel):
     description: str
     district: str
     area: Optional[str] = ""
-    user_id: Optional[int] = None
 
 
 class ComplaintResponse(BaseModel):

@@ -10,8 +10,8 @@ function getAnswer(question) {
 
   if (text.includes("track") || text.includes("status") || text.includes("complaint id")) {
     return {
-      text: "Use the public tracker to look up complaint progress. You can also sign in to see your submitted complaints.",
-      action: { label: "Open complaint tracker", to: "/track" },
+      text: "Sign in with the account you used to report the issue, then open My Complaints. Complaint details and progress are private to the citizens who reported them and authorized authorities.",
+      action: { label: "Go to my complaints", to: "/my-complaints" },
     };
   }
 

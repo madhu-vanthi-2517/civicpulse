@@ -16,7 +16,6 @@ import ComplaintForm from "./pages/citizen/ComplaintForm";
 import Login from "./pages/citizen/Login";
 import Register from "./pages/citizen/Register";
 import ComplaintTracker from "./pages/citizen/ComplaintTracker";
-import PublicTracker from "./pages/citizen/PublicTracker";
 import AdminDashboard from "./pages/authority/AdminDashboard";
 import Analytics from "./pages/authority/Analytics";
 import ComplaintDetail from "./pages/authority/ComplaintDetail";
@@ -39,8 +38,7 @@ function Navbar() {
   const isAuthPage =
     location.pathname === "/" ||
     location.pathname === "/login" ||
-    location.pathname === "/register" ||
-    location.pathname === "/public-tracker";
+    location.pathname === "/register";
 
   if (isAdminPage || isAuthPage) return null;
 
@@ -139,7 +137,7 @@ export default function App() {
 
             <Route path="/my-complaints" element={<ProtectedRoute requiredRole="citizen"><ComplaintTracker /></ProtectedRoute>} />
 
-            <Route path="/track" element={<PublicTracker />} />
+            <Route path="/track" element={<ProtectedRoute requiredRole="citizen"><ComplaintTracker /></ProtectedRoute>} />
 
             <Route path="/admin" element={<ProtectedRoute requiredRole="authority"><AdminDashboard /></ProtectedRoute>} />
 
