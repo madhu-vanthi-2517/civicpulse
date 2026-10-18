@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../../api';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import StatusBadge from '../../components/StatusBadge';
 import UrgencyTag from '../../components/UrgencyTag';
 
@@ -50,7 +50,7 @@ export default function ComplaintDetail() {
       setUpdated(true);
       setTimeout(() => setUpdated(false), 3000);
     } catch (err) {
-      console.error("Failed to update status");
+      console.error("Failed to update status:", err);
     }
   };
 

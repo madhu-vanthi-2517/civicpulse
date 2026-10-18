@@ -1,4 +1,4 @@
-const BASE_URL = "https://civicpulse-backend-dlyv.onrender.com";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://civicpulse-backend-dlyv.onrender.com";
 
 export const api = {
   // Exposing the base url to allow relative static image path assembly in details pages

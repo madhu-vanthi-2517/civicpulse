@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import { api } from "../../api";
 import ComplaintCard from "../../components/ComplaintCard";
 // 🌟 Added icons for dashboard banner
@@ -21,7 +21,7 @@ export default function ComplaintTracker() {
         } else {
           setError("Failed to load complaints");
         }
-      } catch (err) {
+      } catch {
         setError("Cannot connect to server.");
       } finally {
         setLoading(false);

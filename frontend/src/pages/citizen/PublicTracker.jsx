@@ -23,7 +23,7 @@ export default function PublicTracker() {
           setComplaints(data);
         }
       } catch (err) {
-        console.error("Failed to load complaints");
+        console.error("Failed to load complaints:", err);
       } finally {
         setLoading(false);
       }

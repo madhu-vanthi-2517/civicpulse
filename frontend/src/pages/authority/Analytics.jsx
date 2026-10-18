@@ -5,7 +5,7 @@ import {
   Tooltip, ResponsiveContainer, PieChart, Pie,
   Cell, Legend
 } from 'recharts';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { api } from '../../api';
 
 const STATUS_COLORS = {
@@ -26,7 +26,7 @@ export default function Analytics() {
         const result = await api.getAnalytics(token);
         setData(result);
       } catch (err) {
-        console.error("Failed to load analytics");
+        console.error("Failed to load analytics:", err);
       } finally {
         setLoading(false);
       }

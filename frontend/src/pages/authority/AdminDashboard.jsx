@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { api } from '../../api';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import StatusBadge from '../../components/StatusBadge';
 import UrgencyTag from '../../components/UrgencyTag';
 import { LogOut, ClipboardList, BarChart3 } from 'lucide-react';
@@ -20,7 +20,7 @@ export default function AdminDashboard() {
         const data = await api.getComplaints(token);
         if (Array.isArray(data)) setComplaints(data);
       } catch (err) {
-        console.error("Failed to load complaints");
+        console.error("Failed to load complaints:", err);
       } finally {
         setLoading(false);
       }

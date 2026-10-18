@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import { api } from "../../api";
 import { Eye, EyeOff } from "lucide-react";
 import { Box, Button, Container, Paper, Stack, TextField, Typography } from "@mui/material";
@@ -44,7 +44,7 @@ export default function Login() {
       } else {
         setError(data.detail || "Invalid credentials");
       }
-    } catch (err) {
+    } catch {
       setError("Cannot connect to server. Is backend running?");
     } finally {
       setLoading(false);

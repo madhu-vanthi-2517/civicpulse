@@ -10,7 +10,7 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Box, Container, IconButton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "./context/useAuth";
 import LandingPage from "./pages/LandingPage";
 import ComplaintForm from "./pages/citizen/ComplaintForm";
 import Login from "./pages/citizen/Login";
@@ -21,6 +21,7 @@ import AdminDashboard from "./pages/authority/AdminDashboard";
 import Analytics from "./pages/authority/Analytics";
 import ComplaintDetail from "./pages/authority/ComplaintDetail";
 import ProtectedRoute from "./components/ProtectedRoute";
+import CivicHelpChat from "./components/CivicHelpChat";
 
 function Navbar() {
   const location = useLocation();
@@ -147,6 +148,7 @@ export default function App() {
             <Route path="/complaint/:id" element={<ProtectedRoute requiredRole="authority"><ComplaintDetail /></ProtectedRoute>} />
           </Routes>
         </Box>
+        <CivicHelpChat />
       </Box>
     </Router>
   );

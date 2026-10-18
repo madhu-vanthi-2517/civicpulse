@@ -12,7 +12,7 @@ const theme = createTheme({
     background: { default: '#f8fafc', paper: '#ffffff' },
   },
   typography: {
-    fontFamily: 'Arial, Helvetica, sans-serif',
+    fontFamily: '"Inter", "Segoe UI", Arial, sans-serif',
   },
   breakpoints: {
     values: {

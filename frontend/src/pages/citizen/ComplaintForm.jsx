@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useEffect, useRef, useState } from "react";
+import { useAuth } from "../../context/useAuth";
 import { api } from "../../api";
-import { FileText, AlignLeft, MapPin, Building, Send, Cpu, AlertTriangle, Upload, Loader2, X } from "lucide-react";
+import { FileText, AlignLeft, MapPin, Building, Send, Cpu, AlertTriangle, Upload, Loader2, X, Mic } from "lucide-react";
 import { Box, Button, Container, Grid, Paper, Stack, TextField, Typography, IconButton } from "@mui/material";
 
 const PUDUCHERRY_DISTRICTS = ["Puducherry", "Karaikal", "Mahe", "Yanam"];
@@ -9,6 +9,9 @@ const PUDUCHERRY_DISTRICTS = ["Puducherry", "Karaikal", "Mahe", "Yanam"];
 export default function ComplaintForm() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [isListening, setIsListening] = useState(false);
+  const [voiceError, setVoiceError] = useState("");
+  const recognitionRef = useRef(null);
   const [district, setDistrict] = useState("");
   const [area, setArea] = useState("");
   
@@ -22,6 +25,53 @@ export default function ComplaintForm() {
   const [error, setError] = useState("");
   const [locationError, setLocationError] = useState("");
   const { token, user } = useAuth();
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  useEffect(() => () => recognitionRef.current?.abort(), []);
+
+  const handleVoiceInput = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+      return;
+    }
+
+    if (!SpeechRecognition) {
+      setVoiceError("Voice input is not supported in this browser. Please type your description instead.");
+      return;
+    }
+
+    setVoiceError("");
+    const recognition = new SpeechRecognition();
+    recognition.lang = "en-IN";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.onstart = () => setIsListening(true);
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript.trim();
+      if (transcript) {
+        setDescription((current) => `${current}${current && !current.endsWith(" ") ? " " : ""}${transcript}`);
+      }
+    };
+    recognition.onerror = (event) => {
+      if (event.error === "aborted") return;
+      const errorMessages = {
+        "not-allowed": "Microphone access was denied. Allow microphone access in your browser settings and try again.",
+        "audio-capture": "No microphone was found. Connect a microphone or type your description instead.",
+        "no-speech": "No speech was detected. Try again or type your description.",
+        network: "Voice recognition could not connect. Check your connection or type your description.",
+      };
+      setVoiceError(errorMessages[event.error] || "Voice input could not start. Please type your description instead.");
+    };
+    recognition.onend = () => setIsListening(false);
+    recognitionRef.current = recognition;
+
+    try {
+      recognition.start();
+    } catch {
+      setIsListening(false);
+      setVoiceError("Voice input could not start. Please try again or type your description.");
+    }
+  };
 
 const buildDisplayLocation = (data) => {
     const address = data?.address || {};
@@ -70,7 +120,7 @@ const buildDisplayLocation = (data) => {
           const displayLocation = buildDisplayLocation(data);
           setArea(displayLocation);
           setLocationError("");
-        } catch (error) {
+        } catch {
           setArea("Current location detected");
           setLocationError("");
         } finally {
@@ -182,7 +232,7 @@ const buildDisplayLocation = (data) => {
       } else {
         setError(data.detail || "Submission failed. Try again.");
       }
-    } catch (err) {
+    } catch {
       setError("Cannot connect to server.");
     } finally {
       setLoading(false);
@@ -199,7 +249,26 @@ const buildDisplayLocation = (data) => {
           <Stack spacing={2.5}>
             <TextField label="Complaint Title *" placeholder="Enter your complaint here" value={title} onChange={(e) => setTitle(e.target.value)} InputProps={{ startAdornment: <Box sx={{ mr: 1, color: "text.secondary" }}><FileText size={18} /></Box> }} fullWidth />
 
-            <TextField label="Description *" placeholder="Describe the issue in detail..." value={description} onChange={(e) => setDescription(e.target.value)} multiline rows={4} InputProps={{ startAdornment: <Box sx={{ mr: 1, mt: 0.5, color: "text.secondary" }}><AlignLeft size={18} /></Box> }} fullWidth />
+            <Box>
+              <TextField label="Description *" placeholder="Describe the issue in detail..." value={description} onChange={(e) => setDescription(e.target.value)} multiline rows={4} InputProps={{ startAdornment: <Box sx={{ mr: 1, mt: 0.5, color: "text.secondary" }}><AlignLeft size={18} /></Box> }} fullWidth />
+              <Stack direction={{ xs: "column", sm: "row" }} alignItems={{ xs: "flex-start", sm: "center" }} spacing={1} sx={{ mt: 1 }}>
+                <Button
+                  onClick={handleVoiceInput}
+                  disabled={!SpeechRecognition}
+                  variant={isListening ? "contained" : "outlined"}
+                  color={isListening ? "error" : "primary"}
+                  size="small"
+                  aria-pressed={isListening}
+                  startIcon={isListening ? <Loader2 className="animate-spin" size={16} /> : <Mic size={16} />}
+                >
+                  {isListening ? "Stop dictation" : "Dictate description"}
+                </Button>
+                <Typography variant="caption" sx={{ color: "text.secondary" }}>
+                  {SpeechRecognition ? "Voice input is provided by your browser." : "Voice input is not supported in this browser."}
+                </Typography>
+              </Stack>
+              {voiceError && <Typography role="alert" variant="caption" sx={{ color: "error.main", display: "block", mt: 0.75 }}>{voiceError}</Typography>}
+            </Box>
 
             <TextField select label="District *" value={district} onChange={(e) => setDistrict(e.target.value)} SelectProps={{ native: true }} InputProps={{ startAdornment: <Box sx={{ mr: 1, color: "text.secondary" }}><Building size={18} /></Box> }} fullWidth>
               <option value="">Select District</option>

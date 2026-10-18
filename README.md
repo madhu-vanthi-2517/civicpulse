@@ -1,163 +1,168 @@
 # CivicPulse
 
-AI-powered citizen grievance intelligence system, automatically categorizes, prioritizes, and 
-routes civic complaints to the correct municipal department
+**A clearer path from civic concern to community action.**
+
+CivicPulse is an open-source citizen grievance platform for reporting and tracking local civic issues. It combines AI-assisted triage with transparent complaint status, public tracking, and authority analytics.
 
 Built for **UNBOUND '26** · FOSS Club PU · MIT License
 
-## Problem
+## What you can do
 
-Citizens in urban India lack a reliable and transparent way to report and track local civic issues.
-Current municipal portals are fragmented and divided by department, and they provide no feedback after submission.
+### For residents
+- Submit civic complaints with a title, description, district, area, and optional photo evidence.
+- Use **voice-to-text dictation** to fill in a complaint description where the browser supports speech recognition.
+- Get AI-assisted category, urgency, and department suggestions when a complaint is submitted.
+- See a warning when the report resembles an existing complaint.
+- Follow complaint status using the public tracker or your account.
+- Ask the built-in CivicPulse help assistant for guidance on reporting, tracking, and voice input.
 
-Problems like potholes, broken streetlights, garbage buildup, water leaks, and sewage overflow
-remain unresolved. This isn't due to a lack of resources but happens because complaints are
-manually handled, often duplicated, and hard to prioritize on a large scale.
+### For authorities
+- Review and update complaint statuses from the authority dashboard.
+- View complaint analytics to understand reported issues and their distribution.
 
-## Solution
+## What is new
 
-CivicPulse is an open-source, AI-powered grievance platform that:
-- Allows citizens to submit complaints with location and photo evidence
-- Automatically categorizes complaint types using NLP
-- Assigns urgency levels (Low, Medium, High)
-- Routes complaints to the proper municipal department
-- Detects and merges duplicate reports of the same issue, tracking how many citizens reported it
-- Offers real-time public status visibility
-- Provides authorities with an analytics dashboard to identify problem areas
-- Works on both desktop and mobile browsers
+- **Voice-to-text complaint input:** optional speech recognition in the complaint description field. Availability depends on browser support, permissions, and connection. Speech recognition is provided by the browser; consult its privacy settings for details.
+- **CivicPulse Help:** a local, FAQ-guided chatbot for common reporting and tracking questions. It does not call an external AI service or require an AI API key.
+- **Refreshed landing page:** responsive, accessible entry points for reporting, tracking, and getting help.
+- **Configurable API URL:** set `VITE_API_BASE_URL` in the frontend to use a local or alternate backend.
 
-## Architecture
+## How complaints flow
 
-![CivicPulse system architecture](./docs/architecture.png)
+1. A resident signs in and submits a complaint, optionally including photo evidence.
+2. FastAPI receives the form and the classifier suggests a category, urgency, and department.
+3. The system checks for similar reports and can flag a possible duplicate.
+4. The complaint is stored in the configured database.
+5. Authorities review the complaint and update its status.
+6. Residents follow progress through the public tracker or their account.
 
-### How a complaint flows through the system
+## Technology
 
-1. Citizen logs in and submits a complaint via the React form, optionally attaching a photo
-2. FastAPI receives it, stores the photo if attached, and calls the AI pipeline
-3. Scikit-Learn classifies the text → returns Category, Urgency, Department
-4. The system checks for similar existing complaints in the same district
-    - If none found, a new complaint is created
-   - If a match is found, the report is linked to the original and its report count 
-5. All fields saved to PostgreSQL database
-6. Authority sees the complaint on the dashboard, including the photo and report count
-7. Authority updates status → Pending to Resolved
-8. Citizen tracks status on Public Tracker
-9. Analytics page reflects the updated data
+| Area | Technology |
+|---|---|
+| Frontend | React 19, Vite 8, Material UI, React Router |
+| Charts | Recharts |
+| Backend | FastAPI, SQLAlchemy |
+| Database | PostgreSQL |
+| Authentication | JWT |
+| Classification | Scikit-learn, TF-IDF |
+| Maps and geocoding | OpenStreetMap / Nominatim |
+| Voice input | Browser Speech Recognition API (optional) |
 
-### How duplicate complaints are merged
+## Project structure
 
-![Duplicate complaint merge flow](./docs/duplicate_merge_flow.png)
+```text
+backend/
+  app/
+    ai/                 Complaint classifier
+    routers/            Authentication, complaints, classification
+    main.py             FastAPI application
+frontend/
+  src/
+    components/         Shared UI, including CivicPulse Help
+    pages/citizen/      Sign in, registration, submission, tracking
+    pages/authority/    Dashboard, analytics, complaint details
+ml/
+  data/                 Classifier training dataset
+  models/               Model artifacts
+docs/                   Architecture and project documentation
+```
 
-## Citizen and authority journey
-
-![Citizen and Authority User Flow](./docs/user_flow.png)
-
-## Tech Stack
-
-| Component | Tool | Purpose |
-|-----------|------|---------|
-| Frontend framework | React 18 + Vite | Citizen and authority UI |
-| Styling | Tailwind CSS | Responsive design |
-| Routing | React Router v6 | Page navigation |
-| Charts | Recharts | Analytics dashboard |
-| Backend | FastAPI (Python) | REST API layer |
-| Database | PostgreSQL 15 | Data storage |
-| ORM | SQLAlchemy | DB models and queries |
-| Auth | JWT (python-jose) | Citizen and authority login |
-| AI / ML | Scikit-Learn | Complaint classification |
-| Vectorizer | TF-IDF | Text feature extraction and duplicate detection |
-| File storage | FastAPI static files | Photo evidence uploads |
-| Maps | OpenStreetMap + Leaflet.js | Location picker and heatmap |
-| Version control | GitHub | Collaboration |
-| License | MIT | FOSS compliance |
-
-## Project Structure
-
-| Folder | Purpose |
-|--------|---------|
-| `backend/app/ai/` | Classifier, urgency scoring, department routing, duplicate detection |
-| `backend/app/routers/` | API endpoints — auth, complaints, analytics, photo upload |
-| `backend/uploads/` | Stored photo evidence from complaints |
-| `backend/tests/` | Unit tests |
-| `frontend/src/components/` | Shared UI components |
-| `frontend/src/pages/Landing.jsx` | Public landing page |
-| `frontend/src/pages/citizen/` | Login, Register, Submit, Tracker, Public Tracker |
-| `frontend/src/pages/authority/` | Admin Dashboard, Analytics, Complaint Detail |
-| `ml/data/` | Training dataset (CSV) |
-| `ml/models/` | Saved trained model (.pkl) |
-| `ml/notebooks/` | Model development notebook |
-| `docs/` | Architecture, API reference, AI attributions |
-
-## Pages
-
-| Route | Page | Access |
-|-------|------|--------|
-| `/` | Landing Page | Public |
-| `/login` | Login | Public |
-| `/register` | Register | Public |
-| `/track` | Public Complaint Tracker | Public |
-| `/submit` | Submit Complaint (with optional photo) | Citizen |
-| `/my-complaints` | My Complaints | Citizen |
-| `/admin` | Authority Dashboard | Authority |
-| `/analytics` | Analytics | Authority |
-| `/complaint/:id` | Complaint Detail (includes photo if attached) | Authority |
-
-## Setup
+## Run locally
 
 ### Prerequisites
-- Python 3.10+
-- Node.js 18+
-- PostgreSQL 15+
 
-### Clone the repo
-```bash
+- Python 3.10 or newer
+- Node.js 20.19+ or 22.12+
+- PostgreSQL
+
+Clone the repository and open its project directory:
+
+```powershell
 git clone https://github.com/madhu-vanthi-2517/civicpulse.git
 cd civicpulse
 ```
 
-### Backend
-```bash
-cd backend
-pip install -r requirements.txt
-cp .env.example .env
-# Edit .env with your PostgreSQL credentials
-uvicorn main:app --reload
+### 1. Configure the database
+
+Create a PostgreSQL database, then create `backend/.env` with its connection string:
+
+```env
+DATABASE_URL=postgresql://USER:PASSWORD@localhost:5432/civicpulse
 ```
 
-### Frontend
-```bash
+Do not commit `.env` files or real credentials.
+
+### 2. Start the backend
+
+From the repository root:
+
+```powershell
+cd backend
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+The API documentation is available at `http://localhost:8000/docs`.
+
+### 3. Start the frontend
+
+In a separate terminal:
+
+```powershell
 cd frontend
-npm install
+npm ci
 npm run dev
 ```
 
-### Live link
-https://civicpulse-wheat.vercel.app
+By default, the frontend uses the hosted CivicPulse API. To use the local backend, create `frontend/.env.local`:
 
-### Test accounts
-|Role|E-mail|Password|
-|----|------|--------|
-|Admin|admin@test.com|Admin@12345|
-|Citizen|citizen1@test.com|citizen@12345|
+```env
+VITE_API_BASE_URL=http://localhost:8000
+```
 
-## Demo Video
-https://youtu.be/tP4Wmauv1cI?si=zYkcwOtqQZRsbRi5
+Restart the Vite development server after changing environment variables.
 
-## Team
+### 4. Validate the frontend
 
-| Name | Role | GitHub |
-|------|------|--------|
-| Susmittha | AI / ML | @susmittha21 |
-| Jeevadharshini | Backend | @jeevadharshini25 |
-| Mathivathana | Frontend — Citizen UI | @mathi-vathana-06 |
-| Madhuvanthi | Frontend — Authority UI + DevOps | @madhu-vanthi-2517 |
+```powershell
+cd frontend
+npm run lint
+npm run build
+```
+
+## Routes
+
+| Route | Page | Access |
+|---|---|---|
+| `/` | Landing page and CivicPulse Help | Public |
+| `/login` | Sign in | Public |
+| `/register` | Create an account | Public |
+| `/track` | Public complaint tracker | Public |
+| `/submit` | Submit a complaint | Citizen |
+| `/my-complaints` | Personal complaint tracker | Citizen |
+| `/admin` | Authority dashboard | Authority |
+| `/analytics` | Complaint analytics | Authority |
+| `/complaint/:id` | Complaint details | Authority |
+
+## Documentation
+
+- [Architecture](./docs/architecture.png)
+- [API reference](./docs/api_reference.md)
+- [Model performance](./docs/model_performance.md)
+- [AI attributions](./docs/ai_attributions.md)
+
+## Deployment
+
+- Frontend: https://civicpulse-wheat.vercel.app
+- Backend API: https://civicpulse-backend-dlyv.onrender.com
+
+## Contributing
+
+Contributions are welcome. Please open an issue to discuss substantial changes and run the frontend lint and production build before submitting a pull request.
 
 ## License
 
-This project is licensed under the MIT License.
-See [LICENSE](./LICENSE) for details.
-
-## AI Attributions
-
-All AI tool usage is documented in [docs/ai_attributions.md](./docs/ai_attributions.md)
-as required by UNBOUND '26 Article VI.
+This project is licensed under the MIT License. See [LICENSE](./LICENSE) for details.

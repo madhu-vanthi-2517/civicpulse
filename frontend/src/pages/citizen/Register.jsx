@@ -36,7 +36,7 @@ export default function Register() {
       } else {
         setError(data.detail || "Registration failed");
       }
-    } catch (err) {
+    } catch {
       setError("Cannot connect to server. Is backend running?");
     } finally {
       setLoading(false);
