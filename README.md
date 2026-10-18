@@ -1,10 +1,22 @@
 # CivicPulse
 
-**A clearer path from civic concern to community action.**
+**A full-stack learning prototype for local civic issue reporting.**
 
-CivicPulse is an open-source citizen grievance platform for reporting and privately tracking local civic issues. It combines AI-assisted triage with authority workflows and analytics.
+CivicPulse is an open-source prototype for reporting and privately tracking local civic issues. We built it to learn and demonstrate how a machine-learning component, a citizen- and authority-facing frontend, and a REST API/backend can work together as one civic-tech application. Its Puducherry-focused workflow is a project exploration, not an official government service or a replacement for CPGRAMS.
 
 Built for **UNBOUND '26** · FOSS Club PU · MIT License
+
+## Why we built CivicPulse
+
+CPGRAMS already provides an established, government-wide grievance service. Our goal was not to recreate that service or claim that CivicPulse has features the government platform lacks. We wanted a practical project through which we could:
+
+- Train and integrate a text-classification model that suggests a complaint category.
+- Connect ML predictions and rule-based urgency/department routing to a usable reporting workflow.
+- Build a React frontend for citizens and authorities and a FastAPI backend for authentication, complaint handling, and analytics.
+- Explore how duplicate detection and role-based workflows might help organize local municipal reports.
+- Learn how separate ML, frontend, and backend components are integrated, tested, and documented in a full-stack application.
+
+The current implementation is a demonstration of these ideas. Its classification and routing suggestions need real-world evaluation, and the application is not yet ready to handle sensitive public submissions as a production service.
 
 ## What you can do
 
@@ -26,7 +38,7 @@ Built for **UNBOUND '26** · FOSS Club PU · MIT License
 - **CivicPulse Help:** a local, FAQ-guided chatbot for common reporting and tracking questions. It does not call an external AI service or require an AI API key.
 - **Refreshed landing page:** responsive, accessible entry points for reporting, tracking, and getting help.
 - **Configurable API URL:** set `VITE_API_BASE_URL` in the frontend to use a local or alternate backend.
-- **Private complaint access:** complaint lists and attached evidence are no longer publicly served. Citizens can see reports linked to their account; authorized authorities can review the full queue.
+- **Private-access controls in the repository:** complaint-list, authority, analytics, and evidence API routes require role-appropriate authentication. These controls must be deployed and verified on the backend before they protect the hosted service.
 
 ## How complaints flow
 
@@ -58,19 +70,22 @@ These are subjective assessments of this prototype, not an independent audit or 
 | Dimension | Rating | Reason |
 |---|---:|---|
 | Local civic focus and ease of reporting | 7/10 | A focused complaint flow, optional photo, browser dictation, and AI-assisted triage make a useful demo; usability still needs testing with residents. |
-| Complaint privacy and role separation | 7/10 after the access-control change | The intended policy is private citizen tracking plus authority-only administration. Production deployment must run the updated backend and configure a strong `SECRET_KEY`. |
+| Complaint privacy and role separation | 4/10 until verified | Role-based API controls exist in the repository, but deployment is controlled separately and duplicate-linked reports can currently expose another report's details to linked reporters. |
 | Overall maturity | 5/10 | It demonstrates a working prototype, but still needs operational testing, formal security/privacy review, reliable notifications, and complete redress workflows. |
 
 The citizen submission and personal-complaint pages are useful for a prototype; the authority dashboard and analytics provide the right basic workflow. Their presentation is less consistent than the refreshed landing page, and the product does not yet have a mature service history, appeals, feedback, or notification experience. Treat CivicPulse as a promising project demo rather than a production government service.
 
 ### Privacy model
 
-- Complaint lists are not public. The backend derives the citizen identity from a signed bearer token instead of trusting a client-supplied user ID.
-- A citizen can list reports linked to their own account. The complete complaint queue, individual authority detail, status changes, analytics, and evidence-image retrieval require an authority account.
-- Uploaded evidence is no longer mounted as an unauthenticated static directory; the authority detail view fetches it through an authenticated API route.
+- The latest backend code removes the public complaint-list and static-upload routes. It derives the citizen identity from a signed bearer token instead of trusting a client-supplied user ID.
+- The intended policy is that citizens can follow only reports associated with their account, while the full queue, authority details, status changes, analytics, and evidence retrieval require an authority account.
+- **Known duplicate-report limitation:** similar submissions can currently be linked to an existing complaint record. Since a citizen's personal list returns linked complaint records, this design can expose details from the original report to another linked reporter. The data model should be changed to keep each citizen's submission private and store shared duplicate/issue grouping separately before claiming strict per-reporter confidentiality.
+- Uploaded evidence should be served only by the authenticated authority API, not as a public static file.
+- **Deployment and ownership:** the hosted backend is operated by a separate project developer, not by the frontend/ML contributor. The backend operator controls or can access the service and its configured database, subject to that hosting setup. This repository alone cannot verify who has production credentials, how backups are handled, or whether the latest privacy changes have been deployed.
 - Set a unique, high-entropy `SECRET_KEY` in the backend environment and redeploy the API. Local development generates a process-only random key if this is unset; tokens will stop working after a restart and are not shared between workers.
-- The privacy change takes effect only when the updated backend is deployed. It cannot revoke copies of complaint data or evidence that may have been accessed or cached before deployment.
-- These controls protect the current application routes; they do not replace a formal privacy assessment, production hardening, or review of hosting/database access.
+- Backend access controls take effect online only after the operator deploys and verifies the updated backend. They cannot revoke copies of complaint data or evidence that may have been accessed or cached before deployment.
+- Do not use real personal, sensitive, or identifying information in the hosted demo until backend ownership, access, retention, deletion, and deployment of the privacy changes have been confirmed with the operator.
+- These application controls do not replace a formal privacy assessment, production hardening, or review of hosting and database access.
 
 ## Technology
 
@@ -78,10 +93,10 @@ The citizen submission and personal-complaint pages are useful for a prototype; 
 |---|---|
 | Frontend | React 19, Vite 8, Material UI, React Router |
 | Charts | Recharts |
-| Backend | FastAPI, SQLAlchemy |
+| Backend/API | FastAPI, SQLAlchemy |
 | Database | PostgreSQL |
 | Authentication | JWT |
-| Classification | Scikit-learn, TF-IDF |
+| ML/NLP | Scikit-learn text classifier, TF-IDF; rule-based urgency and department routing |
 | Maps and geocoding | OpenStreetMap / Nominatim |
 | Voice input | Browser Speech Recognition API (optional) |
 
@@ -121,11 +136,11 @@ cd civicpulse
 
 ### 1. Configure the database
 
-Create a PostgreSQL database, then create `backend/.env` with its connection string:
-Also set a unique, high-entropy `SECRET_KEY` there so JWT sessions remain valid across restarts and workers.
+Create a PostgreSQL database, then create `backend/.env` with its connection string and a unique, high-entropy `SECRET_KEY`. The key must remain stable across restarts and workers so JWT sessions stay valid.
 
 ```env
 DATABASE_URL=postgresql://USER:PASSWORD@localhost:5432/civicpulse
+SECRET_KEY=replace-with-a-long-random-secret
 ```
 
 Do not commit `.env` files or real credentials.
