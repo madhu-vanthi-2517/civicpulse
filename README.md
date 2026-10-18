@@ -1,22 +1,21 @@
 # CivicPulse
 
-**A full-stack learning prototype for local civic issue reporting.**
+**A full-stack hackathon prototype for local civic issue reporting.**
 
-CivicPulse is an open-source prototype for reporting and privately tracking local civic issues. We built it to learn and demonstrate how a machine-learning component, a citizen- and authority-facing frontend, and a REST API/backend can work together as one civic-tech application. Its Puducherry-focused workflow is a project exploration, not an official government service or a replacement for CPGRAMS.
+CivicPulse is an open-source prototype for reporting and privately tracking local civic issues. Built during a hackathon, it brings together machine learning, a citizen- and authority-facing frontend, and a REST API/backend as one civic-tech application. Its Puducherry-focused workflow is a project prototype, not an official government service or a replacement for CPGRAMS.
 
 Built for **UNBOUND '26** · FOSS Club PU · MIT License
 
-## Why we built CivicPulse
+## Project purpose
 
-CPGRAMS already provides an established, government-wide grievance service. Our goal was not to recreate that service or claim that CivicPulse has features the government platform lacks. We wanted a practical project through which we could:
+CPGRAMS already provides an established, government-wide grievance service. CivicPulse does not aim to recreate that service or claim that its features are absent from the government platform. The hackathon challenge was to design and build a focused local civic-issue workflow that integrates:
 
-- Train and integrate a text-classification model that suggests a complaint category.
-- Connect ML predictions and rule-based urgency/department routing to a usable reporting workflow.
-- Build a React frontend for citizens and authorities and a FastAPI backend for authentication, complaint handling, and analytics.
-- Explore how duplicate detection and role-based workflows might help organize local municipal reports.
-- Learn how separate ML, frontend, and backend components are integrated, tested, and documented in a full-stack application.
+- An ML text classifier that suggests complaint categories.
+- Urgency and department routing connected to the complaint-submission workflow.
+- A React frontend for citizens and authorities and a FastAPI backend for authentication, complaint handling, and analytics.
+- Duplicate-report detection and role-based workflows for organizing local municipal issues.
 
-The current implementation is a demonstration of these ideas. Its classification and routing suggestions need real-world evaluation, and the application is not yet ready to handle sensitive public submissions as a production service.
+The result demonstrates an end-to-end collaboration across ML, frontend, and backend development. Its classification and routing suggestions still need real-world evaluation, and the application is not yet ready to handle sensitive public submissions as a production service.
 
 ## What you can do
 
